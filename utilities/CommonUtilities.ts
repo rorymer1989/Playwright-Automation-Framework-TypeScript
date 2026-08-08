@@ -1,5 +1,6 @@
-import fs from 'fs';
-import path from 'path';
+/// <reference types="node" />
+import * as fs from 'fs';
+import * as path from 'path';
 import * as XLSX from 'xlsx';
 import { Page, Locator } from '@playwright/test';
 
