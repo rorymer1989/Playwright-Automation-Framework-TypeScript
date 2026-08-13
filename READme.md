@@ -1050,7 +1050,7 @@ If you have ideas, suggestions, or technical feedback, feel free to open an issu
 
 GitHub:
 
-https://github.com/mrpathak20/Playwright-Automation-Framework
+https://github.com/mrpathak20/Playwright-Automation-Framework-TypeScript.git
 
 ---
 
