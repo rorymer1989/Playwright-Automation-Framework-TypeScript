@@ -1,4 +1,5 @@
 import type { Locator, Page } from "@playwright/test";
+import SoftAssertionUtilClass from "../utilities/softAssertionUtil";
 
 interface AssertionUtil {
     assertVisible(locator: Locator): Promise<void>;
@@ -9,9 +10,6 @@ interface AssertionUtil {
 
 interface SoftAssertionUtil {
 }
-
-const Assertion: AssertionUtil = require("../utils/assertionUtil");
-const SoftAssertionUtilClass: new () => SoftAssertionUtil = require("../utils/softAssertionUtil");
 
 export class Assertions {
 
@@ -24,21 +22,19 @@ export class Assertions {
     }
 
     async assertVisible(locator: Locator): Promise<void> {
-        await Assertion.assertVisible(locator);
+        throw new Error("Method not implemented.");
     }
 
     async assertHidden(locator: Locator): Promise<void> {
-        await Assertion.assertHidden(locator);
+        throw new Error("Method not implemented.");
     }
 
     async assertText(locator: Locator, expected: string): Promise<void> {
-        await Assertion.assertText(locator, expected);
+        throw new Error("Method not implemented.");
     }
 
     async assertURL(page: Page, url: string): Promise<void> {
-        await Assertion.assertURL(page, url);
+        throw new Error("Method not implemented.");
     }
 
 }
-
-module.exports = Assertions;
