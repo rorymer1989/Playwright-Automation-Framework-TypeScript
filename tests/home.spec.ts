@@ -9,7 +9,6 @@ interface HomeData {
 }
 
 test.describe("Playwright.dev — Home", () => {
-
     test.beforeEach(async ({ allure }) => {
         await allure.epic("Documentation site");
         await allure.feature("Home page");
@@ -26,7 +25,13 @@ test.describe("Playwright.dev — Home", () => {
         await assertion.assertVisible(homePage.getStartedLink, "Get started link is visible");
     });
 
-    test("Get started navigates to the installation docs", async ({ homePage, docsPage, assertion, data, page }) => {
+    test("Get started navigates to the installation docs", async ({
+        homePage,
+        docsPage,
+        assertion,
+        data,
+        page,
+    }) => {
         const home = data.load<HomeData>("home");
 
         await homePage.open();
@@ -38,7 +43,12 @@ test.describe("Playwright.dev — Home", () => {
         await assertion.assertText(docsPage.installationHeading, home.installationHeading);
     });
 
-    test("docs sidebar lists the getting-started links (soft assertions)", async ({ homePage, docsPage, assertion, data }) => {
+    test("docs sidebar lists the getting-started links (soft assertions)", async ({
+        homePage,
+        docsPage,
+        assertion,
+        data,
+    }) => {
         const home = data.load<HomeData>("home");
 
         await homePage.open();

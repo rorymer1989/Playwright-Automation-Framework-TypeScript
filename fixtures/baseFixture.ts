@@ -4,11 +4,13 @@ import { Assertions } from "./assertionFixture";
 import dataManager from "../utilities/dataManager";
 import allureUtil from "../reporting/allure/allureUtil";
 import stepUtil from "../reporting/allure/stepUtil";
-import { HomePage, DocsPage } from "../pages";
+import { HomePage, DocsPage, LoginPage, SecureAreaPage } from "../pages";
 
 interface CustomFixtures {
     homePage: HomePage;
     docsPage: DocsPage;
+    loginPage: LoginPage;
+    secureAreaPage: SecureAreaPage;
     actions: Actions;
     assertion: Assertions;
     data: typeof dataManager;
@@ -17,13 +19,33 @@ interface CustomFixtures {
 }
 
 export const test = base.extend<CustomFixtures>({
-    homePage: async ({ page }, use) => { await use(new HomePage(page)); },
-    docsPage: async ({ page }, use) => { await use(new DocsPage(page)); },
-    actions: async ({}, use) => { await use(new Actions()); },
-    assertion: async ({}, use) => { await use(new Assertions()); },
-    data: async ({}, use) => { await use(dataManager); },
-    allure: async ({}, use) => { await use(allureUtil); },
-    step: async ({}, use) => { await use(stepUtil.step.bind(stepUtil)); },
+    homePage: async ({ page }, use) => {
+        await use(new HomePage(page));
+    },
+    docsPage: async ({ page }, use) => {
+        await use(new DocsPage(page));
+    },
+    loginPage: async ({ page }, use) => {
+        await use(new LoginPage(page));
+    },
+    secureAreaPage: async ({ page }, use) => {
+        await use(new SecureAreaPage(page));
+    },
+    actions: async ({}, use) => {
+        await use(new Actions());
+    },
+    assertion: async ({}, use) => {
+        await use(new Assertions());
+    },
+    data: async ({}, use) => {
+        await use(dataManager);
+    },
+    allure: async ({}, use) => {
+        await use(allureUtil);
+    },
+    step: async ({}, use) => {
+        await use(stepUtil.step.bind(stepUtil));
+    },
 });
 
 export { expect } from "@playwright/test";

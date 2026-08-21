@@ -88,3 +88,4 @@ Return a structured result:
   "healingSuccessful": false,
   "reason": ""
 }
+```

@@ -1,11 +1,17 @@
 import { defineConfig, devices } from "@playwright/test";
 import path from "node:path";
-import { loadEnvironment, ENV } from "./config/environment";
+import { loadEnvironment, ENV, storageStatePath } from "./config/environment";
 
 // Loads config/environments/<TEST_ENV>.env (default: uat)
 loadEnvironment();
 
 const isCI = !!process.env.CI;
+
+const BROWSERS = [
+    { name: "chromium", device: "Desktop Chrome" },
+    { name: "firefox", device: "Desktop Firefox" },
+    { name: "webkit", device: "Desktop Safari" },
+] as const;
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -15,7 +21,7 @@ export default defineConfig({
     fullyParallel: true,
     forbidOnly: isCI,
     retries: isCI ? 2 : 0,
-    workers: process.env.PW_WORKERS ? Number(process.env.PW_WORKERS) : (isCI ? 2 : undefined),
+    workers: process.env.PW_WORKERS ? Number(process.env.PW_WORKERS) : isCI ? 2 : undefined,
     timeout: 60_000,
     expect: { timeout: 10_000 },
 
@@ -39,12 +45,28 @@ export default defineConfig({
     },
 
     projects: [
-        { name: "chromium", use: { ...devices["Desktop Chrome"] } },
-        { name: "firefox", use: { ...devices["Desktop Firefox"] } },
-        { name: "webkit", use: { ...devices["Desktop Safari"] } },
+        // Each browser gets its own `setup:<browser>` project that logs in once
+        // (tests/auth.setup.ts) with the SAME device profile and stores the state the
+        // browser project then reuses. See storageStatePath() for why it is per browser.
+        ...BROWSERS.flatMap(({ name, device }) => [
+            {
+                name: `setup:${name}`,
+                testMatch: /auth\.setup\.ts/,
+                use: { ...devices[device] },
+            },
+            {
+                name,
+                testIgnore: /.*\.api\.spec\.ts/,
+                dependencies: [`setup:${name}`],
+                use: { ...devices[device], storageState: storageStatePath(name) },
+            },
+        ]),
 
-        /* Mobile viewports */
-        // { name: "Mobile Chrome", use: { ...devices["Pixel 5"] } },
-        // { name: "Mobile Safari", use: { ...devices["iPhone 12"] } },
+        // API tests: no browser, baseURL points at the API
+        {
+            name: "api",
+            testMatch: /.*\.api\.spec\.ts/,
+            use: { baseURL: ENV.apiUrl },
+        },
     ],
 });

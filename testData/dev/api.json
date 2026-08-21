@@ -1,0 +1,5 @@
+{
+  "existingPostId": 1,
+  "existingUserId": 1,
+  "newPost": { "title": "Playwright framework", "body": "Created from the api project", "userId": 1 }
+}

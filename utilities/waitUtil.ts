@@ -24,8 +24,6 @@ export async function waitForPageReady(
 
     const selectors = [...DEFAULT_LOADER_SELECTORS, ...loaderSelectors];
     await Promise.all(
-        selectors.map((selector) =>
-            page.locator(selector).first().waitFor({ state: "hidden", timeout })
-        )
+        selectors.map((selector) => page.locator(selector).first().waitFor({ state: "hidden", timeout }))
     );
 }

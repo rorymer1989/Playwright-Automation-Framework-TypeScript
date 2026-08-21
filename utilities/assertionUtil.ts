@@ -2,7 +2,6 @@ import { expect } from "@playwright/test";
 import type { APIResponse, Locator, Page } from "@playwright/test";
 
 export class Assertion {
-
     /* ==========================
        Element Assertions
     ========================== */
@@ -157,16 +156,11 @@ export class Assertion {
         expect(response.status()).toBe(expectedStatus);
     }
 
-    static async assertJsonValue(
-        response: APIResponse,
-        key: string,
-        expectedValue: unknown
-    ): Promise<void> {
+    static async assertJsonValue(response: APIResponse, key: string, expectedValue: unknown): Promise<void> {
         const body: unknown = await response.json();
         if (typeof body !== "object" || body === null || !(key in body)) {
             throw new Error(`Response JSON does not contain key "${key}"`);
         }
         expect((body as Record<string, unknown>)[key]).toBe(expectedValue);
     }
-
 }

@@ -9,3 +9,6 @@ reports/
 *.zip
 .env
 .DS_Store
+
+# Authenticated browser state (tests/auth.setup.ts)
+.auth/

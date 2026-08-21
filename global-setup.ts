@@ -2,18 +2,13 @@ import fs from "node:fs";
 import path from "node:path";
 import { printExecutionDashboard } from "./utilities/dashboardUtil";
 
-export default async function globalSetup(): Promise<void> {
+export default function globalSetup(): void {
     printExecutionDashboard();
     console.log("\n========================================");
     console.log("🚀 Playwright Framework Initialization");
     console.log("========================================");
 
-    const folders = [
-        "allure-results",
-        "allure-report",
-        "playwright-report",
-        "test-results"
-    ];
+    const folders = ["allure-results", "allure-report", "playwright-report", "test-results"];
 
     folders.forEach((folder: string) => {
         const folderPath = path.join(process.cwd(), folder);

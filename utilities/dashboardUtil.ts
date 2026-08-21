@@ -2,12 +2,11 @@ import os from "os";
 import { EXECUTION_CONFIG } from "../config/executionConfig";
 
 export function printExecutionDashboard(): void {
-
     const now = new Date();
 
     const startedAt = now.toLocaleString("en-IN", {
         dateStyle: "medium",
-        timeStyle: "medium"
+        timeStyle: "medium",
     });
 
     console.log(`
@@ -39,5 +38,4 @@ Started At        : ${startedAt}
 
 ══════════════════════════════════════════════════════════════════════
 `);
-
 }

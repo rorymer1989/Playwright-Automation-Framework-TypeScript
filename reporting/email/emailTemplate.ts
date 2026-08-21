@@ -12,7 +12,6 @@ export interface EmailSummary {
 }
 
 export function generateEmailTemplate(summary: EmailSummary): string {
-
     return `
 
 <!DOCTYPE html>
@@ -228,5 +227,4 @@ Regards,
 </html>
 
 `;
-
 }

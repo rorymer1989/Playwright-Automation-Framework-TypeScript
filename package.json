@@ -16,21 +16,33 @@
     "test:firefox": "sh scripts/clean-snap-env.sh playwright test --project=firefox",
     "test:webkit": "sh scripts/clean-snap-env.sh playwright test --project=webkit",
     "report:email": "tsx scripts/send-report.ts",
-    "report:zip": "tsx scripts/zip-reports.ts"
+    "report:zip": "tsx scripts/zip-reports.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "npm run typecheck && npm run lint && npm run format:check",
+    "test:api": "sh scripts/clean-snap-env.sh playwright test --project=api"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.62.1",
     "@types/archiver": "^8.0.0",
     "@types/node": "^26.1.2",
     "@types/nodemailer": "^8.0.1",
     "allure-commandline": "^2.43.0",
     "allure-playwright": "^3.10.2",
+    "eslint": "^10.9.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-playwright": "^2.11.0",
+    "prettier": "^3.9.6",
     "tsx": "^4.23.12",
-    "typescript": "^7.0.2"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.67.0"
   },
   "dependencies": {
     "@faker-js/faker": "^10.5.0",

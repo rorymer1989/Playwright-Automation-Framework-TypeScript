@@ -1,15 +1,15 @@
+import type { Locator, Page } from "@playwright/test";
 import { smartClick } from "../utilities/clickUtil";
 import { smartFill } from "../utilities/fillUtil";
-import { waitForPageReady } from "../utilities/waitUtil";
-import type { Locator, Page } from "@playwright/test";
+import { waitForPageReady, type WaitForPageReadyOptions } from "../utilities/waitUtil";
 
-export interface ActionsInterface {
-    smartClick(locator: Locator): Promise<void>;
-    smartFill(locator: Locator, value: string): Promise<void>;
-    waitForPageReady(page: Page): Promise<void>;
-}
-
-export class Actions implements ActionsInterface {
+/**
+ * `actions` fixture: the single entry point for element interactions.
+ * Click/fill go through the smart* utilities (retry + verification); the rest
+ * are thin wrappers over Playwright's auto-waiting Locator API.
+ */
+export class Actions {
+    // ---- Click / type -------------------------------------------------
 
     async smartClick(locator: Locator): Promise<void> {
         await smartClick(locator);
@@ -19,8 +19,60 @@ export class Actions implements ActionsInterface {
         await smartFill(locator, value);
     }
 
-    async waitForPageReady(page: Page): Promise<void> {
-        await waitForPageReady(page);
+    async forceClick(locator: Locator): Promise<void> {
+        await locator.click({ force: true });
     }
 
+    async doubleClick(locator: Locator): Promise<void> {
+        await locator.dblclick();
+    }
+
+    async rightClick(locator: Locator): Promise<void> {
+        await locator.click({ button: "right" });
+    }
+
+    async hover(locator: Locator): Promise<void> {
+        await locator.hover();
+    }
+
+    async pressKey(locator: Locator, key: string): Promise<void> {
+        await locator.press(key);
+    }
+
+    // ---- Form controls --------------------------------------------------
+
+    async selectByValue(locator: Locator, value: string): Promise<void> {
+        await locator.selectOption(value);
+    }
+
+    async selectByLabel(locator: Locator, label: string): Promise<void> {
+        await locator.selectOption({ label });
+    }
+
+    /** Idempotent: only toggles when needed. */
+    async setChecked(locator: Locator, checked: boolean): Promise<void> {
+        await locator.setChecked(checked);
+    }
+
+    async uploadFile(locator: Locator, filePath: string | string[]): Promise<void> {
+        await locator.setInputFiles(filePath);
+    }
+
+    // ---- Scroll / wait --------------------------------------------------
+
+    async scrollIntoView(locator: Locator): Promise<void> {
+        await locator.scrollIntoViewIfNeeded();
+    }
+
+    async waitForPageReady(page: Page, options?: WaitForPageReadyOptions): Promise<void> {
+        await waitForPageReady(page, options);
+    }
+
+    async waitForVisible(locator: Locator, timeout?: number): Promise<void> {
+        await locator.waitFor({ state: "visible", timeout });
+    }
+
+    async waitForHidden(locator: Locator, timeout?: number): Promise<void> {
+        await locator.waitFor({ state: "hidden", timeout });
+    }
 }
