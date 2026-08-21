@@ -1,10 +1,20 @@
 import fs from "node:fs";
 import path from "node:path";
 import { printExecutionDashboard } from "./utilities/dashboardUtil";
+import { preflight } from "./utilities/preflight";
+import { ENV } from "./config/environment";
 import { logger } from "./utilities/logger";
 
-export default function globalSetup(): void {
+export default async function globalSetup(): Promise<void> {
     printExecutionDashboard();
+
+    await preflight([
+        { name: "BASE_URL", url: ENV.baseUrl },
+        { name: "AUTH_URL", url: ENV.authUrl },
+        { name: "SHOP_URL", url: ENV.shopUrl },
+        { name: "API_URL", url: ENV.apiUrl },
+    ]);
+
     logger.section("🚀 Playwright Framework Initialization");
 
     const folders = ["allure-results", "allure-report", "playwright-report", "test-results"];

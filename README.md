@@ -31,10 +31,11 @@ The framework provides a structured foundation for building and maintaining larg
 
 # 🚀 What's New
 
-## v1.9.0 — E-commerce Reference Suite
+## v1.10.0 — Failure Paths, Preflight & Excel
 
-- **`tests/shop/`**: a complete, data-driven suite over saucedemo.com (login, catalogue, cart, checkout with totals) showing every framework piece working together.
-- `pages/shop/` page objects on `data-test` ids, grouped `shop` fixture, multi-app auth setup.
+- **Failure-paths demo** (`DEMO_FAILURES=1`): proves traces/videos/screenshots, retries → flaky, soft aggregation, real visual diffs and red emails — locally and in CI.
+- **Environment preflight**: unreachable URLs fail the run in seconds, not per test.
+- **Excel data-driven checkout** over `testData/<env>/checkout-customers.xlsx`.
 
 Full details in [CHANGELOG.md](CHANGELOG.md).
 
@@ -204,7 +205,7 @@ Environment       : UAT
 Browser           : Chromium
 Platform          : darwin
 Node Version      : v24.x
-Framework Version : v1.9.1
+Framework Version : v1.10.0
 Base URL          : https://example.com
 ```
 
@@ -381,7 +382,7 @@ Example:
 
 🚀 Playwright Automation Framework
 
-Framework Version : v1.9.1
+Framework Version : v1.10.0
 
 Environment       : UAT
 
@@ -488,6 +489,31 @@ npm run test:visual:local     # host run, informational: fonts differ from CI
 ```
 
 CI runs the `visual` job in the same image; diffs are uploaded as artifacts on failure.
+
+---
+
+# 🧨 Failure Paths Demo
+
+`tests/demo/failures.spec.ts` contains **controlled failures** (hard, soft ×3, flaky-then-pass, real visual diff with saucedemo's `problem_user`, timeout) to prove the failure side of the framework: traces/videos/screenshots, retries → _flaky_, soft aggregation, `expected/actual/diff` images, Allure categories and a red email. They are skipped unless opted in:
+
+```bash
+npm run test:demo-failures                                   # chromium, 1 retry — expected to fail
+DEMO_FAILURES=1 VISUAL_TESTS=tests/demo npm run test:visual  # the visual diff, rendered in Docker
+```
+
+In CI: _Run workflow_ → tick **demo_failures**. Baseline for the visual case: `DEMO_FAILURES=1 VISUAL_BASELINE_USER=standard VISUAL_TESTS=tests/demo sh scripts/visual-docker.sh --update-snapshots`.
+
+---
+
+# 🚦 Environment Preflight
+
+`global-setup` GETs every configured URL (`BASE_URL`, `AUTH_URL`, `SHOP_URL`, `API_URL`) and **fails fast** listing the unreachable ones, instead of letting every test time out (e.g. `TEST_ENV=prod` with placeholder hosts fails in ~5 s). `SKIP_PREFLIGHT=1` bypasses it.
+
+---
+
+# 📑 Excel Data-Driven Example
+
+`tests/shop/checkout-excel.spec.ts` runs one checkout per row flagged `executor=Y` in `testData/<env>/checkout-customers.xlsx` (edit `scripts/generate-excel-data.ts`, then `npm run data:excel`).
 
 ---
 
@@ -613,7 +639,7 @@ Playwright-Automation-Framework-TypeScript
 │   ├── actionFixture.ts
 │   └── assertionFixture.ts
 ├── pages                              # BasePage, HomePage, DocsPage, LoginPage, SecureAreaPage, shop/
-├── tests                              # *.spec.ts, auth/, shop/, api/, a11y/, visual/ (+__snapshots__), unit/, auth.setup.ts
+├── tests                              # *.spec.ts, auth/, shop/, api/, a11y/, visual/, demo/ (+__snapshots__), unit/, auth.setup.ts
 ├── testData/<env>/*.json              # environment-aware test data
 ├── utilities                          # + logger.ts
 │   ├── assertionUtil.ts  softAssertionUtil.ts
@@ -975,6 +1001,12 @@ The goal is to gradually evolve the framework toward **AI-enabled intelligent QA
 # 📦 Release History
 
 See [CHANGELOG.md](CHANGELOG.md) for the complete list.
+
+## 🚀 v1.10.0 — Failure Paths, Preflight & Excel
+
+- `tests/demo/failures.spec.ts` (opt-in), `utilities/preflight.ts`, `tests/shop/checkout-excel.spec.ts`
+
+---
 
 ## 🩹 v1.9.1 — Email reporting fixes
 
