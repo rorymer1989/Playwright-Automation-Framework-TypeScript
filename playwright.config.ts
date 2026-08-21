@@ -28,8 +28,6 @@ const MOBILE = [
  */
 export default defineConfig({
     testDir: "./tests",
-    // tests/seed.spec.ts is the template for Playwright Test Agents, not a test
-    testIgnore: /seed\.spec\.ts/,
     fullyParallel: true,
     forbidOnly: isCI,
     retries: isCI ? 2 : 0,
@@ -103,6 +101,16 @@ export default defineConfig({
                 use: { ...devices[device], storageState: storageStatePath(name) },
             },
         ]),
+
+        // Template for the Playwright Test Agents (planner/generator/healer). The MCP
+        // `*_setup_page` tools run this file to open an authenticated page, so it must be
+        // discoverable by a project; CI never selects it (matrix runs by --project).
+        {
+            name: "seed",
+            testMatch: /seed\.spec\.ts/,
+            dependencies: ["setup:chromium"],
+            use: { ...devices["Desktop Chrome"], storageState: storageStatePath("chromium") },
+        },
 
         // Unit tests of framework utilities: no browser, no network
         { name: "unit", testMatch: /.*\.unit\.spec\.ts/ },
