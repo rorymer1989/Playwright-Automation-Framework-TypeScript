@@ -31,9 +31,9 @@ The framework provides a structured foundation for building and maintaining larg
 
 # 🚀 What's New
 
-## v1.14.0 — Official Playwright Test Agents
+## v1.15.0 — Typed API Layer, CLAUDE.md & Nightly CI
 
-- Planner / generator / healer from `npx playwright init-agents`, bound by repository rules and fed by a framework-compliant seed; `/jira-test` and `/heal` delegate to them.
+- `api/` typed clients + `api` fixture (usable from browser suites to seed via API), `CLAUDE.md` entry point for Claude Code, nightly CI with PR concurrency, Spec Kit backfill for every `tests/shop/` suite.
 
 Full details in [CHANGELOG.md](CHANGELOG.md).
 
@@ -203,7 +203,7 @@ Environment       : UAT
 Browser           : Chromium
 Platform          : darwin
 Node Version      : v24.x
-Framework Version : v1.14.0
+Framework Version : v1.15.0
 Base URL          : https://example.com
 ```
 
@@ -380,7 +380,7 @@ Example:
 
 🚀 Playwright Automation Framework
 
-Framework Version : v1.14.0
+Framework Version : v1.15.0
 
 Environment       : UAT
 
@@ -1058,6 +1058,12 @@ The goal is to gradually evolve the framework toward **AI-enabled intelligent QA
 # 📦 Release History
 
 See [CHANGELOG.md](CHANGELOG.md) for the complete list.
+
+## 🚀 v1.15.0 — Typed API Layer, CLAUDE.md & Nightly CI
+
+- `api/`, `api` fixture, `CLAUDE.md`, nightly + concurrency in `playwright.yml`, `specs/002…007`
+
+---
 
 ## 🚀 v1.14.0 — Official Playwright Test Agents
 
