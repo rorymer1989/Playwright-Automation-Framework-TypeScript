@@ -407,16 +407,17 @@ This provides immediate visibility into the execution context.
 
 ---
 
-# 🌐 Cross-Browser Testing
+# 🌐 Cross-Browser & Mobile Testing
 
-The framework supports Playwright browser projects including:
+| Project         | Device          | Scope                            | Script                  |
+| --------------- | --------------- | -------------------------------- | ----------------------- |
+| `chromium`      | Desktop Chrome  | all UI suites                    | `npm run test:chromium` |
+| `firefox`       | Desktop Firefox | all UI suites                    | `npm run test:firefox`  |
+| `webkit`        | Desktop Safari  | all UI suites                    | `npm run test:webkit`   |
+| `mobile-chrome` | Pixel 7         | `tests/shop/` (e-commerce suite) | `npm run test:mobile`   |
+| `mobile-safari` | iPhone 15       | `tests/shop/` (e-commerce suite) | `npm run test:mobile`   |
 
-| Browser  | Supported |
-| -------- | --------- |
-| Chromium | ✅        |
-| Chrome   | ✅        |
-| Firefox  | ✅        |
-| WebKit   | ✅        |
+Every UI project has its own `setup:<project>` that logs in with the same device profile and stores `.auth/<project>.json`. Mobile projects are scoped to the responsive e-commerce suite: visual baselines are desktop-only and the docs/auth demos are not mobile targets. CI runs both mobile projects as extra matrix entries.
 
 Browser configuration can be maintained through the Playwright configuration.
 

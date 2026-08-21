@@ -14,6 +14,16 @@ const BROWSERS = [
 ] as const;
 
 /**
+ * Mobile emulation (Chromium + WebKit engines). Scoped to the e-commerce suite:
+ * visual baselines are desktop-only and the docs/auth demos are not responsive targets.
+ * Run with `npm run test:mobile`; CI runs them as two extra matrix entries.
+ */
+const MOBILE = [
+    { name: "mobile-chrome", device: "Pixel 7" },
+    { name: "mobile-safari", device: "iPhone 15" },
+] as const;
+
+/**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
@@ -75,6 +85,20 @@ export default defineConfig({
             {
                 name,
                 testIgnore: /(\.(api|unit)\.spec\.ts|seed\.spec\.ts)$/,
+                dependencies: [`setup:${name}`],
+                use: { ...devices[device], storageState: storageStatePath(name) },
+            },
+        ]),
+
+        ...MOBILE.flatMap(({ name, device }) => [
+            {
+                name: `setup:${name}`,
+                testMatch: /auth\.setup\.ts/,
+                use: { ...devices[device] },
+            },
+            {
+                name,
+                testMatch: /tests\/shop\/.*\.spec\.ts/,
                 dependencies: [`setup:${name}`],
                 use: { ...devices[device], storageState: storageStatePath(name) },
             },

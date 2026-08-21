@@ -15,6 +15,7 @@
     "test:prod": "TEST_ENV=prod sh scripts/clean-snap-env.sh playwright test",
     "test:firefox": "sh scripts/clean-snap-env.sh playwright test --project=firefox",
     "test:webkit": "sh scripts/clean-snap-env.sh playwright test --project=webkit",
+    "test:mobile": "sh scripts/clean-snap-env.sh playwright test --project=mobile-chrome --project=mobile-safari",
     "report:email": "tsx scripts/send-report.ts",
     "report:zip": "tsx scripts/zip-reports.ts",
     "lint": "eslint .",

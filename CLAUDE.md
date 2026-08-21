@@ -23,7 +23,7 @@ Playwright Test + TypeScript (strict, CommonJS) framework: Page Object Model + c
 
 - New feature/story: `/jira-test SCRUM-<n>` (or `/speckit-specify` → `/speckit-plan` → `/speckit-tasks` → `/speckit-implement`) on branch `feat/SCRUM-<n>`; `specs/<NNN-slug>/{spec,plan,tasks}.md` must exist for every suite under `tests/shop/`.
 - Broken locator: `/heal tests/<area>/<spec>.spec.ts[:line]` → delegates to `.claude/agents/playwright-test-healer.md`, review its diff.
-- Before any commit: `npm run check` and `npx playwright test --project=unit`. Then chromium first, then firefox and webkit.
+- Before any commit: `npm run check` and `npx playwright test --project=unit`. Then chromium first, then firefox and webkit (and `npm run test:mobile` for `tests/shop/` changes).
 - Commits prefixed with the story key. Pushing, opening or merging PRs only on a human instruction.
 
 ## Useful commands
@@ -31,7 +31,7 @@ Playwright Test + TypeScript (strict, CommonJS) framework: Page Object Model + c
 ```
 npm test                         # full local run (3 browsers + api + unit)
 npm run test:story -- "@SCRUM-9" # one story
-npm run test:chromium / :firefox / :webkit / :api / :unit / :a11y
+npm run test:chromium / :firefox / :webkit / :mobile / :api / :unit / :a11y
 npm run test:visual              # visual regression inside the official Docker image
 npm run check                    # typecheck + eslint + prettier
 npm run jira:story -- SCRUM-9    # fetch a story; npm run jira:bugs raises bugs from test-result.json
