@@ -17,7 +17,7 @@ No `waitForTimeout`, no `networkidle`, no manual retry loops over Playwright's a
 Assertions go through the `assertion` fixture (hard) or `assertion.soft` (soft), which render as boxed `test.step`s. Multi-step flows use the `step` fixture. Framework output goes through `utilities/logger.ts` (`LOG_LEVEL`); `console.*` is forbidden outside it. Every failure MUST leave a trace, video and screenshot (config already does this) and be reportable to Jira by `npm run jira:bugs` without manual edits.
 
 ### V. Quality Gates Are Mandatory
-`npm run check` (strict TypeScript, type-checked ESLint with Playwright rules, Prettier) and the `unit` project MUST pass before any commit. Pure utilities get unit tests in `tests/unit/`. Visual baselines are generated only inside the official Playwright Docker image (`npm run test:visual:update`). CI runs the full matrix; a change is done when CI is green.
+`npm run check` (strict TypeScript, type-checked ESLint with Playwright rules, Prettier) and the `unit` project MUST pass before any commit. Pure utilities get unit tests in `tests/unit/`. Visual baselines are generated only inside the official Playwright Docker image (`npm run test:visual:update`). CI runs the full matrix; a change is done when CI is green. A test that passes only after a retry is **flaky** and fails the `merge-reports` gate (`FLAKY_BUDGET`, default 0): retries exist for reporting, never as a pass condition — fix the cause or quarantine with a linked issue.
 
 ## Security & Data
 
@@ -34,4 +34,4 @@ Secrets (`.env`: `EMAIL_*`, `JIRA_*`) never enter version control, `.env.example
 
 This constitution supersedes ad-hoc practices. Amendments are made by pull request that updates this file, `AI/config/ai-rules.md` and, when structure changes, `AI/context/framework-context.md`, with a CHANGELOG entry. Every plan and PR review MUST verify compliance with Principles I–V; deviations require a written justification in the plan's Complexity Tracking section.
 
-**Version**: 1.0.0 | **Ratified**: 2026-08-21 | **Last Amended**: 2026-08-21
+**Version**: 1.1.0 | **Ratified**: 2026-08-21 | **Last Amended**: 2026-08-21

@@ -14,7 +14,7 @@ Playwright Test + TypeScript (strict, CommonJS) framework: Page Object Model + c
 - API calls through the `api` fixture (`api/` typed clients: `api.posts`, `api.users`); add a client per resource, never raw URLs in tests.
 - Assertions through the `assertion` fixture (`assertion.soft.*` for soft); multi-step flows through `step`.
 - Locator priority: `getByRole` → `getByLabel` → `getByPlaceholder` → `getByTestId` (`data-test`) → `getByText` → CSS → XPath. Discover locators on the live app (Playwright MCP); never guess.
-- No `waitForTimeout`, `networkidle`, manual retry loops or `console.*` (use `utilities/logger.ts`).
+- No `waitForTimeout`, `networkidle`, manual retry loops or `console.*` (use `utilities/logger.ts`). A test that passes only on retry is flaky and fails the CI gate (`FLAKY_BUDGET` = 0): fix the cause, never rely on retries.
 - Environment URLs/credentials only from `config/environments/*.env` and `testData/<env>/`; never hard-code.
 - Tests start authenticated via `storageState`; login tests opt out with `test.use({ storageState: { cookies: [], origins: [] } })`.
 - Do not modify `playwright.config.ts`, `config/`, `.github/`, secrets or existing utilities without an explicit human instruction. Never weaken an assertion to make a test pass.
@@ -34,6 +34,7 @@ npm run test:story -- "@SCRUM-9" # one story
 npm run test:chromium / :firefox / :webkit / :mobile / :api / :unit / :a11y
 npm run test:visual              # visual regression inside the official Docker image
 npm run check                    # typecheck + eslint + prettier
+npm run report:flaky             # flaky gate over test-result.json (FLAKY_BUDGET, default 0)
 npm run jira:story -- SCRUM-9    # fetch a story; npm run jira:bugs raises bugs from test-result.json
 ```
 

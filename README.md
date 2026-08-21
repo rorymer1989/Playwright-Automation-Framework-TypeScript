@@ -587,6 +587,7 @@ check (typecheck · lint · format · unit)
 - Each shard installs only its browser and uploads a **blob** report; `merge-reports` produces one `playwright-report` artifact plus the Allure report, with the trend history carried across runs through the Actions cache.
 - `workflow_dispatch` lets you pick `TEST_ENV`.
 - A unit test (`tests/unit/ciConfig.unit.spec.ts`) fails if the Docker image tag in the workflow drifts from `@playwright/test`.
+- **Flaky policy** — `merge-reports` runs `npm run report:flaky` on the merged `test-result.json`: every test that passed only after a retry is listed in the job summary and the job **fails when the count exceeds `FLAKY_BUDGET`** (repository variable, default `0`). Retries keep the run green for reporting, but a flaky test never merges silently: fix it or quarantine it with a linked issue instead of raising the budget. Locally: `npm run report:flaky` after any run (`FLAKY_BUDGET=2` to relax).
 - **Closing the loop** (on `push` to `main` and manual runs, never on PRs): `merge-reports` also builds a merged `test-result.json`, raises de-duplicated **Jira bugs** for failed tests (`npm run jira:bugs`) and **emails** the summary with a link to the run. Both steps are skipped unless the repository secrets exist: `JIRA_BASE_URL`, `JIRA_EMAIL`, `JIRA_API_TOKEN` (+ optional variable `JIRA_PROJECT_KEY`) and `EMAIL_FROM`, `EMAIL_PASSWORD`, `EMAIL_TO` (+ optional `EMAIL_SERVICE`). Set them with `gh secret set NAME`.
 
 ---
