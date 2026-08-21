@@ -31,12 +31,20 @@ export default defineConfig({
     snapshotPathTemplate:
         "{testDir}/{testFileDir}/__snapshots__/{testFileName}/{arg}-{projectName}-{platform}{ext}",
 
-    reporter: [
-        ["list"],
-        ["html", { outputFolder: "playwright-report", open: "never" }],
-        ["json", { outputFile: "test-result.json" }],
-        ["allure-playwright", { resultsDir: "allure-results" }],
-    ],
+    // CI shards emit a blob each; the merge-reports job turns them into one HTML report.
+    reporter: isCI
+        ? [
+              ["list"],
+              ["blob", { outputDir: "blob-report" }],
+              ["json", { outputFile: "test-result.json" }],
+              ["allure-playwright", { resultsDir: "allure-results" }],
+          ]
+        : [
+              ["list"],
+              ["html", { outputFolder: "playwright-report", open: "never" }],
+              ["json", { outputFile: "test-result.json" }],
+              ["allure-playwright", { resultsDir: "allure-results" }],
+          ],
 
     globalSetup: path.join(__dirname, "global-setup.ts"),
     globalTeardown: path.join(__dirname, "global-teardown.ts"),

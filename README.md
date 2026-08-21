@@ -476,6 +476,21 @@ CI runs the `visual` job in the same image; diffs are uploaded as artifacts on f
 
 ---
 
+# ⚙️ CI Pipeline
+
+```
+check (typecheck · lint · format · unit)
+  ├── test   matrix: chromium | firefox | webkit  × shard 1/2, 2/2   +  api
+  └── visual (official Playwright image)
+        └── merge-reports: blob → single HTML report · Allure report
+```
+
+- Each shard installs only its browser and uploads a **blob** report; `merge-reports` produces one `playwright-report` artifact plus the Allure report.
+- `workflow_dispatch` lets you pick `TEST_ENV`.
+- A unit test (`tests/unit/ciConfig.unit.spec.ts`) fails if the Docker image tag in the workflow drifts from `@playwright/test`.
+
+---
+
 # 🪵 Logging
 
 Framework output (banner, setup/teardown, reporting) goes through `utilities/logger.ts` and is controlled by `LOG_LEVEL` (`silent` | `error` | `warn` | `info` | `debug`, default `info`):
