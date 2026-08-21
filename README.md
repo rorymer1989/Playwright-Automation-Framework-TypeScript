@@ -31,10 +31,9 @@ The framework provides a structured foundation for building and maintaining larg
 
 # 🚀 What's New
 
-## v1.13.0 — Spec-Driven with GitHub Spec Kit
+## v1.14.0 — Official Playwright Test Agents
 
-- **Constitution** (`.specify/memory/constitution.md`) as the single binding rulebook for humans and AI agents; specs/plans/tasks versioned under `specs/`.
-- **`/jira-test`** now runs the Spec Kit workflow (specify → plan → tasks → implement); **`/heal`** repairs broken locators with validated candidates.
+- Planner / generator / healer from `npx playwright init-agents`, bound by repository rules and fed by a framework-compliant seed; `/jira-test` and `/heal` delegate to them.
 
 Full details in [CHANGELOG.md](CHANGELOG.md).
 
@@ -204,7 +203,7 @@ Environment       : UAT
 Browser           : Chromium
 Platform          : darwin
 Node Version      : v24.x
-Framework Version : v1.13.0
+Framework Version : v1.14.0
 Base URL          : https://example.com
 ```
 
@@ -381,7 +380,7 @@ Example:
 
 🚀 Playwright Automation Framework
 
-Framework Version : v1.13.0
+Framework Version : v1.14.0
 
 Environment       : UAT
 
@@ -502,6 +501,14 @@ The repo is a [Spec Kit](https://github.com/github/spec-kit) project. `.specify/
 | `/heal tests/shop/login.spec.ts`                                            | Self-healing of a broken locator: classify → discover on the live page → validate candidates (role → label → placeholder → test-id → text → CSS) → propose a diff for approval |
 
 Example: `specs/001-product-detail/` (SCRUM-22) → `tests/shop/product-detail.spec.ts`.
+
+### Official Playwright Test Agents
+
+`npx playwright init-agents --loop=claude` installed the official **planner / generator / healer** agents (`.claude/agents/`) and the `playwright-test` MCP server (`.mcp.json`). They explore and verify against a real browser. Integration points:
+
+- `tests/seed.spec.ts` is the template every generated test inherits (framework fixture, `shop` page objects, `@KEY` tag) — keep it compiling; it is excluded from the run.
+- Each agent definition ends with a binding **Repository rules** section (reuse, locator priority, no `networkidle`/`waitForTimeout`, never weaken assertions or `test.fixme()`).
+- `/jira-test` delegates exploration to the planner and per-scenario generation to the generator; `/heal` delegates to the healer and reviews its diff.
 
 ---
 
@@ -1041,6 +1048,12 @@ The goal is to gradually evolve the framework toward **AI-enabled intelligent QA
 # 📦 Release History
 
 See [CHANGELOG.md](CHANGELOG.md) for the complete list.
+
+## 🚀 v1.14.0 — Official Playwright Test Agents
+
+- `.claude/agents/playwright-test-*`, `.mcp.json`, `tests/seed.spec.ts`
+
+---
 
 ## 🚀 v1.13.0 — Spec-Driven with GitHub Spec Kit
 
