@@ -31,12 +31,11 @@ The framework provides a structured foundation for building and maintaining larg
 
 # 🚀 What's New
 
-## v1.4.0 — Quality Gates, Authentication & API
+## v1.5.0 — Lean Actions & Framework Unit Tests
 
-- **Authentication via `storageState`**: login once per browser, every UI test starts authenticated.
-- **API testing project** with the built-in `request` fixture and API assertions.
-- **ESLint + Prettier** (type-checked, Playwright rules) enforced in CI with `npm run check`.
-- `ActionUtility` removed; the `actions` fixture is the single interaction layer.
+- **`smartClick` / `smartFill` simplified**: thin wrappers over Playwright's auto-waiting API, no manual retry loops; `smartFill` keeps an auto-retrying value check.
+- **Unit tests of the framework utilities** (`unit` project, 18 tests) run with `npm test` and in CI.
+- `Fakerutility.ts` → `fakerUtil.ts`, now used by the API example.
 
 Full details in [CHANGELOG.md](CHANGELOG.md).
 
@@ -206,7 +205,7 @@ Environment       : UAT
 Browser           : Chromium
 Platform          : darwin
 Node Version      : v24.x
-Framework Version : v1.4.0
+Framework Version : v1.5.0
 Base URL          : https://example.com
 ```
 
@@ -383,7 +382,7 @@ Example:
 
 🚀 Playwright Automation Framework
 
-Framework Version : v1.4.0
+Framework Version : v1.5.0
 
 Environment       : UAT
 
@@ -877,6 +876,14 @@ The goal is to gradually evolve the framework toward **AI-enabled intelligent QA
 # 📦 Release History
 
 See [CHANGELOG.md](CHANGELOG.md) for the complete list.
+
+## 🚀 v1.5.0 — Lean Actions & Framework Unit Tests
+
+- `smartClick` / `smartFill` without manual waits or retry loops
+- `unit` project with tests for `retryUtil`, `dataManager`, `excelUtil`, `executionSummary`
+- `fakerUtil` naming aligned and in use
+
+---
 
 ## 🚀 v1.4.0 — Quality Gates, Authentication & API
 
