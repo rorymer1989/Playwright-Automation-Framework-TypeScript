@@ -1,3 +1,4 @@
+import { logger } from "./logger";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -26,7 +27,7 @@ export class DataManager {
         }
 
         if (!this.cache.has(filePath)) {
-            console.log(`Loading Test Data: ${filePath}`);
+            logger.debug(`Loading test data: ${filePath}`);
             this.cache.set(filePath, JSON.parse(fs.readFileSync(filePath, "utf8")));
         }
 

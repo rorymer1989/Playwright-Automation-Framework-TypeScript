@@ -1,120 +1,101 @@
-import { expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import type { APIResponse, Locator, Page } from "@playwright/test";
 
+/**
+ * Hard assertions, each wrapped in a `test.step` so the intent shows up in the
+ * HTML/Allure report and trace viewer instead of stdout. `box: true` makes a
+ * failure point at the caller's line rather than at this helper.
+ */
+async function step(title: string, assertion: () => Promise<void> | void): Promise<void> {
+    await test.step(title, assertion, { box: true });
+}
+
 export class Assertion {
-    /* ==========================
-       Element Assertions
-    ========================== */
+    /* ---- Element ----------------------------------------------------- */
 
-    static async assertVisible(locator: Locator, message = "Element should be visible"): Promise<void> {
-        console.log(` ${message}`);
-        await expect(locator).toBeVisible();
+    static assertVisible(locator: Locator, message = "Element should be visible"): Promise<void> {
+        return step(message, () => expect(locator).toBeVisible());
     }
 
-    static async assertHidden(locator: Locator, message = "Element should be hidden"): Promise<void> {
-        console.log(`${message}`);
-        await expect(locator).toBeHidden();
+    static assertHidden(locator: Locator, message = "Element should be hidden"): Promise<void> {
+        return step(message, () => expect(locator).toBeHidden());
     }
 
-    static async assertEnabled(locator: Locator, message = "Element should be enabled"): Promise<void> {
-        console.log(`${message}`);
-        await expect(locator).toBeEnabled();
+    static assertEnabled(locator: Locator, message = "Element should be enabled"): Promise<void> {
+        return step(message, () => expect(locator).toBeEnabled());
     }
 
-    static async assertDisabled(locator: Locator, message = "Element should be disabled"): Promise<void> {
-        console.log(`${message}`);
-        await expect(locator).toBeDisabled();
+    static assertDisabled(locator: Locator, message = "Element should be disabled"): Promise<void> {
+        return step(message, () => expect(locator).toBeDisabled());
     }
 
-    static async assertEditable(locator: Locator, message = "Element should be editable"): Promise<void> {
-        console.log(`${message}`);
-        await expect(locator).toBeEditable();
+    static assertEditable(locator: Locator, message = "Element should be editable"): Promise<void> {
+        return step(message, () => expect(locator).toBeEditable());
     }
 
-    static async assertChecked(locator: Locator, message = "Checkbox should be checked"): Promise<void> {
-        console.log(`${message}`);
-        await expect(locator).toBeChecked();
+    static assertChecked(locator: Locator, message = "Checkbox should be checked"): Promise<void> {
+        return step(message, () => expect(locator).toBeChecked());
     }
 
-    static async assertFocused(locator: Locator, message = "Element should be focused"): Promise<void> {
-        console.log(`${message}`);
-        await expect(locator).toBeFocused();
+    static assertFocused(locator: Locator, message = "Element should be focused"): Promise<void> {
+        return step(message, () => expect(locator).toBeFocused());
     }
 
-    /* ==========================
-       Text Assertions
-    ========================== */
+    /* ---- Text -------------------------------------------------------- */
 
-    static async assertText(locator: Locator, expectedText: string | RegExp): Promise<void> {
-        console.log(`Validating text : ${expectedText}`);
-        await expect(locator).toHaveText(expectedText);
+    static assertText(locator: Locator, expected: string | RegExp): Promise<void> {
+        return step(`Text should be ${String(expected)}`, () => expect(locator).toHaveText(expected));
     }
 
-    static async assertContainsText(locator: Locator, expectedText: string | RegExp): Promise<void> {
-        console.log(`Validating partial text : ${expectedText}`);
-        await expect(locator).toContainText(expectedText);
+    static assertContainsText(locator: Locator, expected: string | RegExp): Promise<void> {
+        return step(`Text should contain ${String(expected)}`, () => expect(locator).toContainText(expected));
     }
 
-    static async assertValue(locator: Locator, expectedValue: string | RegExp): Promise<void> {
-        console.log(`Validating input value`);
-        await expect(locator).toHaveValue(expectedValue);
+    static assertValue(locator: Locator, expected: string | RegExp): Promise<void> {
+        return step(`Value should be ${String(expected)}`, () => expect(locator).toHaveValue(expected));
     }
 
-    static async assertPlaceholder(locator: Locator, placeholder: string | RegExp): Promise<void> {
-        console.log(`Validating placeholder`);
-        await expect(locator).toHaveAttribute("placeholder", placeholder);
+    static assertPlaceholder(locator: Locator, placeholder: string | RegExp): Promise<void> {
+        return step(`Placeholder should be ${String(placeholder)}`, () =>
+            expect(locator).toHaveAttribute("placeholder", placeholder)
+        );
     }
 
-    /* ==========================
-       Page Assertions
-    ========================== */
+    /* ---- Page -------------------------------------------------------- */
 
-    static async assertTitle(page: Page, title: string | RegExp): Promise<void> {
-        console.log(`Validating page title`);
-        await expect(page).toHaveTitle(title);
+    static assertTitle(page: Page, title: string | RegExp): Promise<void> {
+        return step(`Title should be ${String(title)}`, () => expect(page).toHaveTitle(title));
     }
 
-    static async assertTitleContains(page: Page, title: string): Promise<void> {
-        console.log(`Validating page title`);
-        await expect(page).toHaveTitle(new RegExp(title));
+    static assertTitleContains(page: Page, title: string): Promise<void> {
+        return step(`Title should contain "${title}"`, () => expect(page).toHaveTitle(new RegExp(title)));
     }
 
-    static async assertURL(page: Page, url: string | RegExp): Promise<void> {
-        console.log(`Validating URL`);
-        await expect(page).toHaveURL(url);
+    static assertURL(page: Page, url: string | RegExp): Promise<void> {
+        return step(`URL should be ${String(url)}`, () => expect(page).toHaveURL(url));
     }
 
-    static async assertURLContains(page: Page, text: string): Promise<void> {
-        console.log(`Validating URL contains ${text}`);
-        await expect(page).toHaveURL(new RegExp(text));
+    static assertURLContains(page: Page, text: string): Promise<void> {
+        return step(`URL should contain "${text}"`, () => expect(page).toHaveURL(new RegExp(text)));
     }
 
-    /* ==========================
-       Count Assertions
-    ========================== */
+    /* ---- Count / attributes ------------------------------------------ */
 
-    static async assertCount(locator: Locator, expectedCount: number): Promise<void> {
-        console.log(`Validating locator count`);
-        await expect(locator).toHaveCount(expectedCount);
+    static assertCount(locator: Locator, expectedCount: number): Promise<void> {
+        return step(`Count should be ${expectedCount}`, () => expect(locator).toHaveCount(expectedCount));
     }
 
-    /* ==========================
-       Attribute Assertions
-    ========================== */
-
-    static async assertAttribute(locator: Locator, attribute: string, value: string | RegExp): Promise<void> {
-        console.log(`Validating attribute ${attribute}`);
-        await expect(locator).toHaveAttribute(attribute, value);
+    static assertAttribute(locator: Locator, attribute: string, value: string | RegExp): Promise<void> {
+        return step(`Attribute "${attribute}" should be ${String(value)}`, () =>
+            expect(locator).toHaveAttribute(attribute, value)
+        );
     }
 
-    static async assertClass(locator: Locator, className: string | RegExp): Promise<void> {
-        console.log(`Validating class`);
-        await expect(locator).toHaveClass(className);
+    static assertClass(locator: Locator, className: string | RegExp): Promise<void> {
+        return step(`Class should match ${String(className)}`, () => expect(locator).toHaveClass(className));
     }
 
-    /* ==========================
-       Generic Assertions
-    ========================== */
+    /* ---- Generic ----------------------------------------------------- */
 
     static assertTrue(value: unknown, message = "Expected value to be true"): void {
         expect(value, message).toBeTruthy();
@@ -148,19 +129,19 @@ export class Assertion {
         expect(actual).toBeLessThan(expected);
     }
 
-    /* ==========================
-       API Assertions
-    ========================== */
+    /* ---- API --------------------------------------------------------- */
 
     static assertStatus(response: APIResponse, expectedStatus: number): void {
-        expect(response.status()).toBe(expectedStatus);
+        expect(response.status(), `${response.url()} status`).toBe(expectedStatus);
     }
 
-    static async assertJsonValue(response: APIResponse, key: string, expectedValue: unknown): Promise<void> {
-        const body: unknown = await response.json();
-        if (typeof body !== "object" || body === null || !(key in body)) {
-            throw new Error(`Response JSON does not contain key "${key}"`);
-        }
-        expect((body as Record<string, unknown>)[key]).toBe(expectedValue);
+    static assertJsonValue(response: APIResponse, key: string, expectedValue: unknown): Promise<void> {
+        return step(`JSON "${key}" should be ${String(expectedValue)}`, async () => {
+            const body: unknown = await response.json();
+            if (typeof body !== "object" || body === null || !(key in body)) {
+                throw new Error(`Response JSON does not contain key "${key}"`);
+            }
+            expect((body as Record<string, unknown>)[key]).toBe(expectedValue);
+        });
     }
 }

@@ -1,3 +1,4 @@
+import { logger } from "../../utilities/logger";
 import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
@@ -33,5 +34,5 @@ Execution Date=${new Date().toLocaleString()}
         content
     );
 
-    console.log("✅ Allure Environment Information Generated");
+    logger.info("✅ Allure environment information generated.");
 }

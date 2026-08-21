@@ -1,3 +1,4 @@
+import { logger } from "../../utilities/logger";
 import nodemailer from "nodemailer";
 import { getExecutionSummary } from "./executionSummary";
 import { generateEmailTemplate } from "./emailTemplate";
@@ -29,7 +30,5 @@ export async function sendExecutionReport(): Promise<void> {
         attachments,
     });
 
-    console.log("\n========================================");
-    console.log(`✅ Execution email sent to ${emailConfig.to}`);
-    console.log("========================================");
+    logger.section(`✅ Execution email sent to ${emailConfig.to}`);
 }

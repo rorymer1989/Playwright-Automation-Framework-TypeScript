@@ -442,6 +442,18 @@ npm run test:api
 
 ---
 
+# 🪵 Logging
+
+Framework output (banner, setup/teardown, reporting) goes through `utilities/logger.ts` and is controlled by `LOG_LEVEL` (`silent` | `error` | `warn` | `info` | `debug`, default `info`):
+
+```bash
+LOG_LEVEL=warn npm test   # only the test runner output
+```
+
+Inside tests, don't log: every `assertion.*` call is already a `test.step` visible in the HTML/Allure report and the trace viewer, and the `step` fixture wraps any other action.
+
+---
+
 # 🧪 Unit Tests of the Framework
 
 Pure utilities (`retryUtil`, `dataManager`, `excelUtil`, `executionSummary`) have unit tests in `tests/unit/*.unit.spec.ts`, run by the `unit` project with no browser and no network. They are part of `npm test` and CI.
@@ -539,7 +551,7 @@ Playwright-Automation-Framework-TypeScript
 ├── pages                              # BasePage, HomePage, DocsPage, LoginPage, SecureAreaPage
 ├── tests                              # *.spec.ts, auth/, api/*.api.spec.ts, unit/*.unit.spec.ts, auth.setup.ts
 ├── testData/<env>/*.json              # environment-aware test data
-├── utilities
+├── utilities                          # + logger.ts
 │   ├── assertionUtil.ts  softAssertionUtil.ts
 │   ├── clickUtil.ts  fillUtil.ts  waitUtil.ts  retryUtil.ts
 │   ├── screenshotUtil.ts  excelUtil.ts  fileUtil.ts  scrollUtil.ts

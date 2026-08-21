@@ -1,12 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import { printExecutionDashboard } from "./utilities/dashboardUtil";
+import { logger } from "./utilities/logger";
 
 export default function globalSetup(): void {
     printExecutionDashboard();
-    console.log("\n========================================");
-    console.log("🚀 Playwright Framework Initialization");
-    console.log("========================================");
+    logger.section("🚀 Playwright Framework Initialization");
 
     const folders = ["allure-results", "allure-report", "playwright-report", "test-results"];
 
@@ -15,12 +14,11 @@ export default function globalSetup(): void {
 
         if (!fs.existsSync(folderPath)) {
             fs.mkdirSync(folderPath, { recursive: true });
-            console.log(`✅ Created Folder : ${folder}`);
+            logger.info(`✅ Created folder: ${folder}`);
         } else {
-            console.log(`📁 Folder Exists : ${folder}`);
+            logger.debug(`Folder exists: ${folder}`);
         }
     });
 
-    console.log("\n✅ Reporting folders initialized successfully.");
-    console.log("========================================\n");
+    logger.info("✅ Reporting folders ready.\n");
 }

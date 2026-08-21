@@ -1,3 +1,5 @@
+import { logger } from "./logger";
+
 /**
  * Generic retry utility
  */
@@ -22,7 +24,7 @@ export async function retry(
             lastError = error;
 
             if (logRetries) {
-                console.log(`⚠ ${actionName} failed. Retry ${attempt}/${retries}`);
+                logger.warn(`${actionName} failed. Retry ${attempt}/${retries}`);
             }
 
             if (attempt < retries) {
