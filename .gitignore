@@ -14,3 +14,6 @@ reports/
 .auth/
 blob-report/
 all-blob-reports/
+
+# Playwright MCP artefacts (test agents)
+.playwright-mcp/
