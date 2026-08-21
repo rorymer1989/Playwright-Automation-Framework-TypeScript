@@ -509,7 +509,10 @@ npm run jira:story -- SCRUM-12 --json
 
 - **`/jira-test SCRUM-12`** (Claude Code command, `.claude/commands/jira-test.md`): fetches the story, reads `AI/` rules, explores the app for real locators, reuses page objects/fixtures/data, generates `tests/<area>/<story>.spec.ts`, runs it on the three browsers and commits on `feat/SCRUM-12`.
 - **Traceability**: specs tag the story in the title (`@SCRUM-12`) and call `allure.issue("SCRUM-12")`, which renders a link to Jira in the Allure report. Run a story's tests with `npm run test:story -- "@SCRUM-12"`.
-- `utilities/jiraClient.ts` (`getStory`, `addComment`) is unit-tested against a local server.
+- **Bugs from failures**: `npm run jira:bugs` creates one Bug per failed test in `test-result.json` (structured ADF description: steps, expected, actual, environment; screenshot/video/trace attached; `automated` label). Already-open bugs with the same summary get a comment instead of a duplicate. `--dry-run` prints what would be created. `JIRA_PROJECT_KEY` (default `SCRUM`), `REPORT_URL` linked in the bug.
+- `utilities/jiraClient.ts` (`getStory`, `search`, `createBug`, `attach`, `addComment`) is unit-tested against a local server.
+
+> **Security**: the API token is a password. Keep it only in `.env` (git-ignored) or CI secrets, never in `.env.example`; rotate it if it was ever printed or committed.
 
 ---
 

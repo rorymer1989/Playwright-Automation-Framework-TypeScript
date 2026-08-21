@@ -6,6 +6,9 @@
  *   JIRA_API_TOKEN  https://id.atlassian.com/manage-profile/security/api-tokens
  */
 
+import fs from "node:fs";
+import path from "node:path";
+
 export interface JiraConfig {
     baseUrl: string;
     email: string;
@@ -129,15 +132,18 @@ export class JiraClient {
         };
     }
 
-    async request<T>(path: string, init: RequestInit = {}): Promise<T> {
-        const response = await fetch(`${this.config.baseUrl}/rest/api/3${path}`, {
-            ...init,
-            headers: { ...this.headers, ...(init.headers ?? {}) },
-        });
+    async request<T>(apiPath: string, init: RequestInit = {}): Promise<T> {
+        const headers: Record<string, string> = {
+            ...this.headers,
+            ...((init.headers as Record<string, string> | undefined) ?? {}),
+        };
+        // An empty value removes a default header (multipart bodies must let fetch set Content-Type)
+        for (const [k, v] of Object.entries(headers)) if (v === "") delete headers[k];
+        const response = await fetch(`${this.config.baseUrl}/rest/api/3${apiPath}`, { ...init, headers });
         if (!response.ok) {
             const body = await response.text();
             throw new Error(
-                `Jira ${init.method ?? "GET"} ${path} → HTTP ${response.status}: ${body.slice(0, 300)}`
+                `Jira ${init.method ?? "GET"} ${apiPath} → HTTP ${response.status}: ${body.slice(0, 300)}`
             );
         }
         return (response.status === 204 ? undefined : await response.json()) as T;
@@ -166,6 +172,52 @@ export class JiraClient {
         };
     }
 
+    /** Searches issues with JQL; returns keys + summaries (used to de-duplicate bugs). */
+    async search(jql: string, maxResults = 20): Promise<{ key: string; summary: string; status: string }[]> {
+        const result = await this.request<{
+            issues: { key: string; fields: { summary: string; status?: { name: string } } }[];
+        }>("/search/jql", {
+            method: "POST",
+            body: JSON.stringify({ jql, maxResults, fields: ["summary", "status"] }),
+        });
+        return result.issues.map((i) => ({
+            key: i.key,
+            summary: i.fields.summary,
+            status: i.fields.status?.name ?? "Unknown",
+        }));
+    }
+
+    /** Creates a Bug with a structured ADF description. */
+    async createBug(bug: BugReport): Promise<CreatedIssue> {
+        const adf = bugToAdf(bug);
+        const body = {
+            fields: {
+                project: { key: bug.projectKey },
+                summary: bug.summary,
+                issuetype: { name: bug.issueType ?? "Bug" },
+                ...(bug.priority ? { priority: { name: bug.priority } } : {}),
+                labels: bug.labels ?? [],
+                description: { type: "doc", version: 1, content: adf.content },
+            },
+        };
+        const created = await this.request<{ key: string; id: string }>("/issue", {
+            method: "POST",
+            body: JSON.stringify(body),
+        });
+        return { key: created.key, id: created.id, url: `${this.config.baseUrl}/browse/${created.key}` };
+    }
+
+    /** Uploads a file as an attachment (screenshots, traces, reports). */
+    async attach(key: string, filePath: string, fileName: string = path.basename(filePath)): Promise<void> {
+        const form = new FormData();
+        form.append("file", new Blob([fs.readFileSync(filePath)]), fileName);
+        await this.request(`/issue/${encodeURIComponent(key)}/attachments`, {
+            method: "POST",
+            body: form,
+            headers: { "X-Atlassian-Token": "no-check", "Content-Type": "" },
+        });
+    }
+
     /** Adds a plain-text comment to an issue (e.g. link to the generated tests / PR). */
     async addComment(key: string, text: string): Promise<void> {
         const body = {
@@ -180,6 +232,61 @@ export class JiraClient {
             body: JSON.stringify(body),
         });
     }
+}
+
+/* ---- Bug creation ------------------------------------------------------ */
+
+export interface BugReport {
+    projectKey: string;
+    summary: string;
+    /** One paragraph: what is wrong. */
+    description: string;
+    steps: string[];
+    expected: string;
+    actual: string;
+    environment: Record<string, string>;
+    labels?: string[];
+    priority?: string;
+    /** Issue type name (default "Bug"). */
+    issueType?: string;
+}
+
+export interface CreatedIssue {
+    key: string;
+    id: string;
+    url: string;
+}
+
+const text = (t: string): AdfNode => ({ type: "text", text: t });
+const paragraph = (t: string): AdfNode => ({ type: "paragraph", content: [text(t)] });
+const heading = (t: string, level = 3): AdfNode => ({
+    type: "heading",
+    attrs: { level },
+    content: [text(t)],
+});
+const list = (items: string[], ordered = false): AdfNode => ({
+    type: ordered ? "orderedList" : "bulletList",
+    content: items.map((i) => ({ type: "listItem", content: [paragraph(i)] })),
+});
+
+/** Builds the ADF body used for bugs raised from test failures. */
+export function bugToAdf(bug: BugReport): AdfNode {
+    return {
+        type: "doc",
+        attrs: { version: 1 },
+        content: [
+            heading("Summary", 2),
+            paragraph(bug.description),
+            heading("Steps to reproduce"),
+            list(bug.steps, true),
+            heading("Expected result"),
+            paragraph(bug.expected),
+            heading("Actual result"),
+            paragraph(bug.actual),
+            heading("Environment"),
+            list(Object.entries(bug.environment).map(([k, v]) => `${k}: ${v}`)),
+        ],
+    };
 }
 
 /** Markdown rendering used as the input of the test-generation prompt. */

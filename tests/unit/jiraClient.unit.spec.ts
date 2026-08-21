@@ -140,3 +140,155 @@ test.describe("jiraClient", () => {
         }
     });
 });
+
+test.describe("jira bugs from failures", () => {
+    const report = {
+        suites: [
+            {
+                title: "shop/login.spec.ts",
+                suites: [
+                    {
+                        title: "Shop — login @SCRUM-1",
+                        specs: [
+                            {
+                                title: "rejects locked out user",
+                                file: "shop/login.spec.ts",
+                                line: 28,
+                                tests: [
+                                    {
+                                        projectName: "chromium",
+                                        results: [
+                                            {
+                                                status: "failed",
+                                                error: { message: "\u001b[31mexpected\u001b[0m X" },
+                                                attachments: [
+                                                    {
+                                                        name: "screenshot",
+                                                        path: "/tmp/s.png",
+                                                        contentType: "image/png",
+                                                    },
+                                                    {
+                                                        name: "trace",
+                                                        path: "/tmp/t.zip",
+                                                        contentType: "application/zip",
+                                                    },
+                                                    { name: "stdout", contentType: "text/plain" },
+                                                ],
+                                            },
+                                            { status: "passed" },
+                                        ],
+                                    },
+                                    {
+                                        projectName: "firefox",
+                                        results: [
+                                            {
+                                                status: "timedOut",
+                                                error: { message: "Timeout" },
+                                                attachments: [],
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
+                            {
+                                title: "passes",
+                                file: "shop/login.spec.ts",
+                                line: 40,
+                                tests: [{ projectName: "chromium", results: [{ status: "passed" }] }],
+                            },
+                        ],
+                    },
+                ],
+            },
+        ],
+    };
+
+    test("collectFailures uses the last result, keeps evidence attachments and strips ANSI", async () => {
+        const { collectFailures } = await import("../../scripts/jira-bugs");
+        const failures = collectFailures(report);
+        expect(failures).toHaveLength(1); // chromium passed on retry; firefox timed out
+        expect(failures[0]).toMatchObject({
+            title: "rejects locked out user",
+            project: "firefox",
+            message: "Timeout",
+            suite: "shop/login.spec.ts › Shop — login @SCRUM-1",
+        });
+    });
+
+    test("toBugReport builds a structured bug with labels and environment", async () => {
+        const { collectFailures, toBugReport } = await import("../../scripts/jira-bugs");
+        const bug = toBugReport(collectFailures(report)[0], "SCRUM", "https://ci/run/1");
+        expect(bug.summary).toBe("[Automation][firefox] rejects locked out user");
+        expect(bug.labels).toEqual(["automated", "playwright", "firefox"]);
+        expect(bug.environment.Report).toBe("https://ci/run/1");
+        expect(bug.steps[0]).toContain("shop/login.spec.ts:28 --project=firefox");
+    });
+
+    test("createBug, search and attach hit the expected endpoints", async () => {
+        const calls: { method: string; url: string; contentType: string }[] = [];
+        const server = http.createServer((req, res) => {
+            calls.push({
+                method: req.method ?? "",
+                url: req.url ?? "",
+                contentType: req.headers["content-type"] ?? "",
+            });
+            res.setHeader("content-type", "application/json");
+            if (req.url === "/rest/api/3/issue" && req.method === "POST")
+                res.end(JSON.stringify({ key: "SCRUM-99", id: "1" }));
+            else if (req.url === "/rest/api/3/search/jql") res.end(JSON.stringify({ issues: [] }));
+            else if (req.url?.endsWith("/attachments")) res.end("[]");
+            else {
+                res.statusCode = 404;
+                res.end("{}");
+            }
+            req.resume();
+        });
+        await new Promise<void>((r) => server.listen(0, "127.0.0.1", r));
+        const { port } = server.address() as { port: number };
+        const { bugToAdf } = await import("../../utilities/jiraClient");
+        const bug = {
+            projectKey: "SCRUM",
+            summary: "s",
+            description: "d",
+            steps: ["1"],
+            expected: "e",
+            actual: "a",
+            environment: { Env: "UAT" },
+        };
+        try {
+            const client = new JiraClient({
+                baseUrl: `http://127.0.0.1:${port}`,
+                email: "a@b.c",
+                apiToken: "t",
+            });
+            expect(await client.search("project = SCRUM")).toEqual([]);
+            const created = await client.createBug(bug);
+            expect(created).toEqual({
+                key: "SCRUM-99",
+                id: "1",
+                url: `http://127.0.0.1:${port}/browse/SCRUM-99`,
+            });
+            await client.attach("SCRUM-99", "package.json");
+        } finally {
+            server.close();
+        }
+        expect(calls.map((c) => `${c.method} ${c.url}`)).toEqual([
+            "POST /rest/api/3/search/jql",
+            "POST /rest/api/3/issue",
+            "POST /rest/api/3/issue/SCRUM-99/attachments",
+        ]);
+        expect(calls[2].contentType).toMatch(/^multipart\/form-data/);
+        expect(bugToAdf(bug).content?.map((n) => n.type)).toEqual([
+            "heading",
+            "paragraph",
+            "heading",
+            "orderedList",
+            "heading",
+            "paragraph",
+            "heading",
+            "paragraph",
+            "heading",
+            "bulletList",
+        ]);
+    });
+});
