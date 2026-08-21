@@ -18,6 +18,7 @@
     "test:mobile": "sh scripts/clean-snap-env.sh playwright test --project=mobile-chrome --project=mobile-safari",
     "report:email": "tsx scripts/send-report.ts",
     "report:zip": "tsx scripts/zip-reports.ts",
+    "report:flaky": "tsx scripts/flaky-report.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",

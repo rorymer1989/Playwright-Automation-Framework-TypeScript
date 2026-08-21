@@ -8,7 +8,7 @@
 - [ ] **II. Tests are specifications** — every new/changed test maps to a scenario in `specs/<feature>/spec.md`; story tests tagged `@KEY` + `allure.issue`. No assertion weakened.
 - [ ] **III. Deterministic** — no `waitForTimeout` / `networkidle` / manual retry loops; locators in priority order, discovered on the live app; no hard-coded URLs or credentials.
 - [ ] **IV. Observable** — `assertion` / `step` fixtures, `logger` instead of `console`.
-- [ ] **V. Quality gates** — `npm run check` and `unit` pass locally; CI green.
+- [ ] **V. Quality gates** — `npm run check` and `unit` pass locally; CI green, including the flaky policy (no test passed only on retry).
 
 ## Test plan
 

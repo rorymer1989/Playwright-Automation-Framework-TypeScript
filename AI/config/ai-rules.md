@@ -42,6 +42,7 @@ Generated code must:
 - Reuse fixtures.
 - Reuse Page Objects.
 - Avoid duplication.
+- Be deterministic: a test that passes only on retry is flaky and fails CI (`FLAKY_BUDGET` = 0). Never add retries, sleeps or `test.fixme()` to hide it.
 
 ## Human Approval
 

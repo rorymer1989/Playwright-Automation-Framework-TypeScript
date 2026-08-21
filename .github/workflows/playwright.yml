@@ -170,7 +170,16 @@ jobs:
       - name: Merge into one JSON report (input for Jira bugs and the email summary)
         run: PLAYWRIGHT_JSON_OUTPUT_NAME=test-result.json npx playwright merge-reports -c merge.config.ts --reporter json ./all-blob-reports
 
+      # ---- Flaky policy: a test that passed only after a retry fails the gate.
+      #      FLAKY_BUDGET (repository variable, default 0) is the tolerated count.
+      - name: Flaky policy
+        env:
+          FLAKY_BUDGET: ${{ vars.FLAKY_BUDGET || '0' }}
+          SKIP_PREFLIGHT: 1
+        run: npm run -s report:flaky
+
       - name: Upload Playwright report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
@@ -178,6 +187,7 @@ jobs:
           retention-days: 14
 
       - name: Download Allure results
+        if: always()
         uses: actions/download-artifact@v4
         with:
           pattern: allure-*
@@ -188,6 +198,7 @@ jobs:
       #      generator, save the new one (main / scheduled / manual runs only, so PR runs
       #      read the trend but never pollute it). Mirrors global-teardown.ts locally.
       - name: Restore Allure history
+        if: always()
         uses: actions/cache/restore@v4
         with:
           path: allure-history
@@ -195,6 +206,7 @@ jobs:
           restore-keys: allure-history-
 
       - name: Seed history into results
+        if: always()
         run: |
           if [ -d allure-history ]; then
             mkdir -p allure-results/history
@@ -205,20 +217,22 @@ jobs:
           fi
 
       - name: Generate Allure report
+        if: always()
         run: npx allure generate allure-results --clean -o allure-report
 
       - name: Save Allure history
-        if: github.event_name != 'pull_request'
+        if: always() && github.event_name != 'pull_request'
         run: rm -rf allure-history && cp -r allure-report/history allure-history
 
       - name: Cache Allure history
-        if: github.event_name != 'pull_request'
+        if: always() && github.event_name != 'pull_request'
         uses: actions/cache/save@v4
         with:
           path: allure-history
           key: allure-history-${{ github.run_id }}
 
       - name: Upload Allure report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
@@ -227,7 +241,7 @@ jobs:
 
       # ---- Close the loop (main / manual runs only, never on PRs) ----
       - name: Raise Jira bugs for failed tests
-        if: github.event_name != 'pull_request' && env.JIRA_API_TOKEN != ''
+        if: always() && github.event_name != 'pull_request' && env.JIRA_API_TOKEN != ''
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
@@ -238,7 +252,7 @@ jobs:
         run: npm run -s jira:bugs
 
       - name: Email execution summary
-        if: github.event_name != 'pull_request' && env.EMAIL_TO != ''
+        if: always() && github.event_name != 'pull_request' && env.EMAIL_TO != ''
         env:
           EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
