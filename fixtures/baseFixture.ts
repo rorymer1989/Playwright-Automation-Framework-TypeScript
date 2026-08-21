@@ -6,6 +6,8 @@ import allureUtil from "../reporting/allure/allureUtil";
 import stepUtil from "../reporting/allure/stepUtil";
 import { expectNoA11yViolations, scanA11y, type A11yOptions } from "../utilities/a11yUtil";
 import { expectVisualMatch } from "../utilities/visualUtil";
+import { ENV } from "../config/environment";
+import { createApiClients, type ApiClients } from "../api";
 import {
     HomePage,
     DocsPage,
@@ -47,6 +49,11 @@ interface CustomFixtures {
     };
     /** Visual regression against per-browser baselines (see utilities/visualUtil.ts). */
     visual: { match: typeof expectVisualMatch };
+    /**
+     * Typed API clients (`api/`) on their own request context pointed at API_URL,
+     * so browser suites can seed or verify state through the API as well.
+     */
+    api: ApiClients;
 }
 
 export const test = base.extend<CustomFixtures>({
@@ -96,6 +103,11 @@ export const test = base.extend<CustomFixtures>({
     },
     visual: async ({}, use) => {
         await use({ match: expectVisualMatch });
+    },
+    api: async ({ playwright }, use) => {
+        const context = await playwright.request.newContext({ baseURL: ENV.apiUrl });
+        await use(createApiClients(context));
+        await context.dispose();
     },
 });
 

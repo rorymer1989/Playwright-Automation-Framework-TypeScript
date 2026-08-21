@@ -11,6 +11,7 @@ Playwright Test + TypeScript (strict, CommonJS) framework: Page Object Model + c
 ## Non-negotiables
 
 - Import `test`/`expect` from `fixtures/baseFixture.ts`, never from `@playwright/test` (except `tests/unit/`).
+- API calls through the `api` fixture (`api/` typed clients: `api.posts`, `api.users`); add a client per resource, never raw URLs in tests.
 - Assertions through the `assertion` fixture (`assertion.soft.*` for soft); multi-step flows through `step`.
 - Locator priority: `getByRole` → `getByLabel` → `getByPlaceholder` → `getByTestId` (`data-test`) → `getByText` → CSS → XPath. Discover locators on the live app (Playwright MCP); never guess.
 - No `waitForTimeout`, `networkidle`, manual retry loops or `console.*` (use `utilities/logger.ts`).
