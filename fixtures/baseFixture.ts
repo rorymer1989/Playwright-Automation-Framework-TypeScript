@@ -4,6 +4,8 @@ import { Assertions } from "./assertionFixture";
 import dataManager from "../utilities/dataManager";
 import allureUtil from "../reporting/allure/allureUtil";
 import stepUtil from "../reporting/allure/stepUtil";
+import { expectNoA11yViolations, scanA11y, type A11yOptions } from "../utilities/a11yUtil";
+import { expectVisualMatch } from "../utilities/visualUtil";
 import { HomePage, DocsPage, LoginPage, SecureAreaPage } from "../pages";
 
 interface CustomFixtures {
@@ -16,6 +18,13 @@ interface CustomFixtures {
     data: typeof dataManager;
     allure: typeof allureUtil;
     step: typeof stepUtil.step;
+    /** Accessibility: `a11y.check()` fails on WCAG violations, `a11y.scan()` only returns them. */
+    a11y: {
+        check: (options?: A11yOptions) => Promise<void>;
+        scan: (options?: A11yOptions) => ReturnType<typeof scanA11y>;
+    };
+    /** Visual regression against per-browser baselines (see utilities/visualUtil.ts). */
+    visual: { match: typeof expectVisualMatch };
 }
 
 export const test = base.extend<CustomFixtures>({
@@ -45,6 +54,15 @@ export const test = base.extend<CustomFixtures>({
     },
     step: async ({}, use) => {
         await use(stepUtil.step.bind(stepUtil));
+    },
+    a11y: async ({ page }, use) => {
+        await use({
+            check: (options) => expectNoA11yViolations(page, options),
+            scan: (options) => scanA11y(page, options),
+        });
+    },
+    visual: async ({}, use) => {
+        await use({ match: expectVisualMatch });
     },
 });
 
