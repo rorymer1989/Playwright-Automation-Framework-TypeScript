@@ -36,4 +36,22 @@ export const ENV = {
     get environment(): string {
         return process.env.TEST_ENV ?? "uat";
     },
+    /** Base URL of the application that requires authentication (storageState setup). */
+    get authUrl(): string {
+        return process.env.AUTH_URL ?? "";
+    },
+    /** Base URL for API tests (`api` project). */
+    get apiUrl(): string {
+        return process.env.API_URL ?? "";
+    },
 };
+
+/**
+ * Authenticated browser state persisted by tests/auth.setup.ts.
+ * One file per browser project: apps protected against session hijacking
+ * (Rack::Protection, Django, …) bind the session to the User-Agent, so a
+ * state captured with Chrome's UA is rejected when replayed by Firefox/WebKit.
+ */
+export function storageStatePath(browser: string): string {
+    return path.resolve(__dirname, "..", ".auth", `${browser}.json`);
+}

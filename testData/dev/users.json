@@ -1,0 +1,5 @@
+{
+  "_comment": "Public demo credentials for the-internet.herokuapp.com. Real credentials belong in .env, never here.",
+  "standard": { "username": "tomsmith", "password": "SuperSecretPassword!" },
+  "invalid": { "username": "tomsmith", "password": "wrong-password" }
+}

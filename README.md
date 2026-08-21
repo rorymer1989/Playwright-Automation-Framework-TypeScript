@@ -459,6 +459,24 @@ Browser configuration can be maintained through the Playwright configuration.
 
 ---
 
+# 🔐 Authentication (storageState)
+
+`tests/auth.setup.ts` logs in once per browser through the UI and saves the session to `.auth/<browser>.json` (git-ignored). Browser projects declare `dependencies: ["setup:<browser>"]` and `use.storageState`, so every UI test starts already authenticated and the login flow is not repeated. See `tests/auth/login.spec.ts`.
+
+The state is per browser on purpose: apps with session-hijacking protection bind the session to the User-Agent.
+
+---
+
+# 🔌 API Testing
+
+`*.api.spec.ts` files run in the `api` project (no browser) against `API_URL` using Playwright's built-in `request` fixture and the `assertion.assertStatus` / `assertJsonValue` helpers. See `tests/api/posts.api.spec.ts`.
+
+```bash
+npm run test:api
+```
+
+---
+
 # 📱 Mobile Web Testing
 
 The framework supports browser-based mobile automation using Playwright device emulation.
@@ -543,8 +561,8 @@ Playwright-Automation-Framework-TypeScript
 │   ├── baseFixture.ts                 # test/expect + homePage, docsPage, actions, assertion, data, allure, step
 │   ├── actionFixture.ts
 │   └── assertionFixture.ts
-├── pages                              # BasePage, HomePage, DocsPage, index.ts
-├── tests                              # *.spec.ts
+├── pages                              # BasePage, HomePage, DocsPage, LoginPage, SecureAreaPage
+├── tests                              # *.spec.ts, auth/, api/*.api.spec.ts, auth.setup.ts
 ├── testData/<env>/*.json              # environment-aware test data
 ├── utilities
 │   ├── assertionUtil.ts  softAssertionUtil.ts

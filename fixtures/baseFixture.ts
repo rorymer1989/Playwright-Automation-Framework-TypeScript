@@ -4,11 +4,13 @@ import { Assertions } from "./assertionFixture";
 import dataManager from "../utilities/dataManager";
 import allureUtil from "../reporting/allure/allureUtil";
 import stepUtil from "../reporting/allure/stepUtil";
-import { HomePage, DocsPage } from "../pages";
+import { HomePage, DocsPage, LoginPage, SecureAreaPage } from "../pages";
 
 interface CustomFixtures {
     homePage: HomePage;
     docsPage: DocsPage;
+    loginPage: LoginPage;
+    secureAreaPage: SecureAreaPage;
     actions: Actions;
     assertion: Assertions;
     data: typeof dataManager;
@@ -22,6 +24,12 @@ export const test = base.extend<CustomFixtures>({
     },
     docsPage: async ({ page }, use) => {
         await use(new DocsPage(page));
+    },
+    loginPage: async ({ page }, use) => {
+        await use(new LoginPage(page));
+    },
+    secureAreaPage: async ({ page }, use) => {
+        await use(new SecureAreaPage(page));
     },
     actions: async ({}, use) => {
         await use(new Actions());

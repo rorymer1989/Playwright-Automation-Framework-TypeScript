@@ -1,4 +1,4 @@
-import type { Locator, Page } from "@playwright/test";
+import type { APIResponse, Locator, Page } from "@playwright/test";
 import { Assertion } from "../utilities/assertionUtil";
 import SoftAssertionUtil from "../utilities/softAssertionUtil";
 
@@ -47,5 +47,14 @@ export class Assertions {
     }
     assertURLContains(page: Page, text: string): Promise<void> {
         return Assertion.assertURLContains(page, text);
+    }
+
+    // ---- API ------------------------------------------------------------
+
+    assertStatus(response: APIResponse, expected: number): void {
+        Assertion.assertStatus(response, expected);
+    }
+    assertJsonValue(response: APIResponse, key: string, expected: unknown): Promise<void> {
+        return Assertion.assertJsonValue(response, key, expected);
     }
 }
