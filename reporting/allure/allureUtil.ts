@@ -9,10 +9,19 @@ interface AllureUtilInterface {
     suite(name: string): Promise<void>;
     subSuite(name: string): Promise<void>;
     applyDefaults(): Promise<void>;
+    issue(key: string): Promise<void>;
+    story(name: string): Promise<void>;
 }
 
 import { allure as allureApi } from "allure-playwright";
 import { DEFAULT_ALLURE_METADATA } from "./defaultMetadata";
+
+function jiraBrowseUrl(key: string): string {
+    const raw = process.env.JIRA_BASE_URL ?? "";
+    if (!raw) return "";
+    const base = (raw.startsWith("http") ? raw : `https://${raw}`).replace(/\/+$/, "");
+    return `${base}/browse/${key}`;
+}
 
 class AllureUtil implements AllureUtilInterface {
     async epic(name: string): Promise<void> {
@@ -49,6 +58,18 @@ class AllureUtil implements AllureUtilInterface {
 
     async subSuite(name: string): Promise<void> {
         await allureApi.suite(name);
+    }
+
+    /**
+     * Links the test to a Jira issue (story or bug). Rendered as a clickable link in
+     * the Allure report when JIRA_BASE_URL is set; the key is also added as a label
+     * so tests can be filtered by issue.
+     */
+    async issue(key: string): Promise<void> {
+        const url = jiraBrowseUrl(key);
+        if (url) await allureApi.issue(key, url);
+        else await allureApi.label("issue", key);
+        await allureApi.label("jira", key);
     }
 
     /** Applies owner/severity/epic from reporting/allure/defaultMetadata.ts */

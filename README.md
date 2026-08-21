@@ -492,6 +492,27 @@ CI runs the `visual` job in the same image; diffs are uploaded as artifacts on f
 
 ---
 
+# 🎫 Jira: Stories → Tests
+
+The framework can pull a user story from Jira Cloud and generate framework-compliant tests for it.
+
+```text
+JIRA_BASE_URL=https://<site>.atlassian.net
+JIRA_EMAIL=                 # email of the Atlassian account that created the token
+JIRA_API_TOKEN=             # https://id.atlassian.com/manage-profile/security/api-tokens
+```
+
+```bash
+npm run jira:story -- SCRUM-12          # story as Markdown (summary, description, acceptance criteria, subtasks)
+npm run jira:story -- SCRUM-12 --json
+```
+
+- **`/jira-test SCRUM-12`** (Claude Code command, `.claude/commands/jira-test.md`): fetches the story, reads `AI/` rules, explores the app for real locators, reuses page objects/fixtures/data, generates `tests/<area>/<story>.spec.ts`, runs it on the three browsers and commits on `feat/SCRUM-12`.
+- **Traceability**: specs tag the story in the title (`@SCRUM-12`) and call `allure.issue("SCRUM-12")`, which renders a link to Jira in the Allure report. Run a story's tests with `npm run test:story -- "@SCRUM-12"`.
+- `utilities/jiraClient.ts` (`getStory`, `addComment`) is unit-tested against a local server.
+
+---
+
 # 🧨 Failure Paths Demo
 
 `tests/demo/failures.spec.ts` contains **controlled failures** (hard, soft ×3, flaky-then-pass, real visual diff with saucedemo's `problem_user`, timeout) to prove the failure side of the framework: traces/videos/screenshots, retries → _flaky_, soft aggregation, `expected/actual/diff` images, Allure categories and a red email. They are skipped unless opted in:

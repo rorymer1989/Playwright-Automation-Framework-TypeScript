@@ -5,9 +5,10 @@ import { FakerUtility } from "../../utilities/fakerUtil";
 
 const shopData = dataManager.load<ShopData>("shop");
 
-test.describe("Shop — cart and checkout", () => {
+test.describe("Shop — cart and checkout @SCRUM-3", () => {
     test.beforeEach(async ({ allure, shop }) => {
         await allure.feature("Shop");
+        await allure.issue("SCRUM-3");
         await allure.story("Checkout");
         await shop.inventory.open();
     });

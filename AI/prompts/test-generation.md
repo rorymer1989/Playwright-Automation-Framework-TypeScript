@@ -26,8 +26,8 @@ Before generating any code:
 2. Inspect the repository structure.
 
 3. Read:
-   - ai/context/framework-context.md
-   - ai/config/ai-rules.md
+   - AI/context/framework-context.md
+   - AI/config/ai-rules.md
 
 4. Inspect existing:
    - fixtures

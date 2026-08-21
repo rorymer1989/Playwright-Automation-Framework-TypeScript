@@ -1,9 +1,10 @@
 import { test, expect } from "../../fixtures/baseFixture";
 import type { ShopData } from "../../testData/shop.types";
 
-test.describe("Shop — product catalogue", () => {
+test.describe("Shop — product catalogue @SCRUM-2", () => {
     test.beforeEach(async ({ allure, shop }) => {
         await allure.feature("Shop");
+        await allure.issue("SCRUM-2");
         await allure.story("Catalogue");
         await shop.inventory.open(); // already authenticated via storageState
     });
