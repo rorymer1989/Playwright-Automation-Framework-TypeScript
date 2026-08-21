@@ -2,6 +2,20 @@
 
 All notable changes to this project are documented here. Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/).
 
+## [1.6.0] — 2026-08-21
+
+### Added
+
+- **Leveled logger** (`utilities/logger.ts`) — `LOG_LEVEL=silent|error|warn|info|debug` (default `info`) for all framework output (banner, setup/teardown, reporting, retry, data loading, scripts). `LOG_LEVEL=warn` leaves only the test runner's own output. 4 unit tests.
+- **Dependabot** (`.github/dependabot.yml`) — weekly grouped updates for npm (playwright / lint / types groups) and GitHub Actions; TypeScript ≥ 6 ignored until `typescript-eslint` supports it.
+- `.vscode/settings.json` — workspace TypeScript, Prettier on save, ESLint flat config.
+
+### Changed
+
+- **Assertions are `test.step`s** — every `Assertion.*` / `assertion.*` call is a boxed step: its intent shows in the HTML/Allure report and trace viewer instead of stdout, and failures point at the test line, not the helper. `assertStatus` includes the URL in its failure message.
+- No `console.*` left outside the logger.
+- `tsconfig.json` uses `module: preserve` + `moduleResolution: bundler` (typechecks under TS 5.9 and TS 6, fixes the error shown by IDEs bundling TS 6).
+
 ## [1.5.0] — 2026-08-21
 
 ### Added
@@ -82,6 +96,7 @@ Intelligent Execution Update — environment management, execution dashboard, re
 
 Initial release — Page Object Model.
 
+[1.6.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.6.0
 [1.5.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.5.0
 [1.4.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.4.0
 [1.3.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/pull/1

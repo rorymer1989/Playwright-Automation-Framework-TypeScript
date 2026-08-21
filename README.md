@@ -31,11 +31,11 @@ The framework provides a structured foundation for building and maintaining larg
 
 # 🚀 What's New
 
-## v1.5.0 — Lean Actions & Framework Unit Tests
+## v1.6.0 — Observability & Maintenance
 
-- **`smartClick` / `smartFill` simplified**: thin wrappers over Playwright's auto-waiting API, no manual retry loops; `smartFill` keeps an auto-retrying value check.
-- **Unit tests of the framework utilities** (`unit` project, 18 tests) run with `npm test` and in CI.
-- `Fakerutility.ts` → `fakerUtil.ts`, now used by the API example.
+- **Assertions as `test.step`s**: every `assertion.*` call is visible in the HTML/Allure report and trace viewer; failures point at the test line.
+- **Leveled logger** for framework output (`LOG_LEVEL`), no stray `console.log`.
+- **Dependabot** with weekly grouped updates.
 
 Full details in [CHANGELOG.md](CHANGELOG.md).
 
@@ -205,7 +205,7 @@ Environment       : UAT
 Browser           : Chromium
 Platform          : darwin
 Node Version      : v24.x
-Framework Version : v1.5.0
+Framework Version : v1.6.0
 Base URL          : https://example.com
 ```
 
@@ -382,7 +382,7 @@ Example:
 
 🚀 Playwright Automation Framework
 
-Framework Version : v1.5.0
+Framework Version : v1.6.0
 
 Environment       : UAT
 
@@ -888,6 +888,14 @@ The goal is to gradually evolve the framework toward **AI-enabled intelligent QA
 # 📦 Release History
 
 See [CHANGELOG.md](CHANGELOG.md) for the complete list.
+
+## 🚀 v1.6.0 — Observability & Maintenance
+
+- Assertions wrapped in boxed `test.step`s
+- `utilities/logger.ts` with `LOG_LEVEL`
+- Dependabot, workspace TypeScript settings
+
+---
 
 ## 🚀 v1.5.0 — Lean Actions & Framework Unit Tests
 
