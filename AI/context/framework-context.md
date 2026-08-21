@@ -1,5 +1,7 @@
 # Playwright Automation Framework Context
 
+> Entry point for Claude Code sessions: `CLAUDE.md` (repo root). Binding rules: `.specify/memory/constitution.md`.
+
 Language: TypeScript (strict, CommonJS). Tool: Playwright Test. Architecture: Page Object Model + custom fixtures.
 
 ## Directory map (source of truth)
@@ -32,7 +34,7 @@ Language: TypeScript (strict, CommonJS). Tool: Playwright Test. Architecture: Pa
 | `reporting/email/`, `reporting/zip/`     | `npm run report:email` (needs `EMAIL_FROM/PASSWORD/TO`), `npm run report:zip`.                                                                                                                                          |
 | `global-setup.ts` / `global-teardown.ts` | Banner + report folders / Allure environment + report generation (non-fatal).                                                                                                                                           |
 | `scripts/`                               | `clean-snap-env.sh` (wrapper used by npm test scripts), `send-report.ts`, `zip-reports.ts`.                                                                                                                             |
-| `.github/workflows/playwright.yml`       | CI: typecheck + tests + artifacts.                                                                                                                                                                                      |
+| `.github/workflows/playwright.yml`       | CI: `check` → browser/api matrix + visual (Docker) → merged reports. Push/PR to `main`, nightly (Mon–Fri 03:00 UTC) and manual; PR runs are cancelled by newer pushes.                                                  |
 
 Deprecated: `utilities/CommonUtilities.ts` is only a re-export barrel — import from the focused modules instead. There is **no** `utils/` folder.
 
