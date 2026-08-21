@@ -31,10 +31,11 @@ The framework provides a structured foundation for building and maintaining larg
 
 # 🚀 What's New
 
-## v1.7.0 — Accessibility & Visual Regression
+## v1.8.0 — CI Matrix & Merged Reports
 
-- **`a11y` fixture** (axe-core, WCAG 2.1 A/AA) with explicit, guarded exceptions for known issues.
-- **`visual` fixture** (`toHaveScreenshot`) with per-browser/OS baselines rendered in the official Playwright Docker image, locally and in CI.
+- **Per-project matrix with sharding** (chromium/firefox/webkit × 2 + api) plus the Docker `visual` job; critical path ≈ 2 min.
+- **One merged HTML report** and one Allure report from all shards (`blob` reporter + `merge-reports`).
+- Unit guard keeping the Playwright Docker image tag in sync with `@playwright/test`.
 
 Full details in [CHANGELOG.md](CHANGELOG.md).
 
@@ -204,7 +205,7 @@ Environment       : UAT
 Browser           : Chromium
 Platform          : darwin
 Node Version      : v24.x
-Framework Version : v1.7.0
+Framework Version : v1.8.0
 Base URL          : https://example.com
 ```
 
@@ -381,7 +382,7 @@ Example:
 
 🚀 Playwright Automation Framework
 
-Framework Version : v1.7.0
+Framework Version : v1.8.0
 
 Environment       : UAT
 
@@ -612,7 +613,7 @@ Playwright-Automation-Framework-TypeScript
 │   └── zip/                           # zipReport
 ├── scripts                            # clean-snap-env.sh, send-report.ts, zip-reports.ts
 ├── global-setup.ts / global-teardown.ts
-├── playwright.config.ts
+├── playwright.config.ts / merge.config.ts
 ├── tsconfig.json
 ├── eslint.config.mjs / .prettierrc
 ├── .env.example                       # copy to .env for secrets (git-ignored)
@@ -937,6 +938,13 @@ The goal is to gradually evolve the framework toward **AI-enabled intelligent QA
 # 📦 Release History
 
 See [CHANGELOG.md](CHANGELOG.md) for the complete list.
+
+## 🚀 v1.8.0 — CI Matrix & Merged Reports
+
+- Sharded matrix, blob reporter, `merge-reports` job
+- `merge.config.ts`, `SKIP_ALLURE_REPORT`, image-tag guard
+
+---
 
 ## 🚀 v1.7.0 — Accessibility & Visual Regression
 

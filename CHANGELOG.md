@@ -2,6 +2,18 @@
 
 All notable changes to this project are documented here. Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/).
 
+## [1.8.0] — 2026-08-21
+
+### Added
+
+- **CI matrix with sharding** — `check` (typecheck/lint/format/unit) → `test` matrix (chromium/firefox/webkit × 2 shards + api, each installing only its browser) and `visual` (Playwright image) → `merge-reports`. Critical path ≈ 2 min with `fail-fast: false` and per-job artifacts.
+- **Single merged report** — shards use the `blob` reporter; `merge-reports` runs `playwright merge-reports -c merge.config.ts` (pinned `testDir`, required because the visual job's container path differs from the runners') into one `playwright-report` artifact, and merges Allure results into one `allure-report`.
+- `tests/unit/ciConfig.unit.spec.ts` — fails if the workflow's `mcr.microsoft.com/playwright` tag drifts from the installed `@playwright/test`; checks `scripts/visual-docker.sh` derives its tag from the package.
+
+### Changed
+
+- `playwright.config.ts` uses the `blob` reporter in CI (html locally); `global-teardown` skips Allure generation when `SKIP_ALLURE_REPORT=1`.
+
 ## [1.7.0] — 2026-08-21
 
 ### Added
@@ -108,6 +120,7 @@ Intelligent Execution Update — environment management, execution dashboard, re
 
 Initial release — Page Object Model.
 
+[1.8.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.8.0
 [1.7.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.7.0
 [1.6.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.6.0
 [1.5.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.5.0
