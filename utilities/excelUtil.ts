@@ -24,11 +24,20 @@ export function getTestData(filePath: string, sheetName: string, executorColumn 
     const { rows } = readSheet(filePath, sheetName);
     return rows
         .map((row, originalIndex): IndexedRow => ({ ...row, originalIndex }))
-        .filter((row) => String(row[executorColumn] ?? "").toUpperCase() === "Y");
+        .filter((row) => {
+            const flag = row[executorColumn];
+            return typeof flag === "string" && flag.toUpperCase() === "Y";
+        });
 }
 
 /** Writes `value` into `column` of the given row (zero-based) and saves the workbook. */
-export function writeCell(filePath: string, sheetName: string, rowIndex: number, column: string, value: unknown): void {
+export function writeCell(
+    filePath: string,
+    sheetName: string,
+    rowIndex: number,
+    column: string,
+    value: unknown
+): void {
     const { workbook, rows } = readSheet(filePath, sheetName);
 
     if (!Number.isInteger(rowIndex) || rowIndex < 0 || rowIndex >= rows.length) {
@@ -41,6 +50,11 @@ export function writeCell(filePath: string, sheetName: string, rowIndex: number,
 }
 
 /** Backwards-compatible helper for the legacy `policyNumber` column. */
-export function writePolicyNumber(filePath: string, sheetName: string, rowIndex: number, policyNumber: string | number): void {
+export function writePolicyNumber(
+    filePath: string,
+    sheetName: string,
+    rowIndex: number,
+    policyNumber: string | number
+): void {
     writeCell(filePath, sheetName, rowIndex, "policyNumber", policyNumber);
 }

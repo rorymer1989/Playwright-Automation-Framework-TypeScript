@@ -9,7 +9,6 @@ import { waitForPageReady, type WaitForPageReadyOptions } from "../utilities/wai
  * are thin wrappers over Playwright's auto-waiting Locator API.
  */
 export class Actions {
-
     // ---- Click / type -------------------------------------------------
 
     async smartClick(locator: Locator): Promise<void> {

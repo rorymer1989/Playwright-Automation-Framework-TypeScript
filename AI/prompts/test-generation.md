@@ -181,9 +181,9 @@ Use meaningful test names.
 Example:
 
 test(
-  "should successfully submit valid customer details",
-  async ({ page }) => {
-  }
+"should successfully submit valid customer details",
+async ({ page }) => {
+}
 );
 
 Avoid:

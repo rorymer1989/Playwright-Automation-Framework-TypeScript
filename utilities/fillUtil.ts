@@ -10,40 +10,29 @@ interface SmartFillOptions {
 export async function smartFill(
     locator: Locator,
     value: string,
-    {
-        retries = 3,
-        timeout = 5000,
-        delay = 1000
-    }: SmartFillOptions = {}
+    { retries = 3, timeout = 5000, delay = 1000 }: SmartFillOptions = {}
 ): Promise<void> {
+    await retry(
+        async () => {
+            await locator.waitFor({
+                state: "visible",
+                timeout,
+            });
 
-    await retry(async () => {
+            await locator.clear();
 
-        await locator.waitFor({
-            state: "visible",
-            timeout
-        });
+            await locator.fill(value);
 
-        await locator.clear();
+            const enteredValue = await locator.inputValue();
 
-        await locator.fill(value);
-
-        const enteredValue = await locator.inputValue();
-
-        if (enteredValue !== value) {
-
-            throw new Error(
-                `Expected "${value}" but found "${enteredValue}"`
-            );
-
+            if (enteredValue !== value) {
+                throw new Error(`Expected "${value}" but found "${enteredValue}"`);
+            }
+        },
+        {
+            retries,
+            delay,
+            actionName: "Smart Fill",
         }
-
-    }, {
-
-        retries,
-        delay,
-        actionName: "Smart Fill"
-
-    });
-
+    );
 }

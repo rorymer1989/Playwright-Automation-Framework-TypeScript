@@ -30,7 +30,9 @@ async function zipDirectory(sourceDir: string, outputZip: string): Promise<void>
  * Zips playwright-report/ and allure-report/ (whichever exist) into reports/
  * and returns the list of archives created.
  */
-export async function zipExecutionReports(outputDir = path.join(process.cwd(), "reports")): Promise<ReportArchive[]> {
+export async function zipExecutionReports(
+    outputDir = path.join(process.cwd(), "reports")
+): Promise<ReportArchive[]> {
     fs.mkdirSync(outputDir, { recursive: true });
 
     const candidates: Array<[dir: string, filename: string]> = [

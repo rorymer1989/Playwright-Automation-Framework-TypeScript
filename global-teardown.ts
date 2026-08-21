@@ -4,7 +4,7 @@ import { execSync } from "node:child_process";
 
 import { writeEnvironment } from "./reporting/allure/environmentWriter";
 
-export default async function globalTeardown(): Promise<void> {
+export default function globalTeardown(): void {
     console.log("");
     console.log("========================================");
     console.log("Generating Allure Report...");
@@ -20,18 +20,16 @@ export default async function globalTeardown(): Promise<void> {
             fs.mkdirSync(resultsHistory, { recursive: true });
             fs.cpSync(reportHistory, resultsHistory, {
                 recursive: true,
-                force: true
+                force: true,
             });
 
             console.log(" Previous Allure history copied.");
         } else {
-            console.log(
-                "ℹ️ No previous Allure history found. Trend will start from this execution."
-            );
+            console.log("ℹ️ No previous Allure history found. Trend will start from this execution.");
         }
 
         execSync("npx allure generate allure-results --clean -o allure-report", {
-            stdio: "inherit"
+            stdio: "inherit",
         });
 
         console.log("");

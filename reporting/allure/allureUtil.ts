@@ -15,7 +15,6 @@ import { allure as allureApi } from "allure-playwright";
 import { DEFAULT_ALLURE_METADATA } from "./defaultMetadata";
 
 class AllureUtil implements AllureUtilInterface {
-
     async epic(name: string): Promise<void> {
         await allureApi.epic(name);
     }
@@ -59,7 +58,6 @@ class AllureUtil implements AllureUtilInterface {
         await allureApi.epic(DEFAULT_ALLURE_METADATA.epic);
         await allureApi.label("framework", DEFAULT_ALLURE_METADATA.framework);
     }
-
 }
 
 const allureUtil = new AllureUtil();

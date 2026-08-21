@@ -15,42 +15,34 @@ interface SmartClickOptions {
  */
 export async function smartClick(
     locator: Locator,
-    {
-        retries = 3,
-        timeout = 5000,
-        force = false,
-        delay = 1000
-    }: SmartClickOptions = {}
+    { retries = 3, timeout = 5000, force = false, delay = 1000 }: SmartClickOptions = {}
 ): Promise<void> {
+    await retry(
+        async () => {
+            // Wait until visible
+            await locator.waitFor({
+                state: "visible",
+                timeout,
+            });
 
-    await retry(async () => {
+            // Scroll into view
+            await locator.scrollIntoViewIfNeeded();
 
-        // Wait until visible
-        await locator.waitFor({
-            state: "visible",
-            timeout
-        });
+            // Wait until enabled
+            await locator.waitFor({
+                state: "attached",
+            });
 
-        // Scroll into view
-        await locator.scrollIntoViewIfNeeded();
-
-        // Wait until enabled
-        await locator.waitFor({
-            state: "attached"
-        });
-
-        // Click
-        await locator.click({
-            force,
-            timeout
-        });
-
-    }, {
-
-        retries,
-        delay,
-        actionName: "Smart Click"
-
-    });
-
+            // Click
+            await locator.click({
+                force,
+                timeout,
+            });
+        },
+        {
+            retries,
+            delay,
+            actionName: "Smart Click",
+        }
+    );
 }

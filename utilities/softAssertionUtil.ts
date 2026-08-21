@@ -7,7 +7,6 @@ import type { Locator, Page } from "@playwright/test";
  * Call `assertAll()` when you want to stop early once any soft failure exists.
  */
 class SoftAssertionUtil {
-
     async assertVisible(locator: Locator, message?: string): Promise<void> {
         await expect.soft(locator, message).toBeVisible();
     }
@@ -51,7 +50,7 @@ class SoftAssertionUtil {
         if (failures.length > 0) {
             throw new Error(
                 `${failures.length} soft assertion(s) failed:\n\n` +
-                failures.map((e, i) => `${i + 1}. ${e.message ?? String(e)}`).join("\n\n")
+                    failures.map((e, i) => `${i + 1}. ${e.message ?? "Unknown error"}`).join("\n\n")
             );
         }
     }

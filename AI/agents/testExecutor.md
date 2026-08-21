@@ -50,8 +50,7 @@ A self-healing execution should have a controlled retry limit.
 
 Default:
 
-1 original execution
-+
+1 original execution +
 1 healing retry
 
 Do not create infinite execution loops.
@@ -61,10 +60,10 @@ Do not create infinite execution loops.
 Return:
 
 {
-  "test": "",
-  "initialStatus": "",
-  "healingAttempted": false,
-  "healingSuccessful": false,
-  "finalStatus": "",
-  "retries": 0
+"test": "",
+"initialStatus": "",
+"healingAttempted": false,
+"healingSuccessful": false,
+"finalStatus": "",
+"retries": 0
 }

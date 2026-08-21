@@ -14,16 +14,16 @@ This framework focuses on clean architecture, reusable components, environment-a
 
 This framework is designed using modern automation engineering practices with a strong focus on:
 
-* Maintainability
-* Scalability
-* Reusability
-* Test isolation
-* Environment management
-* Test-data management
-* Execution stability
-* Failure investigation
-* Reporting
-* CI/CD readiness
+- Maintainability
+- Scalability
+- Reusability
+- Test isolation
+- Environment management
+- Test-data management
+- Execution stability
+- Failure investigation
+- Reporting
+- CI/CD readiness
 
 The framework provides a structured foundation for building and maintaining large Playwright automation suites.
 
@@ -41,24 +41,22 @@ Custom Playwright fixtures are integrated into the framework to centralize reusa
 
 Benefits:
 
-* Reusable test dependencies
-* Centralized setup
-* Cleaner test files
-* Better test isolation
-* Reduced duplicate code
-* Scalable test architecture
+- Reusable test dependencies
+- Centralized setup
+- Cleaner test files
+- Better test isolation
+- Reduced duplicate code
+- Scalable test architecture
 
 Example:
 
 ```typescript
-import { test, expect } from '../fixtures/baseFixture';
+import { test, expect } from "../fixtures/baseFixture";
 
-test('verify application title', async ({ page }) => {
+test("verify application title", async ({ page }) => {
+  await page.goto("/");
 
-    await page.goto('/');
-
-    await expect(page).toHaveTitle(/Playwright/);
-
+  await expect(page).toHaveTitle(/Playwright/);
 });
 ```
 
@@ -124,12 +122,12 @@ This creates a foundation for maintaining different test-data requirements acros
 
 The approach is designed to support:
 
-* Environment-specific test data
-* Centralized data management
-* Reusable test data
-* Dynamic test data
-* Data-driven execution
-* Future data seeding and cleanup strategies
+- Environment-specific test data
+- Centralized data management
+- Reusable test data
+- Dynamic test data
+- Data-driven execution
+- Future data seeding and cleanup strategies
 
 ---
 
@@ -157,12 +155,12 @@ The framework includes Faker-based dynamic test-data generation.
 
 Useful for generating:
 
-* Names
-* Email addresses
-* Mobile numbers
-* Addresses
-* Random test values
-* Dynamic user information
+- Names
+- Email addresses
+- Mobile numbers
+- Addresses
+- Random test values
+- Dynamic user information
 
 This helps reduce hard-coded test data and improves test-data flexibility.
 
@@ -174,18 +172,18 @@ Allure Reporting is integrated into the framework for detailed execution analysi
 
 The framework captures:
 
-* Passed tests
-* Failed tests
-* Skipped tests
-* Screenshots
-* Videos
-* Playwright traces
-* Attachments
-* Environment information
-* Execution history
-* Execution trends
-* Duration trends
-* Retry trends
+- Passed tests
+- Failed tests
+- Skipped tests
+- Screenshots
+- Videos
+- Playwright traces
+- Attachments
+- Environment information
+- Execution history
+- Execution trends
+- Duration trends
+- Retry trends
 
 Generate the Allure report using:
 
@@ -242,10 +240,10 @@ The framework maintains Allure history to provide visibility across executions.
 
 Supported trend information includes:
 
-* Execution history
-* Duration trends
-* Retry trends
-* Category trends
+- Execution history
+- Duration trends
+- Retry trends
+- Category trends
 
 This allows teams to identify changes in execution behavior over time.
 
@@ -260,11 +258,11 @@ This is useful when validating multiple UI elements or business rules within the
 Example:
 
 ```typescript
-await expect.soft(page.getByText('Username')).toBeVisible();
+await expect.soft(page.getByText("Username")).toBeVisible();
 
-await expect.soft(page.getByText('Password')).toBeVisible();
+await expect.soft(page.getByText("Password")).toBeVisible();
 
-await expect.soft(page.getByRole('button', { name: 'Login' })).toBeVisible();
+await expect.soft(page.getByRole("button", { name: "Login" })).toBeVisible();
 ```
 
 This allows the test to collect multiple validation failures before completing.
@@ -278,32 +276,32 @@ The framework contains reusable execution utilities designed to improve test sta
 ## Smart Click
 
 ```typescript
-await smartClick(page.locator('#login'));
+await smartClick(page.locator("#login"));
 ```
 
 Designed to handle:
 
-* Visibility
-* Scroll into view
-* Interaction readiness
-* Retry behavior
-* Execution logging
+- Visibility
+- Scroll into view
+- Interaction readiness
+- Retry behavior
+- Execution logging
 
 ---
 
 ## Smart Fill
 
 ```typescript
-await smartFill(page.locator('#username'), 'Admin');
+await smartFill(page.locator("#username"), "Admin");
 ```
 
 Designed to:
 
-* Wait for the field
-* Clear existing values
-* Enter data
-* Validate the entered value
-* Retry when required
+- Wait for the field
+- Clear existing values
+- Enter data
+- Validate the entered value
+- Retry when required
 
 ---
 
@@ -327,17 +325,17 @@ Reusable retry mechanisms are available for operations that may occasionally fai
 
 Screenshots can be captured during test execution for:
 
-* Validation points
-* Failure investigation
-* Debugging
-* Execution evidence
+- Validation points
+- Failure investigation
+- Debugging
+- Execution evidence
 
 Example:
 
 ```typescript
 await page.screenshot({
-    path: 'screenshots/homepage.png',
-    fullPage: true
+  path: "screenshots/homepage.png",
+  fullPage: true,
 });
 ```
 
@@ -349,10 +347,10 @@ Playwright execution artifacts can be retained for debugging.
 
 Supported artifacts include:
 
-* Screenshots
-* Videos
-* Playwright traces
-* Attachments
+- Screenshots
+- Videos
+- Playwright traces
+- Attachments
 
 These artifacts can also be consumed through the Allure reporting layer.
 
@@ -364,14 +362,14 @@ The framework includes automated execution email reporting.
 
 The email report can contain:
 
-* Execution summary
-* Total tests
-* Passed tests
-* Failed tests
-* Skipped tests
-* Execution duration
-* Environment information
-* HTML execution report
+- Execution summary
+- Total tests
+- Passed tests
+- Failed tests
+- Skipped tests
+- Execution duration
+- Environment information
+- HTML execution report
 
 Example execution flow:
 
@@ -452,10 +450,10 @@ The framework supports Playwright browser projects including:
 
 | Browser  | Supported |
 | -------- | --------- |
-| Chromium | ✅         |
-| Chrome   | ✅         |
-| Firefox  | ✅         |
-| WebKit   | ✅         |
+| Chromium | ✅        |
+| Chrome   | ✅        |
+| Firefox  | ✅        |
+| WebKit   | ✅        |
 
 Browser configuration can be maintained through the Playwright configuration.
 
@@ -467,26 +465,26 @@ The framework supports browser-based mobile automation using Playwright device e
 
 Capabilities include:
 
-* Mobile viewport testing
-* Device emulation
-* Touch interaction
-* Responsive testing
-* Mobile browser validation
-* Cross-device testing
+- Mobile viewport testing
+- Device emulation
+- Touch interaction
+- Responsive testing
+- Mobile browser validation
+- Cross-device testing
 
 Example:
 
 ```typescript
-import { devices } from '@playwright/test';
+import { devices } from "@playwright/test";
 
 projects: [
-    {
-        name: 'Mobile Chrome',
-        use: {
-            ...devices['Galaxy S24']
-        }
-    }
-]
+  {
+    name: "Mobile Chrome",
+    use: {
+      ...devices["Galaxy S24"],
+    },
+  },
+];
 ```
 
 ---
@@ -497,11 +495,11 @@ Playwright parallel execution is supported for faster test execution.
 
 Benefits include:
 
-* Multiple workers
-* Faster regression execution
-* Independent test execution
-* Cross-browser execution
-* Scalable test suites
+- Multiple workers
+- Faster regression execution
+- Independent test execution
+- Cross-browser execution
+- Scalable test suites
 
 Example:
 
@@ -562,6 +560,7 @@ Playwright-Automation-Framework-TypeScript
 ├── global-setup.ts / global-teardown.ts
 ├── playwright.config.ts
 ├── tsconfig.json
+├── eslint.config.mjs / .prettierrc
 ├── .env.example                       # copy to .env for secrets (git-ignored)
 └── package.json
 ```
@@ -626,16 +625,16 @@ playwright.config.ts
 
 Configuration can control:
 
-* Base URL
-* Browser projects
-* Workers
-* Retries
-* Timeouts
-* Screenshots
-* Videos
-* Traces
-* Reporter configuration
-* Environment configuration
+- Base URL
+- Browser projects
+- Workers
+- Retries
+- Timeouts
+- Screenshots
+- Videos
+- Traces
+- Reporter configuration
+- Environment configuration
 
 ---
 
@@ -697,6 +696,14 @@ npm run test:chromium         # single browser (also test:firefox / test:webkit)
 npm run test:headed
 npm run test:ui
 npx playwright test tests/home.spec.ts
+```
+
+Quality gates (also enforced in CI):
+
+```bash
+npm run check          # typecheck + lint + format check
+npm run lint:fix       # ESLint autofix
+npm run format         # Prettier write
 ```
 
 > The `npm test*` scripts go through `scripts/clean-snap-env.sh`, which strips GTK/GIO variables injected by snap-packaged IDEs (VS Code snap). Without it WebKit crashes on Ubuntu. Calling `npx playwright test` directly works fine from a regular terminal.
@@ -796,30 +803,30 @@ where appropriate in `.gitignore`.
 
 Never commit:
 
-* Passwords
-* API tokens
-* Email credentials
-* Access keys
-* Production secrets
+- Passwords
+- API tokens
+- Email credentials
+- Access keys
+- Production secrets
 
 ---
 
 # 🧰 Utilities
 
-| Module | Purpose |
-| --- | --- |
-| `utilities/assertionUtil.ts` | Centralized hard assertions (`Assertion.*`) |
-| `utilities/softAssertionUtil.ts` | `expect.soft` wrappers + `assertAll()` |
-| `utilities/clickUtil.ts` / `fillUtil.ts` | `smartClick`, `smartFill` with retry and verification |
-| `utilities/waitUtil.ts` | `waitForPageReady` (load + loader overlays, no `networkidle`) |
-| `utilities/retryUtil.ts` | Generic retry |
-| `utilities/screenshotUtil.ts` | Per-test numbered screenshots attached to the report |
-| `utilities/excelUtil.ts` | `getTestData`, `writeCell` (xlsx) |
-| `utilities/fileUtil.ts` | `downloadFile`, `createFolder` |
-| `utilities/scrollUtil.ts` | `clickWithScroll` for horizontal containers |
-| `utilities/Fakerutility.ts` | Dynamic test data (`@faker-js/faker`) |
-| `utilities/dataManager.ts` | Environment-aware JSON test data (`data` fixture) |
-| `utilities/dashboardUtil.ts` | Execution banner printed in `global-setup` |
+| Module                                   | Purpose                                                       |
+| ---------------------------------------- | ------------------------------------------------------------- |
+| `utilities/assertionUtil.ts`             | Centralized hard assertions (`Assertion.*`)                   |
+| `utilities/softAssertionUtil.ts`         | `expect.soft` wrappers + `assertAll()`                        |
+| `utilities/clickUtil.ts` / `fillUtil.ts` | `smartClick`, `smartFill` with retry and verification         |
+| `utilities/waitUtil.ts`                  | `waitForPageReady` (load + loader overlays, no `networkidle`) |
+| `utilities/retryUtil.ts`                 | Generic retry                                                 |
+| `utilities/screenshotUtil.ts`            | Per-test numbered screenshots attached to the report          |
+| `utilities/excelUtil.ts`                 | `getTestData`, `writeCell` (xlsx)                             |
+| `utilities/fileUtil.ts`                  | `downloadFile`, `createFolder`                                |
+| `utilities/scrollUtil.ts`                | `clickWithScroll` for horizontal containers                   |
+| `utilities/Fakerutility.ts`              | Dynamic test data (`@faker-js/faker`)                         |
+| `utilities/dataManager.ts`               | Environment-aware JSON test data (`data` fixture)             |
+| `utilities/dashboardUtil.ts`             | Execution banner printed in `global-setup`                    |
 
 ---
 
@@ -859,15 +866,15 @@ The framework is continuously evolving.
 
 Planned areas include:
 
-* 🤖 AI-enabled test automation
-* 🧠 Intelligent failure analysis
-* 🩹 AI-assisted test maintenance
-* 🔌 MCP integration
-* ☁️ Cloud execution
-* 🔄 CI/CD improvements
-* 🔔 Slack / Teams notifications
-* 📊 Advanced execution analytics
-* 🧪 Advanced test-data lifecycle management
+- 🤖 AI-enabled test automation
+- 🧠 Intelligent failure analysis
+- 🩹 AI-assisted test maintenance
+- 🔌 MCP integration
+- ☁️ Cloud execution
+- 🔄 CI/CD improvements
+- 🔔 Slack / Teams notifications
+- 📊 Advanced execution analytics
+- 🧪 Advanced test-data lifecycle management
 
 The goal is to gradually evolve the framework toward **AI-enabled intelligent QA automation** while maintaining a strong and reliable automation foundation.
 
@@ -879,67 +886,67 @@ The goal is to gradually evolve the framework toward **AI-enabled intelligent QA
 
 ### Architecture
 
-* Custom Playwright Fixtures
-* Improved modular architecture
-* Environment-aware execution
-* Environment-aware test data
+- Custom Playwright Fixtures
+- Improved modular architecture
+- Environment-aware execution
+- Environment-aware test data
 
 ### Test Execution
 
-* Soft Assertions
-* Smart Click
-* Smart Fill
-* Smart Wait
-* Retry Utility
-* Parallel Execution
-* Cross-browser execution
-* Mobile browser execution
+- Soft Assertions
+- Smart Click
+- Smart Fill
+- Smart Wait
+- Retry Utility
+- Parallel Execution
+- Cross-browser execution
+- Mobile browser execution
 
 ### Reporting
 
-* Allure Reporting
-* Environment information
-* Allure history
-* Execution trends
-* Duration trends
-* Retry trends
-* Screenshots
-* Videos
-* Playwright traces
-* Attachments
+- Allure Reporting
+- Environment information
+- Allure history
+- Execution trends
+- Duration trends
+- Retry trends
+- Screenshots
+- Videos
+- Playwright traces
+- Attachments
 
 ### Distribution
 
-* Automated HTML execution summary
-* Email reporting
-* Report ZIP packaging
-* Playwright report packaging
-* Allure report packaging
+- Automated HTML execution summary
+- Email reporting
+- Report ZIP packaging
+- Playwright report packaging
+- Allure report packaging
 
 ---
 
 ## 🚀 v1.1.0 — Intelligent Execution Update
 
-* Environment Management
-* Execution Dashboard
-* Smart Retry Utility
-* Smart Click Utility
-* Smart Fill Utility
-* Smart Wait Utility
-* Assertion Utility
+- Environment Management
+- Execution Dashboard
+- Smart Retry Utility
+- Smart Click Utility
+- Smart Fill Utility
+- Smart Wait Utility
+- Assertion Utility
 
 ---
 
 ## 🚀 v1.0.0
 
-* Page Object Model
-* Excel Data-Driven Framework
-* Cross-Browser Testing
-* Mobile Browser Automation
-* API Utility
-* Database Utility
-* HTML Reporting
-* Organized Artifacts
+- Page Object Model
+- Excel Data-Driven Framework
+- Cross-Browser Testing
+- Mobile Browser Automation
+- API Utility
+- Database Utility
+- HTML Reporting
+- Organized Artifacts
 
 ---
 
@@ -962,18 +969,18 @@ If you would like to improve the framework:
 
 Open to collaboration and freelance opportunities involving:
 
-* Playwright Automation
-* TypeScript Automation
-* QA Automation
-* Automation Framework Development
-* Test Architecture
-* UI Automation
-* API Automation
-* Mobile Web Automation
-* CI/CD Integration
-* Reporting Solutions
-* AI-enabled QA Automation
-* Automation Framework Modernization
+- Playwright Automation
+- TypeScript Automation
+- QA Automation
+- Automation Framework Development
+- Test Architecture
+- UI Automation
+- API Automation
+- Mobile Web Automation
+- CI/CD Integration
+- Reporting Solutions
+- AI-enabled QA Automation
+- Automation Framework Modernization
 
 If you are working on a project where Playwright automation or framework modernization can help, feel free to connect.
 

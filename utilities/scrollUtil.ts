@@ -16,14 +16,18 @@ export async function clickWithScroll(
 ): Promise<void> {
     const button = container.getByRole("button", { name: text }).first();
 
-    await container.evaluate((el) => { el.scrollLeft = 0; });
+    await container.evaluate((el) => {
+        el.scrollLeft = 0;
+    });
 
     for (let i = 0; i <= maxScrolls; i++) {
         if (await button.isVisible()) {
             await button.click();
             return;
         }
-        await container.evaluate((el, step) => { el.scrollLeft += step; }, scrollStep);
+        await container.evaluate((el, step) => {
+            el.scrollLeft += step;
+        }, scrollStep);
         await container.page().waitForTimeout(100);
     }
 
