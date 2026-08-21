@@ -31,34 +31,14 @@ The framework provides a structured foundation for building and maintaining larg
 
 # 🚀 What's New
 
-## v1.2.0 — Enterprise Automation & Reporting Update
+## v1.4.0 — Quality Gates, Authentication & API
 
-The TypeScript release introduces several improvements focused on framework architecture, test data, execution, reporting, and distribution.
+- **Authentication via `storageState`**: login once per browser, every UI test starts authenticated.
+- **API testing project** with the built-in `request` fixture and API assertions.
+- **ESLint + Prettier** (type-checked, Playwright rules) enforced in CI with `npm run check`.
+- `ActionUtility` removed; the `actions` fixture is the single interaction layer.
 
-### 🧩 Playwright Fixtures
-
-Custom Playwright fixtures are integrated into the framework to centralize reusable dependencies and test setup.
-
-Benefits:
-
-- Reusable test dependencies
-- Centralized setup
-- Cleaner test files
-- Better test isolation
-- Reduced duplicate code
-- Scalable test architecture
-
-Example:
-
-```typescript
-import { test, expect } from "../fixtures/baseFixture";
-
-test("verify application title", async ({ page }) => {
-  await page.goto("/");
-
-  await expect(page).toHaveTitle(/Playwright/);
-});
-```
+Full details in [CHANGELOG.md](CHANGELOG.md).
 
 ---
 
@@ -226,7 +206,7 @@ Environment       : UAT
 Browser           : Chromium
 Platform          : darwin
 Node Version      : v24.x
-Framework Version : v1.2.0
+Framework Version : v1.4.0
 Base URL          : https://example.com
 ```
 
@@ -417,7 +397,7 @@ Example:
 
 🚀 Playwright Automation Framework
 
-Framework Version : v1.2.0
+Framework Version : v1.4.0
 
 Environment       : UAT
 
@@ -899,6 +879,27 @@ The goal is to gradually evolve the framework toward **AI-enabled intelligent QA
 ---
 
 # 📦 Release History
+
+See [CHANGELOG.md](CHANGELOG.md) for the complete list.
+
+## 🚀 v1.4.0 — Quality Gates, Authentication & API
+
+- Authentication with per-browser `storageState` (`setup:<browser>` projects)
+- `api` project and API assertions
+- ESLint + Prettier, `npm run check` in CI
+- `ActionUtility` removed in favour of the `actions` fixture
+
+---
+
+## 🚀 v1.3.0 — Bootstrap & Hardening
+
+- Framework made runnable: missing dependencies, broken fixture path, stub assertion fixture
+- Multi-environment config actually wired (`.env` + `config/environments`)
+- Page Objects, test data and a real spec; GitHub Actions CI
+- ESM everywhere, duplicates removed, `CommonUtilities` split, `xlsx` advisory fixed
+- Email/zip reporting reachable via `npm run report:email`
+
+---
 
 ## 🚀 v1.2.0 — Enterprise Automation & Reporting Update
 
