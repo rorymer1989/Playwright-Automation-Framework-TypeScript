@@ -2,6 +2,14 @@
 
 All notable changes to this project are documented here. Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/).
 
+## [1.14.0] — 2026-08-21
+
+### Added
+
+- **Official Playwright Test Agents** (`npx playwright init-agents --loop=claude --prompts`): planner / generator / healer in `.claude/agents/`, example prompts in `.claude/prompts/`, `playwright-test` MCP server in `.mcp.json` (87 tools, verified over stdio). Each agent carries a binding "Repository rules" section (reuse fixtures/page objects, locator priority, no `networkidle`/`waitForTimeout`, never weaken assertions or `test.fixme()`, plans under `specs/<feature>/`).
+- `tests/seed.spec.ts` rewritten as the framework-compliant template the agents inherit (imports `fixtures/baseFixture`, `shop`/`assertion`/`data`, `@KEY` + `allure.issue`); excluded from the run via `testIgnore`.
+- `/jira-test` delegates exploration to the planner and per-scenario generation to the generator; `/heal` delegates to the healer and reviews its diff against the constitution.
+
 ## [1.13.0] — 2026-08-21
 
 ### Added
@@ -182,6 +190,7 @@ Intelligent Execution Update — environment management, execution dashboard, re
 
 Initial release — Page Object Model.
 
+[1.14.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.14.0
 [1.13.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.13.0
 [1.12.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.12.0
 [1.11.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.11.0

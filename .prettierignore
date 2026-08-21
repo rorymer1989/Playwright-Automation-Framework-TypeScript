@@ -12,3 +12,5 @@ test-result.json
 .claude/skills
 .claude/commands
 specs
+.claude/agents
+.claude/prompts

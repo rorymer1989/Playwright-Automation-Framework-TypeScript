@@ -10,6 +10,7 @@ Run `sh scripts/clean-snap-env.sh npx playwright test $ARGUMENTS --project=chrom
 - **assertion** (expected vs received differ), **timeout on navigation**, **app error** → NOT eligible: report the evidence, suggest `npm run jira:bugs`, stop.
 
 ## 2. Discover
+Preferred: delegate to the official **`playwright-test-healer`** subagent (`.claude/agents/playwright-test-healer.md`, bound by the repository rules appended there) and review its diff with the criteria below. Manual fallback:
 Identify the page object and locator involved. Open the live page (Playwright MCP, or a throwaway `npx tsx` script using the same `storageState` as the project) and take an ARIA snapshot / `data-test` dump around the intended element. Propose up to 3 candidates in constitution priority order (`getByRole` → `getByLabel` → `getByPlaceholder` → `getByTestId` → `getByText` → CSS → XPath).
 
 ## 3. Validate

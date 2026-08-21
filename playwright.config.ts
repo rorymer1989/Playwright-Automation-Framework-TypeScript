@@ -18,6 +18,8 @@ const BROWSERS = [
  */
 export default defineConfig({
     testDir: "./tests",
+    // tests/seed.spec.ts is the template for Playwright Test Agents, not a test
+    testIgnore: /seed\.spec\.ts/,
     fullyParallel: true,
     forbidOnly: isCI,
     retries: isCI ? 2 : 0,
@@ -72,7 +74,7 @@ export default defineConfig({
             },
             {
                 name,
-                testIgnore: /.*\.(api|unit)\.spec\.ts/,
+                testIgnore: /(\.(api|unit)\.spec\.ts|seed\.spec\.ts)$/,
                 dependencies: [`setup:${name}`],
                 use: { ...devices[device], storageState: storageStatePath(name) },
             },
