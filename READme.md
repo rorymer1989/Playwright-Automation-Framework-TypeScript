@@ -51,7 +51,7 @@ Benefits:
 Example:
 
 ```typescript
-import { test, expect } from '../fixtures/testFixtures';
+import { test, expect } from '../fixtures/baseFixture';
 
 test('verify application title', async ({ page }) => {
 
@@ -550,7 +550,7 @@ Playwright_Automation
 │   └── executionConfig.ts
 │
 ├── fixtures
-│   └── testFixtures.ts
+│   └── baseFixture.ts
 │
 ├── pages
 │
@@ -721,7 +721,7 @@ npx playwright test
 Run a specific test:
 
 ```bash
-npx playwright test tests/example.spec.ts
+npx playwright test tests/home.spec.ts
 ```
 
 Run tests in headed mode:

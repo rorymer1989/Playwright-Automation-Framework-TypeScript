@@ -2,9 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { execSync } from "node:child_process";
 
-const { writeEnvironment }: { writeEnvironment: () => void } = require(
-    "./reporting/allure/environmentWriter"
-);
+import { writeEnvironment } from "./reporting/allure/environmentWriter";
 
 export default async function globalTeardown(): Promise<void> {
     console.log("");
@@ -32,7 +30,7 @@ export default async function globalTeardown(): Promise<void> {
             );
         }
 
-        execSync("allure generate allure-results --clean -o allure-report", {
+        execSync("npx allure generate allure-results --clean -o allure-report", {
             stdio: "inherit"
         });
 
@@ -40,7 +38,7 @@ export default async function globalTeardown(): Promise<void> {
         console.log("✅ Allure Report Generated Successfully");
         console.log("");
     } catch (error: unknown) {
-        console.error("❌ Unable to generate Allure Report");
-        console.error(error);
+        console.warn("⚠️  Unable to generate Allure Report (requires Java + allure-commandline):");
+        console.warn(`   ${error instanceof Error ? error.message : String(error)}`);
     }
 }

@@ -63,7 +63,6 @@ async function createFolder(folderName: string, basePath: string = 'reports') {
     throw new Error(`Error creating folder: ${msg}`);
   }
 }
-``
 
 
 

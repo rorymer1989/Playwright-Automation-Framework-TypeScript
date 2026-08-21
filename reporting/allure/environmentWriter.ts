@@ -1,8 +1,8 @@
-const fs = require("fs");
-const path = require("path");
-const os = require("os");
+import fs from "node:fs";
+import path from "node:path";
+import os from "node:os";
 
-function writeEnvironment() {
+export function writeEnvironment(): void {
 
     const reportFolder = path.join(process.cwd(), "allure-results");
 
@@ -44,8 +44,3 @@ Execution Date=${new Date().toLocaleString()}
 
 }
 
-module.exports = {
-
-    writeEnvironment
-
-};

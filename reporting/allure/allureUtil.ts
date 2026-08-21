@@ -1,15 +1,3 @@
-interface AllureApi {
-    epic(name: string): Promise<void>;
-    feature(name: string): Promise<void>;
-    story(name: string): Promise<void>;
-    owner(name: string): Promise<void>;
-    severity(level: string): Promise<void>;
-    tags(...tags: string[]): Promise<void>;
-    description(text: string): Promise<void>;
-    parentSuite(name: string): Promise<void>;
-    suite(name: string): Promise<void>;
-}
-
 interface AllureUtilInterface {
     epic(name: string): Promise<void>;
     feature(name: string): Promise<void>;
@@ -22,9 +10,7 @@ interface AllureUtilInterface {
     subSuite(name: string): Promise<void>;
 }
 
-const {
-    allure: allureApi
-}: { allure: AllureApi } = require("allure-playwright");
+import { allure as allureApi } from "allure-playwright";
 
 class AllureUtil implements AllureUtilInterface {
 
@@ -66,4 +52,5 @@ class AllureUtil implements AllureUtilInterface {
 
 }
 
-module.exports = new AllureUtil();
+const allureUtil = new AllureUtil();
+export default allureUtil;

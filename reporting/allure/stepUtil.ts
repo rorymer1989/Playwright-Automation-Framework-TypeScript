@@ -1,8 +1,4 @@
-const {
-
-allure
-
-} = require("allure-playwright");
+import { allure } from "allure-playwright";
 
 interface StepCallback {
 	(): Promise<void> | void;
@@ -26,4 +22,5 @@ await callback();
 
 }
 
-module.exports=new StepUtil();
+const stepUtil = new StepUtil();
+export default stepUtil;

@@ -1,11 +1,13 @@
 import { test as base } from "@playwright/test";
-
 import { Actions } from "./actionFixture";
 import { Assertions } from "./assertionFixture";
-const dataManager = require("../utils/dataManager");
-const allureUtil = require("../reporting/allure/allureUtil");
+import dataManager from "../utilities/dataManager";
+import allureUtil from "../reporting/allure/allureUtil";
+import { HomePage, DocsPage } from "../pages";
 
 interface CustomFixtures {
+    homePage: HomePage;
+    docsPage: DocsPage;
     actions: Actions;
     assertion: Assertions;
     data: typeof dataManager;
@@ -13,31 +15,12 @@ interface CustomFixtures {
 }
 
 export const test = base.extend<CustomFixtures>({
-
-    actions: async ({}, use) => {
-
-        await use(new Actions());
-
-    },
-
-    assertion: async ({}, use: (assertions: Assertions) => Promise<void>): Promise<void> => {
-
-        await use(new Assertions());
-
-    },
-
-    data: async ({}, use: (data: typeof dataManager) => Promise<void>) => {
-
-        await use(dataManager);
-
-    },
-
-    allure: async ({}, use: (allure: typeof allureUtil) => Promise<void>): Promise<void> => {
-
-        await use(allureUtil);
-
-    },
-
+    homePage: async ({ page }, use) => { await use(new HomePage(page)); },
+    docsPage: async ({ page }, use) => { await use(new DocsPage(page)); },
+    actions: async ({}, use) => { await use(new Actions()); },
+    assertion: async ({}, use) => { await use(new Assertions()); },
+    data: async ({}, use) => { await use(dataManager); },
+    allure: async ({}, use) => { await use(allureUtil); },
 });
 
 export { expect } from "@playwright/test";

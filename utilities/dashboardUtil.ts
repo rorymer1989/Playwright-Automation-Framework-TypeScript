@@ -1,5 +1,5 @@
 import os from "os";
-import { EXECUTION_CONFIG } from "../config/executionConfig.js";
+import { EXECUTION_CONFIG } from "../config/executionConfig";
 
 export function printExecutionDashboard() {
 
