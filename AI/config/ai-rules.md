@@ -2,6 +2,14 @@
 
 The AI must follow these rules when working with the framework.
 
+> The binding, complete set of principles lives in `.specify/memory/constitution.md` (Spec Kit). This file is the short operational summary; if they differ, the constitution wins.
+
+## Commands
+
+- `/jira-test KEY` — story → spec → plan → tasks → tests (Spec Kit workflow).
+- `/heal <spec>[:line]` — self-healing of broken locators, proposes a validated diff for approval.
+- `/speckit-*` — generic Spec Kit skills (`specify`, `plan`, `tasks`, `implement`, `clarify`, `analyze`, `checklist`, `converge`).
+
 ## Read First
 
 Before modifying code:
