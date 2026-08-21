@@ -1,5 +1,7 @@
 # Playwright Automation Framework Context
 
+> Entry point for Claude Code sessions: `CLAUDE.md` (repo root). Binding rules: `.specify/memory/constitution.md`.
+
 Language: TypeScript (strict, CommonJS). Tool: Playwright Test. Architecture: Page Object Model + custom fixtures.
 
 ## Directory map (source of truth)
