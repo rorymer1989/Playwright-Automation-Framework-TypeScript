@@ -1,22 +1,22 @@
 import type { Locator, Page } from "@playwright/test";
-import { smartClick } from "../utilities/clickUtil";
-import { smartFill } from "../utilities/fillUtil";
+import { smartClick, type SmartClickOptions } from "../utilities/clickUtil";
+import { smartFill, type SmartFillOptions } from "../utilities/fillUtil";
 import { waitForPageReady, type WaitForPageReadyOptions } from "../utilities/waitUtil";
 
 /**
  * `actions` fixture: the single entry point for element interactions.
- * Click/fill go through the smart* utilities (retry + verification); the rest
- * are thin wrappers over Playwright's auto-waiting Locator API.
+ * Everything is a thin wrapper over Playwright's auto-waiting Locator API;
+ * `smartFill` additionally verifies the value after filling.
  */
 export class Actions {
     // ---- Click / type -------------------------------------------------
 
-    async smartClick(locator: Locator): Promise<void> {
-        await smartClick(locator);
+    async smartClick(locator: Locator, options?: SmartClickOptions): Promise<void> {
+        await smartClick(locator, options);
     }
 
-    async smartFill(locator: Locator, value: string): Promise<void> {
-        await smartFill(locator, value);
+    async smartFill(locator: Locator, value: string, options?: SmartFillOptions): Promise<void> {
+        await smartFill(locator, value, options);
     }
 
     async forceClick(locator: Locator): Promise<void> {

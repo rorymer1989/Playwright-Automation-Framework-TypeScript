@@ -251,37 +251,23 @@ This allows the test to collect multiple validation failures before completing.
 
 # ⚡ Smart Execution Utilities
 
-The framework contains reusable execution utilities designed to improve test stability and reduce repetitive code.
+Thin, intention-revealing wrappers over Playwright's auto-waiting Locator API. They add **no manual waits or retry loops**: Playwright already waits for elements to be attached, visible, stable, enabled and scrolled into view, and a click that needs retries is a flaky locator or application that should surface as such.
 
 ## Smart Click
 
 ```typescript
-await smartClick(page.locator("#login"));
+await actions.smartClick(page.getByRole("button", { name: "Login" }));
+await actions.smartClick(locator, { timeout: 10_000, force: true }); // options are optional
 ```
-
-Designed to handle:
-
-- Visibility
-- Scroll into view
-- Interaction readiness
-- Retry behavior
-- Execution logging
-
----
 
 ## Smart Fill
 
 ```typescript
-await smartFill(page.locator("#username"), "Admin");
+await actions.smartFill(page.getByLabel("Username"), "Admin");
+await actions.smartFill(maskedInput, "1234", { verify: false }); // skip the value check
 ```
 
-Designed to:
-
-- Wait for the field
-- Clear existing values
-- Enter data
-- Validate the entered value
-- Retry when required
+After filling, an auto-retrying `toHaveValue` assertion confirms the input kept the value — this catches masks, async formatting and re-renders that drop keystrokes.
 
 ---
 
@@ -811,20 +797,20 @@ Never commit:
 
 # 🧰 Utilities
 
-| Module                                   | Purpose                                                       |
-| ---------------------------------------- | ------------------------------------------------------------- |
-| `utilities/assertionUtil.ts`             | Centralized hard assertions (`Assertion.*`)                   |
-| `utilities/softAssertionUtil.ts`         | `expect.soft` wrappers + `assertAll()`                        |
-| `utilities/clickUtil.ts` / `fillUtil.ts` | `smartClick`, `smartFill` with retry and verification         |
-| `utilities/waitUtil.ts`                  | `waitForPageReady` (load + loader overlays, no `networkidle`) |
-| `utilities/retryUtil.ts`                 | Generic retry                                                 |
-| `utilities/screenshotUtil.ts`            | Per-test numbered screenshots attached to the report          |
-| `utilities/excelUtil.ts`                 | `getTestData`, `writeCell` (xlsx)                             |
-| `utilities/fileUtil.ts`                  | `downloadFile`, `createFolder`                                |
-| `utilities/scrollUtil.ts`                | `clickWithScroll` for horizontal containers                   |
-| `utilities/Fakerutility.ts`              | Dynamic test data (`@faker-js/faker`)                         |
-| `utilities/dataManager.ts`               | Environment-aware JSON test data (`data` fixture)             |
-| `utilities/dashboardUtil.ts`             | Execution banner printed in `global-setup`                    |
+| Module                                   | Purpose                                                                        |
+| ---------------------------------------- | ------------------------------------------------------------------------------ |
+| `utilities/assertionUtil.ts`             | Centralized hard assertions (`Assertion.*`)                                    |
+| `utilities/softAssertionUtil.ts`         | `expect.soft` wrappers + `assertAll()`                                         |
+| `utilities/clickUtil.ts` / `fillUtil.ts` | `smartClick` (thin `click` wrapper), `smartFill` (`fill` + value verification) |
+| `utilities/waitUtil.ts`                  | `waitForPageReady` (load + loader overlays, no `networkidle`)                  |
+| `utilities/retryUtil.ts`                 | Generic retry                                                                  |
+| `utilities/screenshotUtil.ts`            | Per-test numbered screenshots attached to the report                           |
+| `utilities/excelUtil.ts`                 | `getTestData`, `writeCell` (xlsx)                                              |
+| `utilities/fileUtil.ts`                  | `downloadFile`, `createFolder`                                                 |
+| `utilities/scrollUtil.ts`                | `clickWithScroll` for horizontal containers                                    |
+| `utilities/Fakerutility.ts`              | Dynamic test data (`@faker-js/faker`)                                          |
+| `utilities/dataManager.ts`               | Environment-aware JSON test data (`data` fixture)                              |
+| `utilities/dashboardUtil.ts`             | Execution banner printed in `global-setup`                                     |
 
 ---
 

@@ -1,38 +1,25 @@
-import { retry } from "./retryUtil";
-import type { Locator } from "@playwright/test";
+import { expect, type Locator } from "@playwright/test";
 
-interface SmartFillOptions {
-    retries?: number;
+export interface SmartFillOptions {
+    /** Per-action timeout in ms. Defaults to `use.actionTimeout` from playwright.config.ts. */
     timeout?: number;
-    delay?: number;
+    /** Skip the post-fill value check (e.g. inputs that mask or reformat their value). */
+    verify?: boolean;
 }
 
+/**
+ * Fill wrapper. `locator.fill()` already waits for the element to be visible,
+ * enabled and editable, and clears it before typing. The extra value here is
+ * the verification: an auto-retrying `toHaveValue` catches inputs that drop or
+ * rewrite keystrokes (masks, async formatting, re-renders) without a manual loop.
+ */
 export async function smartFill(
     locator: Locator,
     value: string,
-    { retries = 3, timeout = 5000, delay = 1000 }: SmartFillOptions = {}
+    { timeout, verify = true }: SmartFillOptions = {}
 ): Promise<void> {
-    await retry(
-        async () => {
-            await locator.waitFor({
-                state: "visible",
-                timeout,
-            });
-
-            await locator.clear();
-
-            await locator.fill(value);
-
-            const enteredValue = await locator.inputValue();
-
-            if (enteredValue !== value) {
-                throw new Error(`Expected "${value}" but found "${enteredValue}"`);
-            }
-        },
-        {
-            retries,
-            delay,
-            actionName: "Smart Fill",
-        }
-    );
+    await locator.fill(value, { timeout });
+    if (verify) {
+        await expect(locator, "value should be set after fill").toHaveValue(value, { timeout });
+    }
 }
