@@ -60,6 +60,15 @@ jobs:
           - project: api
             shard: 1
             total: 1
+          # Mobile emulation (tests/shop only) — engine to install differs from the project name
+          - project: mobile-chrome
+            browser: chromium
+            shard: 1
+            total: 1
+          - project: mobile-safari
+            browser: webkit
+            shard: 1
+            total: 1
     env:
       PW_WORKERS: 2
       SKIP_ALLURE_REPORT: 1
@@ -71,7 +80,7 @@ jobs:
 
       - name: Install browser
         if: matrix.project != 'api'
-        run: npx playwright install --with-deps ${{ matrix.project }}
+        run: npx playwright install --with-deps ${{ matrix.browser || matrix.project }}
 
       - name: Run ${{ matrix.project }} (${{ matrix.shard }}/${{ matrix.total }})
         run: >
