@@ -32,11 +32,15 @@
     "test:demo-failures": "DEMO_FAILURES=1 sh scripts/clean-snap-env.sh playwright test tests/demo --project=chromium --retries=1",
     "jira:story": "tsx scripts/jira-story.ts",
     "test:story": "sh scripts/clean-snap-env.sh playwright test --grep",
-    "jira:bugs": "tsx scripts/jira-bugs.ts"
+    "jira:bugs": "tsx scripts/jira-bugs.ts",
+    "prepare": "husky"
   },
   "keywords": [],
-  "author": "",
+  "author": "Pedro Gutierrez",
   "license": "ISC",
+  "engines": {
+    "node": ">=22"
+  },
   "type": "commonjs",
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
@@ -50,6 +54,8 @@
     "eslint": "^10.9.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-playwright": "^2.11.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
     "prettier": "^3.9.6",
     "tsx": "^4.23.12",
     "typescript": "^5.9.3",
@@ -61,5 +67,14 @@
     "dotenv": "^17.4.2",
     "nodemailer": "^9.0.5",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+  },
+  "lint-staged": {
+    "*.{ts,js}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{md,json,yml,yaml}": [
+      "prettier --write"
+    ]
   }
 }
