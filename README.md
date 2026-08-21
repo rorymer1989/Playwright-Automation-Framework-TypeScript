@@ -31,11 +31,11 @@ The framework provides a structured foundation for building and maintaining larg
 
 # 🚀 What's New
 
-## v1.10.0 — Failure Paths, Preflight & Excel
+## v1.11.0 — Jira: Stories → Tests, Failures → Bugs
 
-- **Failure-paths demo** (`DEMO_FAILURES=1`): proves traces/videos/screenshots, retries → flaky, soft aggregation, real visual diffs and red emails — locally and in CI.
-- **Environment preflight**: unreachable URLs fail the run in seconds, not per test.
-- **Excel data-driven checkout** over `testData/<env>/checkout-customers.xlsx`.
+- **`/jira-test SCRUM-12`** generates framework-compliant tests from a Jira story (acceptance criteria → tests), runs them and reports back to the story.
+- **`npm run jira:bugs`** raises de-duplicated bugs with evidence for failed tests.
+- Allure links every test to its Jira issue; `npm run test:story -- "@KEY"`.
 
 Full details in [CHANGELOG.md](CHANGELOG.md).
 
@@ -205,7 +205,7 @@ Environment       : UAT
 Browser           : Chromium
 Platform          : darwin
 Node Version      : v24.x
-Framework Version : v1.10.0
+Framework Version : v1.11.0
 Base URL          : https://example.com
 ```
 
@@ -382,7 +382,7 @@ Example:
 
 🚀 Playwright Automation Framework
 
-Framework Version : v1.10.0
+Framework Version : v1.11.0
 
 Environment       : UAT
 
@@ -1025,6 +1025,12 @@ The goal is to gradually evolve the framework toward **AI-enabled intelligent QA
 # 📦 Release History
 
 See [CHANGELOG.md](CHANGELOG.md) for the complete list.
+
+## 🚀 v1.11.0 — Jira: Stories → Tests, Failures → Bugs
+
+- `utilities/jiraClient.ts`, `/jira-test`, `jira:story`, `jira:bugs`, `allure.issue()`
+
+---
 
 ## 🚀 v1.10.0 — Failure Paths, Preflight & Excel
 
