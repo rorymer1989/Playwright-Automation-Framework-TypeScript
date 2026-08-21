@@ -1,4 +1,5 @@
 import { test, expect } from "../../fixtures/baseFixture";
+import { FakerUtility } from "../../utilities/fakerUtil";
 
 interface ApiData {
     existingPostId: number;
@@ -47,7 +48,8 @@ test.describe("Posts API", () => {
     });
 
     test("POST /posts creates a post", async ({ request, data, assertion }) => {
-        const { newPost } = data.load<ApiData>("api");
+        // Static shape from test data, dynamic content from faker
+        const newPost = { ...data.load<ApiData>("api").newPost, title: FakerUtility.getSentence() };
 
         const response = await request.post("/posts", { data: newPost });
 

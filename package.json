@@ -22,7 +22,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "check": "npm run typecheck && npm run lint && npm run format:check",
-    "test:api": "sh scripts/clean-snap-env.sh playwright test --project=api"
+    "test:api": "sh scripts/clean-snap-env.sh playwright test --project=api",
+    "test:unit": "playwright test --project=unit"
   },
   "keywords": [],
   "author": "",

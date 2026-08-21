@@ -56,11 +56,14 @@ export default defineConfig({
             },
             {
                 name,
-                testIgnore: /.*\.api\.spec\.ts/,
+                testIgnore: /.*\.(api|unit)\.spec\.ts/,
                 dependencies: [`setup:${name}`],
                 use: { ...devices[device], storageState: storageStatePath(name) },
             },
         ]),
+
+        // Unit tests of framework utilities: no browser, no network
+        { name: "unit", testMatch: /.*\.unit\.spec\.ts/ },
 
         // API tests: no browser, baseURL points at the API
         {

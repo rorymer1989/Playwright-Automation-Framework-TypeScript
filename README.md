@@ -443,6 +443,16 @@ npm run test:api
 
 ---
 
+# 🧪 Unit Tests of the Framework
+
+Pure utilities (`retryUtil`, `dataManager`, `excelUtil`, `executionSummary`) have unit tests in `tests/unit/*.unit.spec.ts`, run by the `unit` project with no browser and no network. They are part of `npm test` and CI.
+
+```bash
+npm run test:unit
+```
+
+---
+
 # 📱 Mobile Web Testing
 
 The framework supports browser-based mobile automation using Playwright device emulation.
@@ -528,13 +538,13 @@ Playwright-Automation-Framework-TypeScript
 │   ├── actionFixture.ts
 │   └── assertionFixture.ts
 ├── pages                              # BasePage, HomePage, DocsPage, LoginPage, SecureAreaPage
-├── tests                              # *.spec.ts, auth/, api/*.api.spec.ts, auth.setup.ts
+├── tests                              # *.spec.ts, auth/, api/*.api.spec.ts, unit/*.unit.spec.ts, auth.setup.ts
 ├── testData/<env>/*.json              # environment-aware test data
 ├── utilities
 │   ├── assertionUtil.ts  softAssertionUtil.ts
 │   ├── clickUtil.ts  fillUtil.ts  waitUtil.ts  retryUtil.ts
 │   ├── screenshotUtil.ts  excelUtil.ts  fileUtil.ts  scrollUtil.ts
-│   ├── Fakerutility.ts  dataManager.ts  dashboardUtil.ts
+│   ├── fakerUtil.ts  dataManager.ts  dashboardUtil.ts
 │   └── CommonUtilities.ts             # compatibility re-exports only
 ├── reporting
 │   ├── allure/                        # allureUtil, stepUtil, environmentWriter, defaultMetadata
@@ -808,7 +818,7 @@ Never commit:
 | `utilities/excelUtil.ts`                 | `getTestData`, `writeCell` (xlsx)                                              |
 | `utilities/fileUtil.ts`                  | `downloadFile`, `createFolder`                                                 |
 | `utilities/scrollUtil.ts`                | `clickWithScroll` for horizontal containers                                    |
-| `utilities/Fakerutility.ts`              | Dynamic test data (`@faker-js/faker`)                                          |
+| `utilities/fakerUtil.ts`                 | Dynamic test data (`@faker-js/faker`)                                          |
 | `utilities/dataManager.ts`               | Environment-aware JSON test data (`data` fixture)                              |
 | `utilities/dashboardUtil.ts`             | Execution banner printed in `global-setup`                                     |
 

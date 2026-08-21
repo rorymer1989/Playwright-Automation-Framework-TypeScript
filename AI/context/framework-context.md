@@ -25,7 +25,7 @@ Language: TypeScript (strict, CommonJS). Tool: Playwright Test. Architecture: Pa
 | `utilities/excelUtil.ts`                 | `getTestData(file, sheet)` (rows with `executor=Y`), `writeCell`, `writePolicyNumber`.                                                                                                                                  |
 | `utilities/fileUtil.ts`                  | `downloadFile`, `createFolder`.                                                                                                                                                                                         |
 | `utilities/scrollUtil.ts`                | `clickWithScroll` for horizontally scrollable containers.                                                                                                                                                               |
-| `utilities/Fakerutility.ts`              | `FakerUtility` static generators (`@faker-js/faker`).                                                                                                                                                                   |
+| `utilities/fakerUtil.ts`                 | `FakerUtility` static generators (`@faker-js/faker`).                                                                                                                                                                   |
 | `utilities/dataManager.ts`               | Default export used by the `data` fixture.                                                                                                                                                                              |
 | `utilities/dashboardUtil.ts`             | Console execution banner (called from `global-setup.ts`).                                                                                                                                                               |
 | `reporting/allure/`                      | `allureUtil` (epic/feature/story/owner/severity/tag/applyDefaults), `stepUtil`, `environmentWriter`, `defaultMetadata`.                                                                                                 |
@@ -38,7 +38,7 @@ Deprecated: `utilities/CommonUtilities.ts` is only a re-export barrel — import
 
 ## npm scripts
 
-`test`, `test:chromium|firefox|webkit|api`, `test:dev|uat|prod`, `test:ui`, `test:headed`, `typecheck`, `lint`, `lint:fix`, `format`, `format:check`, `check` (typecheck + lint + format, runs in CI), `report`, `allure`, `report:zip`, `report:email`.
+`test`, `test:chromium|firefox|webkit|api|unit`, `test:dev|uat|prod`, `test:ui`, `test:headed`, `typecheck`, `lint`, `lint:fix`, `format`, `format:check`, `check` (typecheck + lint + format, runs in CI), `report`, `allure`, `report:zip`, `report:email`.
 
 ## Test template
 
