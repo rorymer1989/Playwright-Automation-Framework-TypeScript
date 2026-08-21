@@ -2,7 +2,7 @@ import { logger } from "../../utilities/logger";
 import nodemailer from "nodemailer";
 import { getExecutionSummary } from "./executionSummary";
 import { generateEmailTemplate } from "./emailTemplate";
-import { emailConfig, isEmailConfigured } from "./emailConfig";
+import { getEmailConfig, isEmailConfigured } from "./emailConfig";
 import { zipExecutionReports } from "../zip/zipReport";
 
 /**
@@ -14,6 +14,7 @@ export async function sendExecutionReport(): Promise<void> {
         throw new Error("Email not configured: set EMAIL_FROM, EMAIL_PASSWORD and EMAIL_TO.");
     }
 
+    const emailConfig = getEmailConfig();
     const summary = getExecutionSummary();
     const attachments = await zipExecutionReports();
 
