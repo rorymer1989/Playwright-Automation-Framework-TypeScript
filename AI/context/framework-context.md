@@ -11,7 +11,7 @@ Language: TypeScript (strict, CommonJS). Tool: Playwright Test. Architecture: Pa
 | `config/environments/*.env` | Per-environment non-secret values: `dev`, `uat` (default), `pre-prod`, `prod`. |
 | `config/executionConfig.ts` | `EXECUTION_CONFIG` (name, version from package.json, browser, author). |
 | `fixtures/baseFixture.ts` | **Import `test`/`expect` from here, not from `@playwright/test`.** Fixtures: `homePage`, `docsPage`, `actions`, `assertion`, `data`, `allure`, `step`. |
-| `fixtures/actionFixture.ts` | `Actions`: `smartClick`, `smartFill`, `waitForPageReady`. |
+| `fixtures/actionFixture.ts` | `Actions`: `smartClick`, `smartFill`, `forceClick`, `doubleClick`, `rightClick`, `hover`, `pressKey`, `selectByValue/Label`, `setChecked`, `uploadFile`, `scrollIntoView`, `waitForPageReady`, `waitForVisible/Hidden`. |
 | `fixtures/assertionFixture.ts` | `Assertions`: hard assertions (delegates to `utilities/assertionUtil`) + `assertion.soft.*` (`utilities/softAssertionUtil`). |
 | `pages/` | `BasePage` (goto relative to baseURL + waitForPageReady), `HomePage`, `DocsPage`. Export new pages from `pages/index.ts` and register them as fixtures. |
 | `tests/` | `*.spec.ts`. Reference example: `tests/home.spec.ts`. |
@@ -21,7 +21,6 @@ Language: TypeScript (strict, CommonJS). Tool: Playwright Test. Architecture: Pa
 | `utilities/clickUtil.ts`, `fillUtil.ts` | `smartClick`, `smartFill` (retry + verification). |
 | `utilities/waitUtil.ts` | `waitForPageReady(page, { loaderSelectors })` — never uses `networkidle`. |
 | `utilities/retryUtil.ts` | `retry(action, { retries, delay, actionName })`. Single retry implementation. |
-| `utilities/ActionUtility.ts` | Static helpers (click, fill, select, check, hover, upload, waits). |
 | `utilities/screenshotUtil.ts` | `takeScreenshot(page, caseName, stepName)` → `Screenshots/<date>/<case>/NN_step.jpg` + report attachment. |
 | `utilities/excelUtil.ts` | `getTestData(file, sheet)` (rows with `executor=Y`), `writeCell`, `writePolicyNumber`. |
 | `utilities/fileUtil.ts` | `downloadFile`, `createFolder`. |

@@ -550,7 +550,7 @@ Playwright-Automation-Framework-TypeScript
 ├── testData/<env>/*.json              # environment-aware test data
 ├── utilities
 │   ├── assertionUtil.ts  softAssertionUtil.ts
-│   ├── clickUtil.ts  fillUtil.ts  waitUtil.ts  retryUtil.ts  ActionUtility.ts
+│   ├── clickUtil.ts  fillUtil.ts  waitUtil.ts  retryUtil.ts
 │   ├── screenshotUtil.ts  excelUtil.ts  fileUtil.ts  scrollUtil.ts
 │   ├── Fakerutility.ts  dataManager.ts  dashboardUtil.ts
 │   └── CommonUtilities.ts             # compatibility re-exports only
