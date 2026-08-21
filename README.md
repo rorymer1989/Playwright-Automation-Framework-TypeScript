@@ -702,9 +702,8 @@ Playwright-Automation-Framework-TypeScript
 ├── utilities                          # + logger.ts
 │   ├── assertionUtil.ts  softAssertionUtil.ts
 │   ├── clickUtil.ts  fillUtil.ts  waitUtil.ts  retryUtil.ts
-│   ├── screenshotUtil.ts  excelUtil.ts  fileUtil.ts  scrollUtil.ts
-│   ├── fakerUtil.ts  dataManager.ts  dashboardUtil.ts
-│   └── CommonUtilities.ts             # compatibility re-exports only
+│   ├── screenshotUtil.ts  excelUtil.ts  a11yUtil.ts  visualUtil.ts
+│   └── fakerUtil.ts  dataManager.ts  dashboardUtil.ts  jiraClient.ts  preflight.ts
 ├── reporting
 │   ├── allure/                        # allureUtil, stepUtil, environmentWriter, defaultMetadata
 │   ├── email/                         # emailUtil, executionSummary, emailTemplate, emailConfig
@@ -998,8 +997,6 @@ Never commit:
 | `utilities/retryUtil.ts`                 | Generic retry                                                                  |
 | `utilities/screenshotUtil.ts`            | Per-test numbered screenshots attached to the report                           |
 | `utilities/excelUtil.ts`                 | `getTestData`, `writeCell` (xlsx)                                              |
-| `utilities/fileUtil.ts`                  | `downloadFile`, `createFolder`                                                 |
-| `utilities/scrollUtil.ts`                | `clickWithScroll` for horizontal containers                                    |
 | `utilities/fakerUtil.ts`                 | Dynamic test data (`@faker-js/faker`)                                          |
 | `utilities/dataManager.ts`               | Environment-aware JSON test data (`data` fixture)                              |
 | `utilities/dashboardUtil.ts`             | Execution banner printed in `global-setup`                                     |
