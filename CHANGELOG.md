@@ -2,6 +2,22 @@
 
 All notable changes to this project are documented here. Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/).
 
+## [1.17.0] — 2026-08-21
+
+### Added
+
+- **Flaky policy** (`reporting/flaky/flakyReport.ts`, `npm run report:flaky`): every test that passed only after a retry is listed in the GitHub job summary and the `merge-reports` job fails when the count exceeds `FLAKY_BUDGET` (repository variable, default 0). Constitution **1.1.0** (Principle V): retries exist for reporting, never as a pass condition.
+- **Governance**: `LICENSE` (MIT), `.github/CODEOWNERS`, `.github/PULL_REQUEST_TEMPLATE.md` with the constitution I–V checklist; `main` protected (PR required, 12 required checks incl. mobile and `merge-reports`, strict up-to-date, no force-push).
+- **SCRUM-23 — cart persistence and Reset App State**: first end-to-end `/jira-test` with the official agents (planner explored live, generator wrote the spec verifying every step in-browser). `specs/008-cart-persistence/` + `tests/shop/cart-persistence.spec.ts` (AC1–AC4, 25/25 on 5 projects), summary commented on the story.
+
+### Fixed
+
+- `tests/seed.spec.ts` was in the global `testIgnore`, so the MCP `planner_setup_page` / `generator_setup_page` could not find it and overwrote it with the default seed. It now lives in a dedicated `seed` project (authenticated through `setup:chromium`); agent prompts pass `project: "seed"`.
+
+### Changed
+
+- `package.json` license `ISC` → `MIT`; README License and Contributing sections.
+
 ## [1.16.0] — 2026-08-21
 
 ### Added
