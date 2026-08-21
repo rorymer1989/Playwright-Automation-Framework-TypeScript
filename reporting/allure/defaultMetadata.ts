@@ -1,11 +1,8 @@
-module.exports={
+import { EXECUTION_CONFIG } from "../../config/executionConfig";
 
-owner:"Priyanshu Pathak",
-
-severity:"critical",
-
-epic:"Playwright Automation",
-
-framework:"Playwright Framework"
-
-};
+export const DEFAULT_ALLURE_METADATA = {
+    owner: EXECUTION_CONFIG.author,
+    severity: "critical",
+    epic: "Playwright Automation",
+    framework: EXECUTION_CONFIG.frameworkName,
+} as const;

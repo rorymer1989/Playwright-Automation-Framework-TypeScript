@@ -1,0 +1,6 @@
+{
+  "titlePattern": "Playwright",
+  "docsPath": "/docs/intro",
+  "installationHeading": "Installation",
+  "sidebarLinks": ["Installation", "Writing tests", "Running and debugging tests"]
+}

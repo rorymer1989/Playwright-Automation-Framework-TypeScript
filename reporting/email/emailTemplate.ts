@@ -1,6 +1,4 @@
-export {};
-
-interface EmailSummary {
+export interface EmailSummary {
     framework: string;
     frameworkVersion: string;
     environment: string;
@@ -13,7 +11,7 @@ interface EmailSummary {
     duration: string;
 }
 
-function generateEmailTemplate(summary: EmailSummary): string {
+export function generateEmailTemplate(summary: EmailSummary): string {
 
     return `
 
@@ -232,9 +230,3 @@ Regards,
 `;
 
 }
-
-module.exports = {
-
-generateEmailTemplate
-
-};

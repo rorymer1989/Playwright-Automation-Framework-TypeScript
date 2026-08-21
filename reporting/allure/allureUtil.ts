@@ -1,15 +1,3 @@
-interface AllureApi {
-    epic(name: string): Promise<void>;
-    feature(name: string): Promise<void>;
-    story(name: string): Promise<void>;
-    owner(name: string): Promise<void>;
-    severity(level: string): Promise<void>;
-    tags(...tags: string[]): Promise<void>;
-    description(text: string): Promise<void>;
-    parentSuite(name: string): Promise<void>;
-    suite(name: string): Promise<void>;
-}
-
 interface AllureUtilInterface {
     epic(name: string): Promise<void>;
     feature(name: string): Promise<void>;
@@ -20,11 +8,11 @@ interface AllureUtilInterface {
     description(text: string): Promise<void>;
     suite(name: string): Promise<void>;
     subSuite(name: string): Promise<void>;
+    applyDefaults(): Promise<void>;
 }
 
-const {
-    allure: allureApi
-}: { allure: AllureApi } = require("allure-playwright");
+import { allure as allureApi } from "allure-playwright";
+import { DEFAULT_ALLURE_METADATA } from "./defaultMetadata";
 
 class AllureUtil implements AllureUtilInterface {
 
@@ -64,6 +52,15 @@ class AllureUtil implements AllureUtilInterface {
         await allureApi.suite(name);
     }
 
+    /** Applies owner/severity/epic from reporting/allure/defaultMetadata.ts */
+    async applyDefaults(): Promise<void> {
+        await allureApi.owner(DEFAULT_ALLURE_METADATA.owner);
+        await allureApi.severity(DEFAULT_ALLURE_METADATA.severity);
+        await allureApi.epic(DEFAULT_ALLURE_METADATA.epic);
+        await allureApi.label("framework", DEFAULT_ALLURE_METADATA.framework);
+    }
+
 }
 
-module.exports = new AllureUtil();
+const allureUtil = new AllureUtil();
+export default allureUtil;

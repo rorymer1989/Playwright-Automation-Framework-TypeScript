@@ -1,8 +1,9 @@
-const fs = require("fs");
-const path = require("path");
-const os = require("os");
+import fs from "node:fs";
+import path from "node:path";
+import os from "node:os";
+import { EXECUTION_CONFIG } from "../../config/executionConfig";
 
-function writeEnvironment() {
+export function writeEnvironment(): void {
 
     const reportFolder = path.join(process.cwd(), "allure-results");
 
@@ -21,11 +22,11 @@ function writeEnvironment() {
 
     const content =
 
-`Framework=Playwright Automation Framework
-Framework Version=v1.2.0
+`Framework=${EXECUTION_CONFIG.frameworkName}
+Framework Version=${EXECUTION_CONFIG.frameworkVersion}
 Environment=${process.env.TEST_ENV || "UAT"}
 Browser=${browser}
-Execution=Parallel
+Execution=${EXECUTION_CONFIG.executionType}
 Node Version=${process.version}
 Operating System=${os.type()} ${os.release()}
 Base URL=${process.env.BASE_URL}
@@ -44,8 +45,3 @@ Execution Date=${new Date().toLocaleString()}
 
 }
 
-module.exports = {
-
-    writeEnvironment
-
-};

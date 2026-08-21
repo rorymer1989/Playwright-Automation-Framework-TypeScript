@@ -1,4 +1,4 @@
-import { retry } from "./retryUtil.js";
+import { retry } from "./retryUtil";
 import type { Locator } from "@playwright/test";
 
 interface SmartFillOptions {

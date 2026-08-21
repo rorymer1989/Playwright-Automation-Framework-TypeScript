@@ -1,36 +1,22 @@
 import { Locator, Page, expect } from "@playwright/test";
+import { retry } from "./retryUtil";
+import { waitForPageReady } from "./waitUtil";
 
 export class ActionUtility {
   private static readonly DEFAULT_RETRIES = 3;
   private static readonly DEFAULT_TIMEOUT = 10000;
 
   /**
-   * Generic retry wrapper
+   * Generic retry wrapper (delegates to utilities/retryUtil)
    */
   static async retry<T>(
     action: () => Promise<T>,
     retries: number = this.DEFAULT_RETRIES,
     delay: number = 1000
   ): Promise<T> {
-    let lastError: unknown;
-
-    for (let attempt = 1; attempt <= retries; attempt++) {
-      try {
-        return await action();
-      } catch (error) {
-        lastError = error;
-
-        console.warn(
-          `⚠️ Attempt ${attempt}/${retries} failed. Retrying in ${delay} ms...`
-        );
-
-        if (attempt < retries) {
-          await this.wait(delay);
-        }
-      }
-    }
-
-    throw lastError;
+    let result!: T;
+    await retry(async () => { result = await action(); }, { retries, delay, actionName: "ActionUtility" });
+    return result;
   }
 
   /**
@@ -44,7 +30,7 @@ export class ActionUtility {
    * Wait for page load
    */
   static async waitForPageLoad(page: Page): Promise<void> {
-    await page.waitForLoadState("networkidle");
+    await waitForPageReady(page);
   }
 
   /**

@@ -1,21 +1,42 @@
 {
   "name": "playwright_automation-ts",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {},
+  "version": "1.2.0",
+  "description": "Playwright Automation Framework (TypeScript)",
+  "scripts": {
+    "test": "sh scripts/clean-snap-env.sh playwright test",
+    "test:headed": "sh scripts/clean-snap-env.sh playwright test --headed",
+    "test:ui": "sh scripts/clean-snap-env.sh playwright test --ui",
+    "test:chromium": "sh scripts/clean-snap-env.sh playwright test --project=chromium",
+    "report": "playwright show-report",
+    "allure": "allure generate allure-results --clean -o allure-report && allure open allure-report",
+    "typecheck": "tsc --noEmit",
+    "test:dev": "TEST_ENV=dev sh scripts/clean-snap-env.sh playwright test",
+    "test:uat": "TEST_ENV=uat sh scripts/clean-snap-env.sh playwright test",
+    "test:prod": "TEST_ENV=prod sh scripts/clean-snap-env.sh playwright test",
+    "test:firefox": "sh scripts/clean-snap-env.sh playwright test --project=firefox",
+    "test:webkit": "sh scripts/clean-snap-env.sh playwright test --project=webkit",
+    "report:email": "tsx scripts/send-report.ts",
+    "report:zip": "tsx scripts/zip-reports.ts"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
     "@playwright/test": "^1.62.1",
-    "@types/node": "^26.1.2"
+    "@types/archiver": "^8.0.0",
+    "@types/node": "^26.1.2",
+    "@types/nodemailer": "^8.0.1",
+    "allure-commandline": "^2.43.0",
+    "allure-playwright": "^3.10.2",
+    "tsx": "^4.23.12",
+    "typescript": "^7.0.2"
   },
   "dependencies": {
     "@faker-js/faker": "^10.5.0",
+    "archiver": "^8.0.0",
     "dotenv": "^17.4.2",
-    "faker": "^6.6.6",
-    "xlsx": "^0.18.5"
+    "nodemailer": "^9.0.5",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   }
 }

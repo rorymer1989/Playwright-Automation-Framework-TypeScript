@@ -1,0 +1,11 @@
+node_modules/
+test-results/
+playwright-report/
+allure-results/
+allure-report/
+test-result.json
+Screenshots/
+reports/
+*.zip
+.env
+.DS_Store

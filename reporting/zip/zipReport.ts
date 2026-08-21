@@ -1,81 +1,51 @@
-const fileSystem = require("fs");
-const pathModule = require("path");
-const archiver = require("archiver");
+import fs from "node:fs";
+import path from "node:path";
+
+export interface ReportArchive {
+    filename: string;
+    path: string;
+}
 
 async function zipDirectory(sourceDir: string, outputZip: string): Promise<void> {
+    // archiver >= 8 is ESM-only; load it dynamically from this CommonJS project.
+    const { ZipArchive } = await import("archiver");
 
-    return new Promise<void>((resolve, reject: (reason?: unknown) => void) => {
-
-        const output = fileSystem.createWriteStream(outputZip);
-
-        const archive = archiver("zip", {
-
-            zlib: {
-
-                level: 9
-
-            }
-
-        });
+    await new Promise<void>((resolve, reject) => {
+        const output = fs.createWriteStream(outputZip);
+        const archive = new ZipArchive({ zlib: { level: 9 } });
 
         output.on("close", () => {
-
             console.log(`✅ Created ${outputZip}`);
-
             resolve();
-
         });
-
         archive.on("error", reject);
 
         archive.pipe(output);
-
         archive.directory(sourceDir, false);
-
-        archive.finalize();
-
+        void archive.finalize();
     });
-
 }
 
-async function createExecutionReportArchives() {
+/**
+ * Zips playwright-report/ and allure-report/ (whichever exist) into reports/
+ * and returns the list of archives created.
+ */
+export async function zipExecutionReports(outputDir = path.join(process.cwd(), "reports")): Promise<ReportArchive[]> {
+    fs.mkdirSync(outputDir, { recursive: true });
 
-    const reportsFolder = pathModule.join(process.cwd(), "reports");
+    const candidates: Array<[dir: string, filename: string]> = [
+        ["playwright-report", "PlaywrightReport.zip"],
+        ["allure-report", "AllureReport.zip"],
+    ];
 
-    if (!fileSystem.existsSync(reportsFolder)) {
+    const archives: ReportArchive[] = [];
+    for (const [dir, filename] of candidates) {
+        const sourceDir = path.join(process.cwd(), dir);
+        if (!fs.existsSync(sourceDir)) continue;
 
-        fileSystem.mkdirSync(reportsFolder);
-
+        const target = path.join(outputDir, filename);
+        await zipDirectory(sourceDir, target);
+        archives.push({ filename, path: target });
     }
-
-    if (fileSystem.existsSync("playwright-report")) {
-
-        await zipDirectory(
-
-            "playwright-report",
-
-            "reports/playwright-report.zip"
-
-        );
-
-    }
-
-    if (fileSystem.existsSync("allure-report")) {
-
-        await zipDirectory(
-
-            "allure-report",
-
-            "reports/allure-report.zip"
-
-        );
-
-    }
-
+    return archives;
 }
-
-module.exports = {
-
-    zipExecutionReports: createExecutionReportArchives
-
-};
