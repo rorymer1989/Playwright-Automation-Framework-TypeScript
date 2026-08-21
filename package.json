@@ -32,6 +32,6 @@
     "archiver": "^8.0.0",
     "dotenv": "^17.4.2",
     "nodemailer": "^9.0.5",
-    "xlsx": "^0.18.5"
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   }
 }

@@ -1,5 +1,6 @@
 import { Locator, Page, expect } from "@playwright/test";
 import { retry } from "./retryUtil";
+import { waitForPageReady } from "./waitUtil";
 
 export class ActionUtility {
   private static readonly DEFAULT_RETRIES = 3;
@@ -29,7 +30,7 @@ export class ActionUtility {
    * Wait for page load
    */
   static async waitForPageLoad(page: Page): Promise<void> {
-    await page.waitForLoadState("networkidle");
+    await waitForPageReady(page);
   }
 
   /**

@@ -2,7 +2,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as XLSX from 'xlsx';
-import { Page, Locator } from '@playwright/test';
+import { test, Page, Locator, TestInfo } from '@playwright/test';
 
 function getCurrentDate() {
   console.log('[CommonUtilities] Generating current date string (dd_mm_yyyy)...');
@@ -242,30 +242,36 @@ function writePolicyNumber(filePath: string, sheetName: string | number, rowInde
 
 //ScreenShot Utility
 
-let screenshotCounter = 1;
+/**
+ * Per-test screenshot counter. Keyed by testId so numbering is stable and
+ * isolated when tests run in parallel workers (a module-level counter is not).
+ */
+const screenshotCounters = new Map<string, number>();
 
-async function takeScreenshot(page: Page, caseName: string, stepName: string) {
-  const baseDir = 'Screenshots';
-  const TODAYS_DATE = getCurrentDate();
+function nextScreenshotNumber(testId: string): string {
+  const next = (screenshotCounters.get(testId) ?? 0) + 1;
+  screenshotCounters.set(testId, next);
+  return String(next).padStart(2, '0');
+}
 
-  const SS_PATH = path.join(baseDir, TODAYS_DATE);
+/**
+ * Takes a full-page screenshot under Screenshots/<dd_mm_yyyy>/<caseName>/NN_<stepName>.jpg
+ * and attaches it to the test report (HTML / Allure).
+ *
+ * Pass `testInfo` (from the test callback) for per-test numbering; falls back to
+ * `test.info()` when called from within a running test.
+ */
+async function takeScreenshot(page: Page, caseName: string, stepName: string, testInfo: TestInfo = test.info()) {
+  const caseDir = path.join('Screenshots', getCurrentDate(), caseName);
+  fs.mkdirSync(caseDir, { recursive: true });
 
-  const caseDir = path.join(SS_PATH, caseName);
-
-  if (!fs.existsSync(caseDir)) {
-    fs.mkdirSync(caseDir, { recursive: true });
-  }
-  //const timestamp = new Date(). toISOString().replace(/[:.]/g,'-');
-  //const filePath = path.join(caseDir, `${stepName}-${timestamp}.jpg`);
-  const number = String(screenshotCounter).padStart(2, '0');
+  const number = nextScreenshotNumber(testInfo.testId);
   const filePath = path.join(caseDir, `${number}_${stepName}.jpg`);
 
-  await page.screenshot({
-    path: filePath,
-    fullPage: true,
-  });
-  screenshotCounter++;
+  const buffer = await page.screenshot({ path: filePath, fullPage: true });
+  await testInfo.attach(`${number}_${stepName}`, { body: buffer, contentType: 'image/jpeg' });
 
+  return filePath;
 }
 
 
