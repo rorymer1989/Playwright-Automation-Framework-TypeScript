@@ -31,12 +31,11 @@ The framework provides a structured foundation for building and maintaining larg
 
 # 🚀 What's New
 
-## v1.4.0 — Quality Gates, Authentication & API
+## v1.5.0 — Lean Actions & Framework Unit Tests
 
-- **Authentication via `storageState`**: login once per browser, every UI test starts authenticated.
-- **API testing project** with the built-in `request` fixture and API assertions.
-- **ESLint + Prettier** (type-checked, Playwright rules) enforced in CI with `npm run check`.
-- `ActionUtility` removed; the `actions` fixture is the single interaction layer.
+- **`smartClick` / `smartFill` simplified**: thin wrappers over Playwright's auto-waiting API, no manual retry loops; `smartFill` keeps an auto-retrying value check.
+- **Unit tests of the framework utilities** (`unit` project, 18 tests) run with `npm test` and in CI.
+- `Fakerutility.ts` → `fakerUtil.ts`, now used by the API example.
 
 Full details in [CHANGELOG.md](CHANGELOG.md).
 
@@ -206,7 +205,7 @@ Environment       : UAT
 Browser           : Chromium
 Platform          : darwin
 Node Version      : v24.x
-Framework Version : v1.4.0
+Framework Version : v1.5.0
 Base URL          : https://example.com
 ```
 
@@ -251,37 +250,23 @@ This allows the test to collect multiple validation failures before completing.
 
 # ⚡ Smart Execution Utilities
 
-The framework contains reusable execution utilities designed to improve test stability and reduce repetitive code.
+Thin, intention-revealing wrappers over Playwright's auto-waiting Locator API. They add **no manual waits or retry loops**: Playwright already waits for elements to be attached, visible, stable, enabled and scrolled into view, and a click that needs retries is a flaky locator or application that should surface as such.
 
 ## Smart Click
 
 ```typescript
-await smartClick(page.locator("#login"));
+await actions.smartClick(page.getByRole("button", { name: "Login" }));
+await actions.smartClick(locator, { timeout: 10_000, force: true }); // options are optional
 ```
-
-Designed to handle:
-
-- Visibility
-- Scroll into view
-- Interaction readiness
-- Retry behavior
-- Execution logging
-
----
 
 ## Smart Fill
 
 ```typescript
-await smartFill(page.locator("#username"), "Admin");
+await actions.smartFill(page.getByLabel("Username"), "Admin");
+await actions.smartFill(maskedInput, "1234", { verify: false }); // skip the value check
 ```
 
-Designed to:
-
-- Wait for the field
-- Clear existing values
-- Enter data
-- Validate the entered value
-- Retry when required
+After filling, an auto-retrying `toHaveValue` assertion confirms the input kept the value — this catches masks, async formatting and re-renders that drop keystrokes.
 
 ---
 
@@ -397,7 +382,7 @@ Example:
 
 🚀 Playwright Automation Framework
 
-Framework Version : v1.4.0
+Framework Version : v1.5.0
 
 Environment       : UAT
 
@@ -453,6 +438,16 @@ The state is per browser on purpose: apps with session-hijacking protection bind
 
 ```bash
 npm run test:api
+```
+
+---
+
+# 🧪 Unit Tests of the Framework
+
+Pure utilities (`retryUtil`, `dataManager`, `excelUtil`, `executionSummary`) have unit tests in `tests/unit/*.unit.spec.ts`, run by the `unit` project with no browser and no network. They are part of `npm test` and CI.
+
+```bash
+npm run test:unit
 ```
 
 ---
@@ -542,13 +537,13 @@ Playwright-Automation-Framework-TypeScript
 │   ├── actionFixture.ts
 │   └── assertionFixture.ts
 ├── pages                              # BasePage, HomePage, DocsPage, LoginPage, SecureAreaPage
-├── tests                              # *.spec.ts, auth/, api/*.api.spec.ts, auth.setup.ts
+├── tests                              # *.spec.ts, auth/, api/*.api.spec.ts, unit/*.unit.spec.ts, auth.setup.ts
 ├── testData/<env>/*.json              # environment-aware test data
 ├── utilities
 │   ├── assertionUtil.ts  softAssertionUtil.ts
 │   ├── clickUtil.ts  fillUtil.ts  waitUtil.ts  retryUtil.ts
 │   ├── screenshotUtil.ts  excelUtil.ts  fileUtil.ts  scrollUtil.ts
-│   ├── Fakerutility.ts  dataManager.ts  dashboardUtil.ts
+│   ├── fakerUtil.ts  dataManager.ts  dashboardUtil.ts
 │   └── CommonUtilities.ts             # compatibility re-exports only
 ├── reporting
 │   ├── allure/                        # allureUtil, stepUtil, environmentWriter, defaultMetadata
@@ -811,20 +806,20 @@ Never commit:
 
 # 🧰 Utilities
 
-| Module                                   | Purpose                                                       |
-| ---------------------------------------- | ------------------------------------------------------------- |
-| `utilities/assertionUtil.ts`             | Centralized hard assertions (`Assertion.*`)                   |
-| `utilities/softAssertionUtil.ts`         | `expect.soft` wrappers + `assertAll()`                        |
-| `utilities/clickUtil.ts` / `fillUtil.ts` | `smartClick`, `smartFill` with retry and verification         |
-| `utilities/waitUtil.ts`                  | `waitForPageReady` (load + loader overlays, no `networkidle`) |
-| `utilities/retryUtil.ts`                 | Generic retry                                                 |
-| `utilities/screenshotUtil.ts`            | Per-test numbered screenshots attached to the report          |
-| `utilities/excelUtil.ts`                 | `getTestData`, `writeCell` (xlsx)                             |
-| `utilities/fileUtil.ts`                  | `downloadFile`, `createFolder`                                |
-| `utilities/scrollUtil.ts`                | `clickWithScroll` for horizontal containers                   |
-| `utilities/Fakerutility.ts`              | Dynamic test data (`@faker-js/faker`)                         |
-| `utilities/dataManager.ts`               | Environment-aware JSON test data (`data` fixture)             |
-| `utilities/dashboardUtil.ts`             | Execution banner printed in `global-setup`                    |
+| Module                                   | Purpose                                                                        |
+| ---------------------------------------- | ------------------------------------------------------------------------------ |
+| `utilities/assertionUtil.ts`             | Centralized hard assertions (`Assertion.*`)                                    |
+| `utilities/softAssertionUtil.ts`         | `expect.soft` wrappers + `assertAll()`                                         |
+| `utilities/clickUtil.ts` / `fillUtil.ts` | `smartClick` (thin `click` wrapper), `smartFill` (`fill` + value verification) |
+| `utilities/waitUtil.ts`                  | `waitForPageReady` (load + loader overlays, no `networkidle`)                  |
+| `utilities/retryUtil.ts`                 | Generic retry                                                                  |
+| `utilities/screenshotUtil.ts`            | Per-test numbered screenshots attached to the report                           |
+| `utilities/excelUtil.ts`                 | `getTestData`, `writeCell` (xlsx)                                              |
+| `utilities/fileUtil.ts`                  | `downloadFile`, `createFolder`                                                 |
+| `utilities/scrollUtil.ts`                | `clickWithScroll` for horizontal containers                                    |
+| `utilities/fakerUtil.ts`                 | Dynamic test data (`@faker-js/faker`)                                          |
+| `utilities/dataManager.ts`               | Environment-aware JSON test data (`data` fixture)                              |
+| `utilities/dashboardUtil.ts`             | Execution banner printed in `global-setup`                                     |
 
 ---
 
@@ -881,6 +876,14 @@ The goal is to gradually evolve the framework toward **AI-enabled intelligent QA
 # 📦 Release History
 
 See [CHANGELOG.md](CHANGELOG.md) for the complete list.
+
+## 🚀 v1.5.0 — Lean Actions & Framework Unit Tests
+
+- `smartClick` / `smartFill` without manual waits or retry loops
+- `unit` project with tests for `retryUtil`, `dataManager`, `excelUtil`, `executionSummary`
+- `fakerUtil` naming aligned and in use
+
+---
 
 ## 🚀 v1.4.0 — Quality Gates, Authentication & API
 

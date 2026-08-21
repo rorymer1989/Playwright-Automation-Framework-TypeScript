@@ -1,48 +1,21 @@
-import { retry } from "./retryUtil";
 import type { Locator } from "@playwright/test";
 
-interface SmartClickOptions {
-    retries?: number;
+export interface SmartClickOptions {
+    /** Per-action timeout in ms. Defaults to `use.actionTimeout` from playwright.config.ts. */
     timeout?: number;
+    /** Bypass actionability checks (use sparingly — it hides real problems). */
     force?: boolean;
-    delay?: number;
 }
 
 /**
- * Smart Click Utility
- * @param {Locator} locator
- * @param {Object} options
+ * Click wrapper. Playwright's `locator.click()` already waits for the element
+ * to be attached, visible, stable, enabled and to receive pointer events, and
+ * scrolls it into view — so this adds no manual waits or retry loops on top:
+ * a click that needs retries is a flaky locator or app and should surface as such.
  */
 export async function smartClick(
     locator: Locator,
-    { retries = 3, timeout = 5000, force = false, delay = 1000 }: SmartClickOptions = {}
+    { timeout, force }: SmartClickOptions = {}
 ): Promise<void> {
-    await retry(
-        async () => {
-            // Wait until visible
-            await locator.waitFor({
-                state: "visible",
-                timeout,
-            });
-
-            // Scroll into view
-            await locator.scrollIntoViewIfNeeded();
-
-            // Wait until enabled
-            await locator.waitFor({
-                state: "attached",
-            });
-
-            // Click
-            await locator.click({
-                force,
-                timeout,
-            });
-        },
-        {
-            retries,
-            delay,
-            actionName: "Smart Click",
-        }
-    );
+    await locator.click({ timeout, force });
 }

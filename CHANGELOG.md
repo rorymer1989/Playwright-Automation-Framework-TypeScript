@@ -2,6 +2,19 @@
 
 All notable changes to this project are documented here. Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/).
 
+## [1.5.0] — 2026-08-21
+
+### Added
+
+- **Unit tests of framework utilities** — `unit` Playwright project (no browser, no network) running `tests/unit/*.unit.spec.ts`: `retryUtil`, `dataManager`, `excelUtil`, `executionSummary` (18 tests). Part of `npm test` and CI; `npm run test:unit`.
+- `DataManager` class exported with an injectable `baseDir` (default instance unchanged).
+- `smartClick` / `smartFill` accept options (`timeout`, `force`, `verify`) through the `actions` fixture.
+
+### Changed
+
+- **`smartClick` / `smartFill` simplified** — no manual `waitFor`/`scrollIntoViewIfNeeded`/retry loops on top of Playwright's auto-waiting `click()`/`fill()`; `smartFill` keeps a post-fill check as an auto-retrying `toHaveValue`. Suite runs ~15 % faster and flaky locators fail fast instead of after 3×5 s.
+- `utilities/Fakerutility.ts` → `utilities/fakerUtil.ts`; `FakerUtility` is now used by the API example.
+
 ## [1.4.0] — 2026-08-21
 
 ### Added
@@ -69,5 +82,6 @@ Intelligent Execution Update — environment management, execution dashboard, re
 
 Initial release — Page Object Model.
 
+[1.5.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.5.0
 [1.4.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.4.0
 [1.3.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/pull/1
