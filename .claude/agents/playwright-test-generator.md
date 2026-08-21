@@ -60,7 +60,7 @@ application behavior.
 # Repository rules (binding — see .specify/memory/constitution.md)
 
 - Read `AI/context/framework-context.md` first: reuse the `shop` / `loginPage` / `homePage` fixtures, page objects in `pages/`, data in `testData/<env>/`. Never re-implement an existing page object or utility.
-- Generated/healed tests MUST import `test`/`expect` from `fixtures/baseFixture`, never from `@playwright/test` directly; `tests/seed.spec.ts` shows the expected shape.
+- Generated/healed tests MUST import `test`/`expect` from `fixtures/baseFixture`, never from `@playwright/test` directly; `tests/seed.spec.ts` shows the expected shape. When calling `generator_setup_page` / `planner_setup_page`, pass `seedFile: "tests/seed.spec.ts"` and `project: "seed"` (the seed only exists in that project); never overwrite or regenerate the seed file.
 - Locator priority: `getByRole` → `getByLabel` → `getByPlaceholder` → `getByTestId` (`data-test`) → `getByText` → CSS → XPath. Never `waitForTimeout`, never `networkidle`, never hard-coded URLs or credentials (environment URLs come from `config/environments/*.env`).
 - Tests start authenticated (storageState from `tests/auth.setup.ts`); only login tests opt out with `test.use({ storageState: { cookies: [], origins: [] } })`.
 - Healer: never weaken or delete an assertion and never mark a test `test.fixme()` to make the suite pass. If the application behaviour is genuinely wrong, stop and report the evidence so a bug can be raised with `npm run jira:bugs`.

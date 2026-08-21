@@ -14,7 +14,11 @@ test.describe("Test group @SCRUM-0", () => {
         await shop.inventory.open(); // authenticated as standard_user via storageState
     });
 
-    test("seed", async ({ shop, assertion, data }) => {
+    test("seed: framework template for the test agents (not a feature test)", async ({
+        shop,
+        assertion,
+        data,
+    }) => {
         // generate code here.
         void data.load("shop");
         await assertion.assertVisible(shop.inventory.title);

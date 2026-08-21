@@ -520,7 +520,7 @@ Example: `specs/001-product-detail/` (SCRUM-22) → `tests/shop/product-detail.s
 
 `npx playwright init-agents --loop=claude` installed the official **planner / generator / healer** agents (`.claude/agents/`) and the `playwright-test` MCP server (`.mcp.json`). They explore and verify against a real browser. Integration points:
 
-- `tests/seed.spec.ts` is the template every generated test inherits (framework fixture, `shop` page objects, `@KEY` tag) — keep it compiling; it is excluded from the run.
+- `tests/seed.spec.ts` is the template every generated test inherits (framework fixture, `shop` page objects, `@KEY` tag). It lives in its own `seed` project (Desktop Chrome, authenticated through `setup:chromium`) so the MCP `planner_setup_page` / `generator_setup_page` tools can run it — pass `project: "seed"`. CI never selects it (the matrix runs by `--project`); locally it is one harmless test in `npm test`.
 - Each agent definition ends with a binding **Repository rules** section (reuse, locator priority, no `networkidle`/`waitForTimeout`, never weaken assertions or `test.fixme()`).
 - `/jira-test` delegates exploration to the planner and per-scenario generation to the generator; `/heal` delegates to the healer and reviews its diff.
 
