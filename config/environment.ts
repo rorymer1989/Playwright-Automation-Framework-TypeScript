@@ -5,10 +5,18 @@ import path from "node:path";
 export type TestEnvironment = "dev" | "uat" | "pre-prod" | "prod";
 
 /**
- * Loads config/environments/<TEST_ENV>.env into process.env (without overriding
- * variables already set in the shell / CI). Defaults to "uat".
+ * Loads environment variables into process.env, never overriding values already
+ * set in the shell / CI. Order:
+ *   1. <repo>/.env              — local secrets (email creds, etc.). Git-ignored, optional.
+ *   2. config/environments/<TEST_ENV>.env — per-environment, non-secret values (BASE_URL). Committed.
+ * TEST_ENV defaults to "uat".
  */
 export function loadEnvironment(): TestEnvironment {
+    const rootEnv = path.resolve(__dirname, "..", ".env");
+    if (fs.existsSync(rootEnv)) {
+        dotenv.config({ path: rootEnv });
+    }
+
     const env = (process.env.TEST_ENV ?? "uat").toLowerCase() as TestEnvironment;
     const envFile = path.resolve(__dirname, "environments", `${env}.env`);
 
