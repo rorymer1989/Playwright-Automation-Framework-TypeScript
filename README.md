@@ -31,11 +31,10 @@ The framework provides a structured foundation for building and maintaining larg
 
 # 🚀 What's New
 
-## v1.8.0 — CI Matrix & Merged Reports
+## v1.9.0 — E-commerce Reference Suite
 
-- **Per-project matrix with sharding** (chromium/firefox/webkit × 2 + api) plus the Docker `visual` job; critical path ≈ 2 min.
-- **One merged HTML report** and one Allure report from all shards (`blob` reporter + `merge-reports`).
-- Unit guard keeping the Playwright Docker image tag in sync with `@playwright/test`.
+- **`tests/shop/`**: a complete, data-driven suite over saucedemo.com (login, catalogue, cart, checkout with totals) showing every framework piece working together.
+- `pages/shop/` page objects on `data-test` ids, grouped `shop` fixture, multi-app auth setup.
 
 Full details in [CHANGELOG.md](CHANGELOG.md).
 
@@ -205,7 +204,7 @@ Environment       : UAT
 Browser           : Chromium
 Platform          : darwin
 Node Version      : v24.x
-Framework Version : v1.8.0
+Framework Version : v1.9.0
 Base URL          : https://example.com
 ```
 
@@ -382,7 +381,7 @@ Example:
 
 🚀 Playwright Automation Framework
 
-Framework Version : v1.8.0
+Framework Version : v1.9.0
 
 Environment       : UAT
 
@@ -953,6 +952,13 @@ The goal is to gradually evolve the framework toward **AI-enabled intelligent QA
 # 📦 Release History
 
 See [CHANGELOG.md](CHANGELOG.md) for the complete list.
+
+## 🚀 v1.9.0 — E-commerce Reference Suite
+
+- `tests/shop/` (16 tests/browser), `pages/shop/`, `shop` fixture
+- Multi-app auth setup, unauthenticated opt-out pattern
+
+---
 
 ## 🚀 v1.8.0 — CI Matrix & Merged Reports
 
