@@ -28,7 +28,8 @@
     "test:visual": "sh scripts/visual-docker.sh",
     "test:visual:update": "sh scripts/visual-docker.sh --update-snapshots",
     "test:visual:local": "sh scripts/clean-snap-env.sh playwright test tests/visual",
-    "data:excel": "tsx scripts/generate-excel-data.ts"
+    "data:excel": "tsx scripts/generate-excel-data.ts",
+    "test:demo-failures": "DEMO_FAILURES=1 sh scripts/clean-snap-env.sh playwright test tests/demo --project=chromium --retries=1"
   },
   "keywords": [],
   "author": "",

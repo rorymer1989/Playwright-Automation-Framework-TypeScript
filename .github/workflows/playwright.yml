@@ -12,9 +12,14 @@ on:
         type: choice
         options: [dev, uat, pre-prod, prod]
         default: uat
+      demo_failures:
+        description: "Also run tests/demo (controlled failures) to exercise failure artifacts"
+        type: boolean
+        default: false
 
 env:
   TEST_ENV: ${{ github.event.inputs.test_env || 'uat' }}
+  DEMO_FAILURES: ${{ github.event.inputs.demo_failures == 'true' && '1' || '' }}
 
 jobs:
   # ---------------------------------------------------------------- quality gates

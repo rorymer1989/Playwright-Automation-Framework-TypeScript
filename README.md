@@ -491,6 +491,31 @@ CI runs the `visual` job in the same image; diffs are uploaded as artifacts on f
 
 ---
 
+# 🧨 Failure Paths Demo
+
+`tests/demo/failures.spec.ts` contains **controlled failures** (hard, soft ×3, flaky-then-pass, real visual diff with saucedemo's `problem_user`, timeout) to prove the failure side of the framework: traces/videos/screenshots, retries → _flaky_, soft aggregation, `expected/actual/diff` images, Allure categories and a red email. They are skipped unless opted in:
+
+```bash
+npm run test:demo-failures                                   # chromium, 1 retry — expected to fail
+DEMO_FAILURES=1 VISUAL_TESTS=tests/demo npm run test:visual  # the visual diff, rendered in Docker
+```
+
+In CI: _Run workflow_ → tick **demo_failures**. Baseline for the visual case: `DEMO_FAILURES=1 VISUAL_BASELINE_USER=standard VISUAL_TESTS=tests/demo sh scripts/visual-docker.sh --update-snapshots`.
+
+---
+
+# 🚦 Environment Preflight
+
+`global-setup` GETs every configured URL (`BASE_URL`, `AUTH_URL`, `SHOP_URL`, `API_URL`) and **fails fast** listing the unreachable ones, instead of letting every test time out (e.g. `TEST_ENV=prod` with placeholder hosts fails in ~5 s). `SKIP_PREFLIGHT=1` bypasses it.
+
+---
+
+# 📑 Excel Data-Driven Example
+
+`tests/shop/checkout-excel.spec.ts` runs one checkout per row flagged `executor=Y` in `testData/<env>/checkout-customers.xlsx` (edit `scripts/generate-excel-data.ts`, then `npm run data:excel`).
+
+---
+
 # ⚙️ CI Pipeline
 
 ```
@@ -613,7 +638,7 @@ Playwright-Automation-Framework-TypeScript
 │   ├── actionFixture.ts
 │   └── assertionFixture.ts
 ├── pages                              # BasePage, HomePage, DocsPage, LoginPage, SecureAreaPage, shop/
-├── tests                              # *.spec.ts, auth/, shop/, api/, a11y/, visual/ (+__snapshots__), unit/, auth.setup.ts
+├── tests                              # *.spec.ts, auth/, shop/, api/, a11y/, visual/, demo/ (+__snapshots__), unit/, auth.setup.ts
 ├── testData/<env>/*.json              # environment-aware test data
 ├── utilities                          # + logger.ts
 │   ├── assertionUtil.ts  softAssertionUtil.ts
