@@ -1,6 +1,6 @@
 {
   "name": "playwright_automation-ts",
-  "version": "1.10.0",
+  "version": "1.11.0",
   "description": "Playwright Automation Framework (TypeScript)",
   "scripts": {
     "test": "sh scripts/clean-snap-env.sh playwright test",
@@ -29,7 +29,10 @@
     "test:visual:update": "sh scripts/visual-docker.sh --update-snapshots",
     "test:visual:local": "sh scripts/clean-snap-env.sh playwright test tests/visual",
     "data:excel": "tsx scripts/generate-excel-data.ts",
-    "test:demo-failures": "DEMO_FAILURES=1 sh scripts/clean-snap-env.sh playwright test tests/demo --project=chromium --retries=1"
+    "test:demo-failures": "DEMO_FAILURES=1 sh scripts/clean-snap-env.sh playwright test tests/demo --project=chromium --retries=1",
+    "jira:story": "tsx scripts/jira-story.ts",
+    "test:story": "sh scripts/clean-snap-env.sh playwright test --grep",
+    "jira:bugs": "tsx scripts/jira-bugs.ts"
   },
   "keywords": [],
   "author": "",

@@ -2,6 +2,20 @@
 
 All notable changes to this project are documented here. Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/).
 
+## [1.11.0] — 2026-08-21
+
+### Added
+
+- **Jira integration** (`utilities/jiraClient.ts`, Jira Cloud REST v3 with API token): `getStory` (ADF → text, acceptance-criteria detection, subtasks), `search`, `createBug` (structured ADF: steps/expected/actual/environment), `attach`, `addComment`, `resolveBugType` (issue type from project metadata — works on localized sites where "Bug" is "Error"; `JIRA_BUG_TYPE` to force). Unit-tested against a local HTTP server.
+- **Stories → tests**: `npm run jira:story -- KEY` prints the story as Markdown; `/jira-test KEY` Claude Code command (`.claude/commands/jira-test.md`) fetches the story, applies `AI/` rules, explores the app, reuses components, generates a spec tagged `@KEY` with `allure.issue(KEY)`, runs it on the three browsers and commits on `feat/KEY`. First real run: SCRUM-9 → `tests/shop/catalogue-sorting.spec.ts` (4 ACs → 4 tests, 15/15), summary posted back to the story.
+- **Failures → bugs**: `npm run jira:bugs [-- --dry-run]` raises one de-duplicated Bug per failed test in `test-result.json` with evidence attached (screenshot/video/trace/diff), `automated` label, `REPORT_URL` link; an open bug with the same summary gets a comment instead. Verified on the real board (SCRUM-8).
+- **Traceability**: `allure.issue()` renders a Jira link in Allure and adds a `jira` label; shop suite tagged `@SCRUM-1/2/3/9`; `npm run test:story -- "@KEY"`.
+- `InventoryPage.selectedSortOption()`.
+
+### Fixed
+
+- `AI/` prompt files referenced `ai/…` paths.
+
 ## [1.10.0] — 2026-08-21
 
 ### Added
@@ -149,6 +163,7 @@ Intelligent Execution Update — environment management, execution dashboard, re
 
 Initial release — Page Object Model.
 
+[1.11.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.11.0
 [1.10.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.10.0
 [1.9.1]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.9.1
 [1.9.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.9.0

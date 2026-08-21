@@ -6,12 +6,13 @@ import dataManager from "../../utilities/dataManager";
 // Loaded at module level so the data-driven cases can be declared as individual tests.
 const shopData = dataManager.load<ShopData>("shop");
 
-test.describe("Shop — login", () => {
+test.describe("Shop — login @SCRUM-1", () => {
     // These tests exercise the login form itself, so they must NOT start authenticated.
     test.use({ storageState: { cookies: [], origins: [] } });
 
     test.beforeEach(async ({ allure }) => {
         await allure.feature("Shop");
+        await allure.issue("SCRUM-1");
         await allure.story("Login");
     });
 

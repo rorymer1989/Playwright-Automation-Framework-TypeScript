@@ -13,9 +13,9 @@ Playwright TypeScript tests.
 
 You MUST inspect:
 
-- ai/context/framework-context.md
-- ai/config/ai-rules.md
-- ai/prompts/test-generation.md
+- AI/context/framework-context.md
+- AI/config/ai-rules.md
+- AI/prompts/test-generation.md
 
 Then inspect the actual repository.
 

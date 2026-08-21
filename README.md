@@ -31,11 +31,11 @@ The framework provides a structured foundation for building and maintaining larg
 
 # 🚀 What's New
 
-## v1.10.0 — Failure Paths, Preflight & Excel
+## v1.11.0 — Jira: Stories → Tests, Failures → Bugs
 
-- **Failure-paths demo** (`DEMO_FAILURES=1`): proves traces/videos/screenshots, retries → flaky, soft aggregation, real visual diffs and red emails — locally and in CI.
-- **Environment preflight**: unreachable URLs fail the run in seconds, not per test.
-- **Excel data-driven checkout** over `testData/<env>/checkout-customers.xlsx`.
+- **`/jira-test SCRUM-12`** generates framework-compliant tests from a Jira story (acceptance criteria → tests), runs them and reports back to the story.
+- **`npm run jira:bugs`** raises de-duplicated bugs with evidence for failed tests.
+- Allure links every test to its Jira issue; `npm run test:story -- "@KEY"`.
 
 Full details in [CHANGELOG.md](CHANGELOG.md).
 
@@ -205,7 +205,7 @@ Environment       : UAT
 Browser           : Chromium
 Platform          : darwin
 Node Version      : v24.x
-Framework Version : v1.10.0
+Framework Version : v1.11.0
 Base URL          : https://example.com
 ```
 
@@ -382,7 +382,7 @@ Example:
 
 🚀 Playwright Automation Framework
 
-Framework Version : v1.10.0
+Framework Version : v1.11.0
 
 Environment       : UAT
 
@@ -489,6 +489,30 @@ npm run test:visual:local     # host run, informational: fonts differ from CI
 ```
 
 CI runs the `visual` job in the same image; diffs are uploaded as artifacts on failure.
+
+---
+
+# 🎫 Jira: Stories → Tests
+
+The framework can pull a user story from Jira Cloud and generate framework-compliant tests for it.
+
+```text
+JIRA_BASE_URL=https://<site>.atlassian.net
+JIRA_EMAIL=                 # email of the Atlassian account that created the token
+JIRA_API_TOKEN=             # https://id.atlassian.com/manage-profile/security/api-tokens
+```
+
+```bash
+npm run jira:story -- SCRUM-12          # story as Markdown (summary, description, acceptance criteria, subtasks)
+npm run jira:story -- SCRUM-12 --json
+```
+
+- **`/jira-test SCRUM-12`** (Claude Code command, `.claude/commands/jira-test.md`): fetches the story, reads `AI/` rules, explores the app for real locators, reuses page objects/fixtures/data, generates `tests/<area>/<story>.spec.ts`, runs it on the three browsers and commits on `feat/SCRUM-12`.
+- **Traceability**: specs tag the story in the title (`@SCRUM-12`) and call `allure.issue("SCRUM-12")`, which renders a link to Jira in the Allure report. Run a story's tests with `npm run test:story -- "@SCRUM-12"`.
+- **Bugs from failures**: `npm run jira:bugs` creates one Bug per failed test in `test-result.json` (structured ADF description: steps, expected, actual, environment; screenshot/video/trace attached; `automated` label). Already-open bugs with the same summary get a comment instead of a duplicate. `--dry-run` prints what would be created. `JIRA_PROJECT_KEY` (default `SCRUM`), `REPORT_URL` linked in the bug.
+- `utilities/jiraClient.ts` (`getStory`, `search`, `createBug`, `attach`, `addComment`) is unit-tested against a local server.
+
+> **Security**: the API token is a password. Keep it only in `.env` (git-ignored) or CI secrets, never in `.env.example`; rotate it if it was ever printed or committed.
 
 ---
 
@@ -1001,6 +1025,12 @@ The goal is to gradually evolve the framework toward **AI-enabled intelligent QA
 # 📦 Release History
 
 See [CHANGELOG.md](CHANGELOG.md) for the complete list.
+
+## 🚀 v1.11.0 — Jira: Stories → Tests, Failures → Bugs
+
+- `utilities/jiraClient.ts`, `/jira-test`, `jira:story`, `jira:bugs`, `allure.issue()`
+
+---
 
 ## 🚀 v1.10.0 — Failure Paths, Preflight & Excel
 

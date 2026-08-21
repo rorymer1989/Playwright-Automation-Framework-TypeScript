@@ -58,6 +58,10 @@ test.describe("Feature", () => {
 });
 ```
 
+## Jira traceability
+
+Every spec generated from a story: `test.describe("<Feature> @KEY", …)` and `allure.issue("KEY")` in `beforeEach`. Run with `npm run test:story -- "@KEY"`.
+
 ## Rules for generated code
 
 1. Reuse fixtures, page objects and utilities above; do not create parallel helpers.
