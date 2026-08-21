@@ -2,6 +2,20 @@
 
 All notable changes to this project are documented here. Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/).
 
+## [1.15.0] — 2026-08-21
+
+### Added
+
+- **Typed API client layer** (`api/`): `BaseApiClient` wraps `APIRequestContext` (`get/post/put/patch/delete<T>` → `{ response, body }`, `logger.debug`, optional `expectStatus` fail-fast, `basePath`), `clients/PostsClient`, `clients/UsersClient`, `types.ts`, `createApiClients()`. New **`api` fixture** on its own request context bound to `API_URL`, so browser suites can seed or verify state through the API next to the page objects. `tests/api/posts.api.spec.ts` uses only the clients (+ cross-resource scenario); `tests/unit/apiClient.unit.spec.ts` covers the base client.
+- **`CLAUDE.md`** as the entry point for Claude Code sessions (constitution → AI rules → framework context, non-negotiables, `/jira-test` · `/heal` · `speckit-*` workflow, key scripts).
+- **CI**: nightly run Mon–Fri 03:00 UTC (non-PR → Jira bugs + email summary) and a `concurrency` group that cancels superseded PR runs while never cancelling `main`/scheduled runs.
+- **Spec Kit backfill**: every `tests/shop/` suite now has `specs/<NNN-slug>/{spec,plan,tasks}.md` — `002-catalogue-sorting` (SCRUM-9), `003-shop-login` (SCRUM-1), `004-product-catalogue` (SCRUM-2), `005-cart-checkout` (SCRUM-3), `006-checkout-excel`; plus `007-api-client`.
+- `/heal` exercised end to end with the official `playwright-test-healer` on a deliberately broken `ShopLoginPage` test id (validated live, 21/21 on 3 browsers).
+
+### Changed
+
+- `.gitignore` ignores `.playwright-mcp/` (artefacts of the Playwright test agents).
+
 ## [1.14.0] — 2026-08-21
 
 ### Added

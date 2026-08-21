@@ -1,6 +1,6 @@
 {
   "name": "playwright_automation-ts",
-  "version": "1.14.0",
+  "version": "1.15.0",
   "description": "Playwright Automation Framework (TypeScript)",
   "scripts": {
     "test": "sh scripts/clean-snap-env.sh playwright test",
