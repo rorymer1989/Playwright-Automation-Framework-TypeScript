@@ -432,7 +432,17 @@ The state is per browser on purpose: apps with session-hijacking protection bind
 
 # 🔌 API Testing
 
-`*.api.spec.ts` files run in the `api` project (no browser) against `API_URL` using Playwright's built-in `request` fixture and the `assertion.assertStatus` / `assertJsonValue` helpers. See `tests/api/posts.api.spec.ts`.
+`*.api.spec.ts` files run in the `api` project (no browser) against `API_URL`. Tests talk to the API through the **typed client layer** in `api/`, exposed by the `api` fixture:
+
+```ts
+const { response, body: post } = await api.posts.getById(1); // body is a Post
+assertion.assertStatus(response, 200);
+await api.posts.create(newPost, { expectStatus: 201 }); // fail fast on an unexpected status
+```
+
+- `api/BaseApiClient.ts` wraps `APIRequestContext` (`get/post/put/patch/delete<T>` → `{ response, body }`, debug logging, optional `expectStatus`).
+- One client per resource in `api/clients/` (`PostsClient`, `UsersClient`), models in `api/types.ts`, registered in `createApiClients()`.
+- The fixture opens its own request context on `API_URL`, so browser suites can use `api` and `shop` in the same test (seed through the API, verify through the UI). Unit coverage: `tests/unit/apiClient.unit.spec.ts`. See `tests/api/posts.api.spec.ts` and `specs/007-api-client`.
 
 ```bash
 npm run test:api

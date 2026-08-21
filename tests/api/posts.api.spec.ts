@@ -7,60 +7,60 @@ interface ApiData {
     newPost: { title: string; body: string; userId: number };
 }
 
-interface Post {
-    id: number;
-    userId: number;
-    title: string;
-    body: string;
-}
-
 /**
- * API tests run in the `api` project (no browser). `request` is Playwright's built-in
- * APIRequestContext, already pointed at API_URL through `use.baseURL`.
+ * API tests run in the `api` project (no browser). The `api` fixture exposes the typed
+ * resource clients from `api/` (PostsClient, UsersClient) bound to API_URL.
  */
 test.describe("Posts API", () => {
     test.beforeEach(async ({ allure }) => {
         await allure.feature("Posts API");
     });
 
-    test("GET /posts/:id returns the post", async ({ request, data, assertion }) => {
+    test("GET /posts/:id returns the post", async ({ api, data, assertion }) => {
         const { existingPostId, existingUserId } = data.load<ApiData>("api");
 
-        const response = await request.get(`/posts/${existingPostId}`);
+        const { response, body: post } = await api.posts.getById(existingPostId);
 
         assertion.assertStatus(response, 200);
         await assertion.assertJsonValue(response, "id", existingPostId);
-        await assertion.assertJsonValue(response, "userId", existingUserId);
-
-        const post = (await response.json()) as Post;
+        expect(post.userId).toBe(existingUserId);
         expect(post.title).not.toHaveLength(0);
     });
 
-    test("GET /posts?userId= filters by user", async ({ request, data }) => {
+    test("GET /posts?userId= filters by user", async ({ api, data, assertion }) => {
         const { existingUserId } = data.load<ApiData>("api");
 
-        const response = await request.get("/posts", { params: { userId: existingUserId } });
-        expect(response.ok()).toBeTruthy();
+        const { response, body: posts } = await api.posts.listByUser(existingUserId);
 
-        const posts = (await response.json()) as Post[];
+        assertion.assertStatus(response, 200);
         expect(posts.length).toBeGreaterThan(0);
         expect(posts.every((p) => p.userId === existingUserId)).toBeTruthy();
     });
 
-    test("POST /posts creates a post", async ({ request, data, assertion }) => {
+    test("POST /posts creates a post", async ({ api, data, assertion }) => {
         // Static shape from test data, dynamic content from faker
         const newPost = { ...data.load<ApiData>("api").newPost, title: FakerUtility.getSentence() };
 
-        const response = await request.post("/posts", { data: newPost });
+        const { response, body: created } = await api.posts.create(newPost);
 
         assertion.assertStatus(response, 201);
-        const created = (await response.json()) as Post;
         expect(created).toMatchObject(newPost);
         expect(created.id).toBeGreaterThan(0);
     });
 
-    test("GET /posts/:id for a missing post returns 404", async ({ request, assertion }) => {
-        const response = await request.get("/posts/999999");
+    test("GET /posts/:id for a missing post returns 404", async ({ api, assertion }) => {
+        const { response } = await api.posts.getById(999999);
         assertion.assertStatus(response, 404);
+    });
+
+    test("the author of a post exists as a user", async ({ api, data, assertion }) => {
+        const { existingPostId } = data.load<ApiData>("api");
+
+        const { body: post } = await api.posts.getById(existingPostId);
+        const { response, body: user } = await api.users.getById(post.userId);
+
+        assertion.assertStatus(response, 200);
+        expect(user.id).toBe(post.userId);
+        expect(user.email).toContain("@");
     });
 });
