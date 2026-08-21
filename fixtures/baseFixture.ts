@@ -6,13 +6,33 @@ import allureUtil from "../reporting/allure/allureUtil";
 import stepUtil from "../reporting/allure/stepUtil";
 import { expectNoA11yViolations, scanA11y, type A11yOptions } from "../utilities/a11yUtil";
 import { expectVisualMatch } from "../utilities/visualUtil";
-import { HomePage, DocsPage, LoginPage, SecureAreaPage } from "../pages";
+import {
+    HomePage,
+    DocsPage,
+    LoginPage,
+    SecureAreaPage,
+    ShopLoginPage,
+    InventoryPage,
+    CartPage,
+    CheckoutInfoPage,
+    CheckoutOverviewPage,
+    CheckoutCompletePage,
+} from "../pages";
 
 interface CustomFixtures {
     homePage: HomePage;
     docsPage: DocsPage;
     loginPage: LoginPage;
     secureAreaPage: SecureAreaPage;
+    /** E-commerce demo page objects, grouped. */
+    shop: {
+        login: ShopLoginPage;
+        inventory: InventoryPage;
+        cart: CartPage;
+        checkoutInfo: CheckoutInfoPage;
+        checkoutOverview: CheckoutOverviewPage;
+        checkoutComplete: CheckoutCompletePage;
+    };
     actions: Actions;
     assertion: Assertions;
     data: typeof dataManager;
@@ -39,6 +59,16 @@ export const test = base.extend<CustomFixtures>({
     },
     secureAreaPage: async ({ page }, use) => {
         await use(new SecureAreaPage(page));
+    },
+    shop: async ({ page }, use) => {
+        await use({
+            login: new ShopLoginPage(page),
+            inventory: new InventoryPage(page),
+            cart: new CartPage(page),
+            checkoutInfo: new CheckoutInfoPage(page),
+            checkoutOverview: new CheckoutOverviewPage(page),
+            checkoutComplete: new CheckoutCompletePage(page),
+        });
     },
     actions: async ({}, use) => {
         await use(new Actions());

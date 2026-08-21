@@ -25,3 +25,11 @@ test.describe("Visual regression", () => {
         await visual.match(page, "secure-area", { mask: [secureAreaPage.flash] });
     });
 });
+
+test.describe("Shop visual regression", () => {
+    test("product catalogue matches baseline", async ({ shop, visual, page, allure }) => {
+        await allure.feature("Visual regression");
+        await shop.inventory.open();
+        await visual.match(page, "shop-inventory", { fullPage: true });
+    });
+});

@@ -51,6 +51,8 @@ export default defineConfig({
 
     use: {
         baseURL: ENV.baseUrl,
+        // getByTestId() resolves data-test="…" (used by the shop demo)
+        testIdAttribute: "data-test",
         actionTimeout: 15_000,
         navigationTimeout: 30_000,
         trace: "retain-on-failure",

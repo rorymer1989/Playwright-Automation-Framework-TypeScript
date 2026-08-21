@@ -2,6 +2,14 @@
 
 All notable changes to this project are documented here. Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/).
 
+## [1.9.0] — 2026-08-21
+
+### Added
+
+- **E-commerce reference suite** (`tests/shop/`, saucedemo.com via `SHOP_URL`): login happy path + 4 data-driven error cases + logout; catalogue size/prices, sorting, cart badge; cart lines, 3 data-driven checkout validation cases, full checkout with subtotal/tax/total consistency, cancel. 16 tests per browser, plus catalogue accessibility (real `select-name` issue excluded explicitly and guarded) and a visual baseline.
+- `pages/shop/` page objects over `getByTestId` (`testIdAttribute: "data-test"`), grouped in the `shop` fixture; `testData/<env>/shop.json` with shared `ShopData` type.
+- `tests/auth.setup.ts` now logs into every app under test in one context; tests that need the login form opt out with `test.use({ storageState: { cookies: [], origins: [] } })`.
+
 ## [1.8.0] — 2026-08-21
 
 ### Added
@@ -120,6 +128,7 @@ Intelligent Execution Update — environment management, execution dashboard, re
 
 Initial release — Page Object Model.
 
+[1.9.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.9.0
 [1.8.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.8.0
 [1.7.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.7.0
 [1.6.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.6.0
