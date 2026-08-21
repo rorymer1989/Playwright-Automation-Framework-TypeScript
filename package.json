@@ -27,7 +27,8 @@
     "test:a11y": "sh scripts/clean-snap-env.sh playwright test tests/a11y",
     "test:visual": "sh scripts/visual-docker.sh",
     "test:visual:update": "sh scripts/visual-docker.sh --update-snapshots",
-    "test:visual:local": "sh scripts/clean-snap-env.sh playwright test tests/visual"
+    "test:visual:local": "sh scripts/clean-snap-env.sh playwright test tests/visual",
+    "data:excel": "tsx scripts/generate-excel-data.ts"
   },
   "keywords": [],
   "author": "",
