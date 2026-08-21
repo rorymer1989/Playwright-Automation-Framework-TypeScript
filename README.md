@@ -31,11 +31,10 @@ The framework provides a structured foundation for building and maintaining larg
 
 # 🚀 What's New
 
-## v1.6.0 — Observability & Maintenance
+## v1.7.0 — Accessibility & Visual Regression
 
-- **Assertions as `test.step`s**: every `assertion.*` call is visible in the HTML/Allure report and trace viewer; failures point at the test line.
-- **Leveled logger** for framework output (`LOG_LEVEL`), no stray `console.log`.
-- **Dependabot** with weekly grouped updates.
+- **`a11y` fixture** (axe-core, WCAG 2.1 A/AA) with explicit, guarded exceptions for known issues.
+- **`visual` fixture** (`toHaveScreenshot`) with per-browser/OS baselines rendered in the official Playwright Docker image, locally and in CI.
 
 Full details in [CHANGELOG.md](CHANGELOG.md).
 
@@ -205,7 +204,7 @@ Environment       : UAT
 Browser           : Chromium
 Platform          : darwin
 Node Version      : v24.x
-Framework Version : v1.6.0
+Framework Version : v1.7.0
 Base URL          : https://example.com
 ```
 
@@ -382,7 +381,7 @@ Example:
 
 🚀 Playwright Automation Framework
 
-Framework Version : v1.6.0
+Framework Version : v1.7.0
 
 Environment       : UAT
 
@@ -923,6 +922,13 @@ The goal is to gradually evolve the framework toward **AI-enabled intelligent QA
 # 📦 Release History
 
 See [CHANGELOG.md](CHANGELOG.md) for the complete list.
+
+## 🚀 v1.7.0 — Accessibility & Visual Regression
+
+- `a11y` fixture over `@axe-core/playwright`
+- `visual` fixture, Docker-rendered baselines, `visual` CI job
+
+---
 
 ## 🚀 v1.6.0 — Observability & Maintenance
 
