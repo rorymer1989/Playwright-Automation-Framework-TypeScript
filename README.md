@@ -31,11 +31,9 @@ The framework provides a structured foundation for building and maintaining larg
 
 # 🚀 What's New
 
-## v1.11.0 — Jira: Stories → Tests, Failures → Bugs
+## v1.12.0 — CI Closes the Loop
 
-- **`/jira-test SCRUM-12`** generates framework-compliant tests from a Jira story (acceptance criteria → tests), runs them and reports back to the story.
-- **`npm run jira:bugs`** raises de-duplicated bugs with evidence for failed tests.
-- Allure links every test to its Jira issue; `npm run test:story -- "@KEY"`.
+- On `main` and manual runs, CI raises **Jira bugs with evidence** for failed tests and **emails** the summary, both linking to the run — no human step needed from failure to ticket.
 
 Full details in [CHANGELOG.md](CHANGELOG.md).
 
@@ -205,7 +203,7 @@ Environment       : UAT
 Browser           : Chromium
 Platform          : darwin
 Node Version      : v24.x
-Framework Version : v1.11.0
+Framework Version : v1.12.0
 Base URL          : https://example.com
 ```
 
@@ -382,7 +380,7 @@ Example:
 
 🚀 Playwright Automation Framework
 
-Framework Version : v1.11.0
+Framework Version : v1.12.0
 
 Environment       : UAT
 
@@ -553,6 +551,7 @@ check (typecheck · lint · format · unit)
 - Each shard installs only its browser and uploads a **blob** report; `merge-reports` produces one `playwright-report` artifact plus the Allure report.
 - `workflow_dispatch` lets you pick `TEST_ENV`.
 - A unit test (`tests/unit/ciConfig.unit.spec.ts`) fails if the Docker image tag in the workflow drifts from `@playwright/test`.
+- **Closing the loop** (on `push` to `main` and manual runs, never on PRs): `merge-reports` also builds a merged `test-result.json`, raises de-duplicated **Jira bugs** for failed tests (`npm run jira:bugs`) and **emails** the summary with a link to the run. Both steps are skipped unless the repository secrets exist: `JIRA_BASE_URL`, `JIRA_EMAIL`, `JIRA_API_TOKEN` (+ optional variable `JIRA_PROJECT_KEY`) and `EMAIL_FROM`, `EMAIL_PASSWORD`, `EMAIL_TO` (+ optional `EMAIL_SERVICE`). Set them with `gh secret set NAME`.
 
 ---
 
@@ -1025,6 +1024,12 @@ The goal is to gradually evolve the framework toward **AI-enabled intelligent QA
 # 📦 Release History
 
 See [CHANGELOG.md](CHANGELOG.md) for the complete list.
+
+## 🚀 v1.12.0 — CI Closes the Loop
+
+- `merge-reports`: merged JSON → `jira:bugs` + `report:email` (secrets-gated)
+
+---
 
 ## 🚀 v1.11.0 — Jira: Stories → Tests, Failures → Bugs
 
