@@ -31,10 +31,11 @@ The framework provides a structured foundation for building and maintaining larg
 
 # 🚀 What's New
 
-## v1.9.0 — E-commerce Reference Suite
+## v1.10.0 — Failure Paths, Preflight & Excel
 
-- **`tests/shop/`**: a complete, data-driven suite over saucedemo.com (login, catalogue, cart, checkout with totals) showing every framework piece working together.
-- `pages/shop/` page objects on `data-test` ids, grouped `shop` fixture, multi-app auth setup.
+- **Failure-paths demo** (`DEMO_FAILURES=1`): proves traces/videos/screenshots, retries → flaky, soft aggregation, real visual diffs and red emails — locally and in CI.
+- **Environment preflight**: unreachable URLs fail the run in seconds, not per test.
+- **Excel data-driven checkout** over `testData/<env>/checkout-customers.xlsx`.
 
 Full details in [CHANGELOG.md](CHANGELOG.md).
 
@@ -204,7 +205,7 @@ Environment       : UAT
 Browser           : Chromium
 Platform          : darwin
 Node Version      : v24.x
-Framework Version : v1.9.1
+Framework Version : v1.10.0
 Base URL          : https://example.com
 ```
 
@@ -381,7 +382,7 @@ Example:
 
 🚀 Playwright Automation Framework
 
-Framework Version : v1.9.1
+Framework Version : v1.10.0
 
 Environment       : UAT
 
@@ -1000,6 +1001,12 @@ The goal is to gradually evolve the framework toward **AI-enabled intelligent QA
 # 📦 Release History
 
 See [CHANGELOG.md](CHANGELOG.md) for the complete list.
+
+## 🚀 v1.10.0 — Failure Paths, Preflight & Excel
+
+- `tests/demo/failures.spec.ts` (opt-in), `utilities/preflight.ts`, `tests/shop/checkout-excel.spec.ts`
+
+---
 
 ## 🩹 v1.9.1 — Email reporting fixes
 

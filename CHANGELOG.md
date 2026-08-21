@@ -2,6 +2,15 @@
 
 All notable changes to this project are documented here. Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/).
 
+## [1.10.0] — 2026-08-21
+
+### Added
+
+- **Environment preflight** (`utilities/preflight.ts`, run by `global-setup`): GETs `BASE_URL`/`AUTH_URL`/`SHOP_URL`/`API_URL` and fails fast listing every unreachable target (placeholder `prod` now fails in ~5 s instead of timing out test by test). `SKIP_PREFLIGHT=1` bypasses. Unit-tested against a local HTTP server.
+- **Excel data-driven example**: `tests/shop/checkout-excel.spec.ts` runs one checkout per `executor=Y` row of `testData/<env>/checkout-customers.xlsx` (`npm run data:excel` regenerates from `scripts/generate-excel-data.ts`). First real consumer of `excelUtil`.
+- **Failure-paths demo** (`tests/demo/failures.spec.ts`, opt-in with `DEMO_FAILURES=1`, `npm run test:demo-failures`, CI input `demo_failures`): hard failure, three aggregated soft failures, flaky-then-pass, real visual diff (saucedemo `problem_user` vs `standard_user` baseline, 12 % pixels), timeout. Verified locally and in CI: trace/video/screenshot per failure, flaky classified as flaky by retries, soft message lists all failures, `expected/actual/diff` images, `merge-reports` consolidates failing shards, red email summary.
+- `scripts/visual-docker.sh`: `VISUAL_TESTS` to target another folder; forwards `DEMO_FAILURES`, `VISUAL_BASELINE_USER`, `SKIP_PREFLIGHT`; skips Allure generation in-container.
+
 ## [1.9.1] — 2026-08-21
 
 ### Fixed
@@ -140,6 +149,7 @@ Intelligent Execution Update — environment management, execution dashboard, re
 
 Initial release — Page Object Model.
 
+[1.10.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.10.0
 [1.9.1]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.9.1
 [1.9.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.9.0
 [1.8.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.8.0
