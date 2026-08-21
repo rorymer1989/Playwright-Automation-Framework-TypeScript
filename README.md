@@ -224,6 +224,9 @@ Supported trend information includes:
 
 This allows teams to identify changes in execution behavior over time.
 
+- **Locally**, `global-teardown.ts` copies `allure-report/history` into the next `allure-results` before generating.
+- **In CI**, `merge-reports` restores the newest history from the GitHub Actions cache (`allure-history-*`), generates the merged report with it and saves the new history — only on `main`, scheduled and manual runs, so PR runs see the trend but never pollute it.
+
 ---
 
 # 🧪 Soft Assertions
@@ -580,7 +583,7 @@ check (typecheck · lint · format · unit)
         └── merge-reports: blob → single HTML report · Allure report
 ```
 
-- Each shard installs only its browser and uploads a **blob** report; `merge-reports` produces one `playwright-report` artifact plus the Allure report.
+- Each shard installs only its browser and uploads a **blob** report; `merge-reports` produces one `playwright-report` artifact plus the Allure report, with the trend history carried across runs through the Actions cache.
 - `workflow_dispatch` lets you pick `TEST_ENV`.
 - A unit test (`tests/unit/ciConfig.unit.spec.ts`) fails if the Docker image tag in the workflow drifts from `@playwright/test`.
 - **Closing the loop** (on `push` to `main` and manual runs, never on PRs): `merge-reports` also builds a merged `test-result.json`, raises de-duplicated **Jira bugs** for failed tests (`npm run jira:bugs`) and **emails** the summary with a link to the run. Both steps are skipped unless the repository secrets exist: `JIRA_BASE_URL`, `JIRA_EMAIL`, `JIRA_API_TOKEN` (+ optional variable `JIRA_PROJECT_KEY`) and `EMAIL_FROM`, `EMAIL_PASSWORD`, `EMAIL_TO` (+ optional `EMAIL_SERVICE`). Set them with `gh secret set NAME`.
