@@ -3,3 +3,4 @@ export { HomePage } from "./HomePage";
 export { DocsPage } from "./DocsPage";
 export { LoginPage } from "./LoginPage";
 export { SecureAreaPage } from "./SecureAreaPage";
+export * from "./shop";

@@ -40,6 +40,10 @@ export const ENV = {
     get authUrl(): string {
         return process.env.AUTH_URL ?? "";
     },
+    /** Base URL of the e-commerce demo (pages/shop). */
+    get shopUrl(): string {
+        return process.env.SHOP_URL ?? "";
+    },
     /** Base URL for API tests (`api` project). */
     get apiUrl(): string {
         return process.env.API_URL ?? "";

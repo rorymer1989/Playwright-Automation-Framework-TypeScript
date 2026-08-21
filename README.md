@@ -442,6 +442,21 @@ npm run test:api
 
 ---
 
+# 🛒 Reference Suite: E-commerce Demo
+
+`tests/shop/` automates [saucedemo.com](https://www.saucedemo.com) end to end on top of the framework and is the best place to see every piece working together:
+
+| Spec                | Covers                                                                                                                                                         |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `login.spec.ts`     | Happy path, **data-driven** error cases from `testData/<env>/shop.json`, logout drops the session. Starts unauthenticated via `test.use({ storageState: … })`. |
+| `inventory.spec.ts` | Catalogue size/prices, sorting (price, name), cart badge on add/remove.                                                                                        |
+| `checkout.spec.ts`  | Cart lines, **data-driven** form validation, full checkout with subtotal/tax/total consistency, cancel.                                                        |
+| `a11y/`, `visual/`  | Catalogue accessibility (known issue guarded) and visual baseline.                                                                                             |
+
+Page objects live in `pages/shop/` (`getByTestId` over `data-test`), grouped in the `shop` fixture; the auth setup logs into the shop too, so tests start on the catalogue directly.
+
+---
+
 # ♿ Accessibility (axe-core)
 
 The `a11y` fixture wraps [`@axe-core/playwright`](https://github.com/dequelabs/axe-core-npm):
@@ -598,8 +613,8 @@ Playwright-Automation-Framework-TypeScript
 │   ├── baseFixture.ts                 # test/expect + homePage, docsPage, actions, assertion, data, allure, step
 │   ├── actionFixture.ts
 │   └── assertionFixture.ts
-├── pages                              # BasePage, HomePage, DocsPage, LoginPage, SecureAreaPage
-├── tests                              # *.spec.ts, auth/, api/, a11y/, visual/ (+__snapshots__), unit/, auth.setup.ts
+├── pages                              # BasePage, HomePage, DocsPage, LoginPage, SecureAreaPage, shop/
+├── tests                              # *.spec.ts, auth/, shop/, api/, a11y/, visual/ (+__snapshots__), unit/, auth.setup.ts
 ├── testData/<env>/*.json              # environment-aware test data
 ├── utilities                          # + logger.ts
 │   ├── assertionUtil.ts  softAssertionUtil.ts

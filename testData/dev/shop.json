@@ -1,0 +1,60 @@
+{
+  "_comment": "Public demo credentials for saucedemo.com. Real credentials belong in .env, never here.",
+  "password": "secret_sauce",
+  "users": {
+    "standard": "standard_user",
+    "lockedOut": "locked_out_user",
+    "problem": "problem_user",
+    "performanceGlitch": "performance_glitch_user"
+  },
+  "loginErrors": [
+    {
+      "case": "locked out user",
+      "username": "locked_out_user",
+      "password": "secret_sauce",
+      "message": "Sorry, this user has been locked out."
+    },
+    {
+      "case": "wrong password",
+      "username": "standard_user",
+      "password": "nope",
+      "message": "Username and password do not match any user in this service"
+    },
+    {
+      "case": "missing username",
+      "username": "",
+      "password": "secret_sauce",
+      "message": "Username is required"
+    },
+    {
+      "case": "missing password",
+      "username": "standard_user",
+      "password": "",
+      "message": "Password is required"
+    }
+  ],
+  "catalogSize": 6,
+  "products": {
+    "backpack": { "name": "Sauce Labs Backpack", "price": 29.99 },
+    "bikeLight": { "name": "Sauce Labs Bike Light", "price": 9.99 },
+    "onesie": { "name": "Sauce Labs Onesie", "price": 7.99 }
+  },
+  "taxRate": 0.08,
+  "checkoutValidation": [
+    {
+      "case": "first name required",
+      "info": { "lastName": "Doe", "postalCode": "28001" },
+      "message": "First Name is required"
+    },
+    {
+      "case": "last name required",
+      "info": { "firstName": "Jane", "postalCode": "28001" },
+      "message": "Last Name is required"
+    },
+    {
+      "case": "postal code required",
+      "info": { "firstName": "Jane", "lastName": "Doe" },
+      "message": "Postal Code is required"
+    }
+  ]
+}
