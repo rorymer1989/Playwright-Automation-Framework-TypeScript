@@ -31,9 +31,9 @@ The framework provides a structured foundation for building and maintaining larg
 
 # 🚀 What's New
 
-## v1.15.0 — Typed API Layer, CLAUDE.md & Nightly CI
+## v1.16.0 — Mobile Projects, Allure Trend in CI & Tooling
 
-- `api/` typed clients + `api` fixture (usable from browser suites to seed via API), `CLAUDE.md` entry point for Claude Code, nightly CI with PR concurrency, Spec Kit backfill for every `tests/shop/` suite.
+- `mobile-chrome` / `mobile-safari` projects for the e-commerce suite, Allure history persisted across CI runs, lint-staged pre-commit + `engines`, orphan utilities removed.
 
 Full details in [CHANGELOG.md](CHANGELOG.md).
 
@@ -203,7 +203,7 @@ Environment       : UAT
 Browser           : Chromium
 Platform          : darwin
 Node Version      : v24.x
-Framework Version : v1.15.0
+Framework Version : v1.16.0
 Base URL          : https://example.com
 ```
 
@@ -383,7 +383,7 @@ Example:
 
 🚀 Playwright Automation Framework
 
-Framework Version : v1.15.0
+Framework Version : v1.16.0
 
 Environment       : UAT
 
@@ -1059,6 +1059,12 @@ The goal is to gradually evolve the framework toward **AI-enabled intelligent QA
 # 📦 Release History
 
 See [CHANGELOG.md](CHANGELOG.md) for the complete list.
+
+## 🚀 v1.16.0 — Mobile Projects, Allure Trend in CI & Tooling
+
+- `mobile-chrome`/`mobile-safari`, `npm run test:mobile`, Allure history cache in `merge-reports`, husky + lint-staged
+
+---
 
 ## 🚀 v1.15.0 — Typed API Layer, CLAUDE.md & Nightly CI
 

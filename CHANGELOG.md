@@ -2,6 +2,23 @@
 
 All notable changes to this project are documented here. Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/).
 
+## [1.16.0] — 2026-08-21
+
+### Added
+
+- **Mobile emulation projects**: `mobile-chrome` (Pixel 7) and `mobile-safari` (iPhone 15), each with its own `setup:*` and `storageState`, scoped to `tests/shop/`. `npm run test:mobile`; two extra CI matrix entries (engine mapped through `matrix.browser`). 58/58 without touching a test.
+- **Allure trend across CI runs**: `merge-reports` restores the newest `allure-history-*` Actions cache, seeds it before `allure generate` and saves the new history on non-PR runs only (PRs read the trend, never pollute it). Mirrors `global-teardown.ts` locally.
+- **Tooling**: `engines.node >= 22`, `.nvmrc`, `author`, husky + lint-staged pre-commit (`eslint --fix` + Prettier on staged files; the full `npm run check` stays in CI).
+
+### Changed
+
+- `AI/context/framework-context.md` documents the three demo targets as deliberate: playwright.dev (`BASE_URL`), the-internet (`AUTH_URL`, UA-bound sessions → per-browser `storageState`, multi-domain login in `auth.setup.ts`) and saucedemo (`SHOP_URL`).
+- README cross-browser section rewritten as a project / device / scope / script table.
+
+### Removed
+
+- `utilities/CommonUtilities.ts` (deprecated re-export barrel), `utilities/scrollUtil.ts`, `utilities/fileUtil.ts` — no consumers.
+
 ## [1.15.0] — 2026-08-21
 
 ### Added
