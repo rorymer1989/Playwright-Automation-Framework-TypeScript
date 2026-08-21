@@ -38,7 +38,7 @@
   },
   "keywords": [],
   "author": "Pedro Gutierrez",
-  "license": "ISC",
+  "license": "MIT",
   "engines": {
     "node": ">=22"
   },

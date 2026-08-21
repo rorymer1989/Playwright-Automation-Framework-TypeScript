@@ -1,0 +1,13 @@
+# Default owner for everything
+*                         @rorymer1989
+
+# Framework core and governance need an explicit review
+/playwright.config.ts     @rorymer1989
+/config/                  @rorymer1989
+/fixtures/                @rorymer1989
+/utilities/               @rorymer1989
+/api/                     @rorymer1989
+/.github/                 @rorymer1989
+/.specify/memory/         @rorymer1989
+/AI/                      @rorymer1989
+/CLAUDE.md                @rorymer1989
