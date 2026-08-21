@@ -1302,6 +1302,16 @@ https://github.com/mrpathak20/Playwright-Automation-Framework-TypeScript.git
 
 ---
 
+# 📄 License
+
+[MIT](LICENSE).
+
+# 🤝 Contributing
+
+Pull requests follow `.github/PULL_REQUEST_TEMPLATE.md` (constitution checklist) and need a review from the code owners (`.github/CODEOWNERS`); `main` is protected and only accepts green CI through a PR.
+
+---
+
 ## 🚀 Made with ❤️ by Priyanshu Pathak
 
 ### Happy Testing!
