@@ -1,129 +1,70 @@
 # Playwright Automation Framework Context
 
-## Framework
+Language: TypeScript (strict, CommonJS). Tool: Playwright Test. Architecture: Page Object Model + custom fixtures.
 
-Name:
-Playwright Automation Framework
+## Directory map (source of truth)
 
-Language:
-TypeScript
+| Path | Purpose |
+|---|---|
+| `playwright.config.ts` | Projects (chromium/firefox/webkit), reporters (list, html, json, allure), `use.baseURL` from env, traces/screenshots/videos on failure, CI retries. |
+| `config/environment.ts` | `loadEnvironment()`: loads `.env` (secrets, git-ignored) then `config/environments/<TEST_ENV>.env` (BASE_URL). `ENV.baseUrl`, `ENV.environment`. |
+| `config/environments/*.env` | Per-environment non-secret values: `dev`, `uat` (default), `pre-prod`, `prod`. |
+| `config/executionConfig.ts` | `EXECUTION_CONFIG` (name, version from package.json, browser, author). |
+| `fixtures/baseFixture.ts` | **Import `test`/`expect` from here, not from `@playwright/test`.** Fixtures: `homePage`, `docsPage`, `actions`, `assertion`, `data`, `allure`, `step`. |
+| `fixtures/actionFixture.ts` | `Actions`: `smartClick`, `smartFill`, `waitForPageReady`. |
+| `fixtures/assertionFixture.ts` | `Assertions`: hard assertions (delegates to `utilities/assertionUtil`) + `assertion.soft.*` (`utilities/softAssertionUtil`). |
+| `pages/` | `BasePage` (goto relative to baseURL + waitForPageReady), `HomePage`, `DocsPage`. Export new pages from `pages/index.ts` and register them as fixtures. |
+| `tests/` | `*.spec.ts`. Reference example: `tests/home.spec.ts`. |
+| `testData/<env>/*.json` | Loaded with `data.load<T>("fileName")` (env = `TEST_ENV`). |
+| `utilities/assertionUtil.ts` | Static hard assertions (`Assertion.assertVisible`, `assertText`, `assertURL`, API `assertStatus`, …). |
+| `utilities/softAssertionUtil.ts` | `expect.soft` wrappers + `assertAll()`. |
+| `utilities/clickUtil.ts`, `fillUtil.ts` | `smartClick`, `smartFill` (retry + verification). |
+| `utilities/waitUtil.ts` | `waitForPageReady(page, { loaderSelectors })` — never uses `networkidle`. |
+| `utilities/retryUtil.ts` | `retry(action, { retries, delay, actionName })`. Single retry implementation. |
+| `utilities/ActionUtility.ts` | Static helpers (click, fill, select, check, hover, upload, waits). |
+| `utilities/screenshotUtil.ts` | `takeScreenshot(page, caseName, stepName)` → `Screenshots/<date>/<case>/NN_step.jpg` + report attachment. |
+| `utilities/excelUtil.ts` | `getTestData(file, sheet)` (rows with `executor=Y`), `writeCell`, `writePolicyNumber`. |
+| `utilities/fileUtil.ts` | `downloadFile`, `createFolder`. |
+| `utilities/scrollUtil.ts` | `clickWithScroll` for horizontally scrollable containers. |
+| `utilities/Fakerutility.ts` | `FakerUtility` static generators (`@faker-js/faker`). |
+| `utilities/dataManager.ts` | Default export used by the `data` fixture. |
+| `utilities/dashboardUtil.ts` | Console execution banner (called from `global-setup.ts`). |
+| `reporting/allure/` | `allureUtil` (epic/feature/story/owner/severity/tag/applyDefaults), `stepUtil`, `environmentWriter`, `defaultMetadata`. |
+| `reporting/email/`, `reporting/zip/` | `npm run report:email` (needs `EMAIL_FROM/PASSWORD/TO`), `npm run report:zip`. |
+| `global-setup.ts` / `global-teardown.ts` | Banner + report folders / Allure environment + report generation (non-fatal). |
+| `scripts/` | `clean-snap-env.sh` (wrapper used by npm test scripts), `send-report.ts`, `zip-reports.ts`. |
+| `.github/workflows/playwright.yml` | CI: typecheck + tests + artifacts. |
 
-Automation Tool:
-Playwright
+Deprecated: `utilities/CommonUtilities.ts` is only a re-export barrel — import from the focused modules instead. There is **no** `utils/` folder.
 
-Architecture:
-Page Object Model
+## npm scripts
 
-## Framework Components
+`test`, `test:chromium|firefox|webkit`, `test:dev|uat|prod`, `test:ui`, `test:headed`, `typecheck`, `report`, `allure`, `report:zip`, `report:email`.
 
-### Fixtures
+## Test template
 
-Location:
-fixtures/
+```ts
+import { test, expect } from "../fixtures/baseFixture";
 
-Purpose:
-Centralized reusable Playwright dependencies and test setup.
+test.describe("Feature", () => {
+    test("scenario", async ({ homePage, assertion, data, allure, step, page }) => {
+        await allure.feature("Home");
+        const td = data.load<{ titlePattern: string }>("home");
 
-### Page Objects
+        await step("Open home", () => homePage.open());
+        await assertion.assertTitle(page, new RegExp(td.titlePattern));
+        await assertion.soft.assertVisible(homePage.getStartedLink, "Get started visible");
+        assertion.soft.assertAll();
+    });
+});
+```
 
-Location:
-pages/
+## Rules for generated code
 
-Purpose:
-Store page locators and reusable page actions.
-
-### Tests
-
-Location:
-tests/
-
-Purpose:
-Contain business-level test scenarios.
-
-### Test Data
-
-Location:
-testData/
-
-Purpose:
-Store reusable and environment-aware test data.
-
-### Utilities
-
-Location:
-utils/
-
-Purpose:
-Reusable automation utilities.
-
-Major utilities include:
-
-- Assertion Utility
-- Click Utility
-- Fill Utility
-- Wait Utility
-- Retry Utility
-- Screenshot Utility
-- Excel Utility
-- Faker Utility
-- Environment Utility
-- Dashboard Utility
-
-### Reporting
-
-Location:
-reporting/
-
-Includes:
-
-- Allure reporting
-- Email reporting
-- Report packaging
-
-## Environment Management
-
-Supported environments include:
-
-- DEV
-- UAT
-- PRE-PROD
-- PROD
-
-Environment configuration is separated from test implementation.
-
-Architecture:
-
-Environment
-    ↓
-Configuration
-    ↓
-Test Data
-    ↓
-Test Execution
-
-## Test Architecture
-
-Tests should preferably use:
-
-- Existing fixtures
-- Existing page objects
-- Existing utilities
-- Existing test-data mechanisms
-- Existing assertion utilities
-
-Do not create duplicate utilities when an existing framework utility can be reused.
-
-## AI Rules
-
-When generating automation code:
-
-1. Prefer existing framework components.
-2. Follow the Page Object Model.
-3. Use TypeScript.
-4. Reuse existing fixtures.
-5. Reuse existing assertions.
-6. Reuse environment configuration.
-7. Avoid hard-coded environment URLs.
-8. Avoid duplicate helper functions.
-9. Do not introduce unnecessary dependencies.
-10. Do not modify framework architecture without explicit approval.
+1. Reuse fixtures, page objects and utilities above; do not create parallel helpers.
+2. No hard-coded URLs — use `baseURL` (relative `goto`) and `config/environments`.
+3. No `networkidle`, no fixed `waitForTimeout` in tests.
+4. Locators: prefer `getByRole`/`getByLabel`/`getByTestId` over CSS/XPath.
+5. Test data goes in `testData/<env>/`, secrets only in `.env`.
+6. TypeScript strict: no `any`, no `require`.
+7. Do not modify `playwright.config.ts`, `config/`, CI or secrets without explicit approval.

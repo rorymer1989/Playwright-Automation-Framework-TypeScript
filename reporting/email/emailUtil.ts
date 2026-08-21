@@ -1,75 +1,35 @@
-const nodemailer = require("nodemailer");
+import nodemailer from "nodemailer";
+import { getExecutionSummary } from "./executionSummary";
+import { generateEmailTemplate } from "./emailTemplate";
+import { emailConfig, isEmailConfigured } from "./emailConfig";
+import { zipExecutionReports } from "../zip/zipReport";
 
-const { getExecutionSummary } = require("./executionSummary");
-const { generateEmailTemplate } = require("./emailTemplate");
-const emailConfig = require("./emailConfig");
-const {
-
-zipExecutionReports
-
-} = require("../zip/zipReport");
-async function sendExecutionReport() {
+/**
+ * Sends the execution summary email with the zipped HTML/Allure reports attached.
+ * Requires EMAIL_FROM, EMAIL_PASSWORD and EMAIL_TO (see .env.example).
+ */
+export async function sendExecutionReport(): Promise<void> {
+    if (!isEmailConfigured()) {
+        throw new Error("Email not configured: set EMAIL_FROM, EMAIL_PASSWORD and EMAIL_TO.");
+    }
 
     const summary = getExecutionSummary();
+    const attachments = await zipExecutionReports();
 
     const transporter = nodemailer.createTransport({
-
         service: emailConfig.service,
-
-        auth: {
-
-            user: emailConfig.from,
-
-            pass: emailConfig.password
-
-        }
-
+        auth: { user: emailConfig.from, pass: emailConfig.password },
     });
 
-    // create zip attachments before preparing mail options
-    await zipExecutionReports();
-
-    const mailOptions = {
+    await transporter.sendMail({
         from: emailConfig.from,
         to: emailConfig.to,
-        subject: ` Playwright Execution Report | ${summary.environment}`,
+        subject: `Playwright Execution Report | ${summary.environment} | ${summary.passed}/${summary.total} passed`,
         html: generateEmailTemplate(summary),
-        attachments: [
+        attachments,
+    });
 
-        {
-
-            filename: "AllureReport.zip",
-
-            path: "reports/allure-report.zip"
-
-        },
-
-        {
-
-            filename: "PlaywrightReport.zip",
-
-            path: "reports/playwright-report.zip"
-
-        }
-
-    ]
-
-    };
-
-    await transporter.sendMail(mailOptions);
-
-    console.log("");
-
+    console.log("\n========================================");
+    console.log(`✅ Execution email sent to ${emailConfig.to}`);
     console.log("========================================");
-
-    console.log("✅ Execution Email Sent Successfully");
-
-    console.log("========================================");
-
 }
-
-module.exports = {
-
-    sendExecutionReport
-
-};

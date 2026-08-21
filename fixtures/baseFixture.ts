@@ -3,6 +3,7 @@ import { Actions } from "./actionFixture";
 import { Assertions } from "./assertionFixture";
 import dataManager from "../utilities/dataManager";
 import allureUtil from "../reporting/allure/allureUtil";
+import stepUtil from "../reporting/allure/stepUtil";
 import { HomePage, DocsPage } from "../pages";
 
 interface CustomFixtures {
@@ -12,6 +13,7 @@ interface CustomFixtures {
     assertion: Assertions;
     data: typeof dataManager;
     allure: typeof allureUtil;
+    step: typeof stepUtil.step;
 }
 
 export const test = base.extend<CustomFixtures>({
@@ -21,6 +23,7 @@ export const test = base.extend<CustomFixtures>({
     assertion: async ({}, use) => { await use(new Assertions()); },
     data: async ({}, use) => { await use(dataManager); },
     allure: async ({}, use) => { await use(allureUtil); },
+    step: async ({}, use) => { await use(stepUtil.step.bind(stepUtil)); },
 });
 
 export { expect } from "@playwright/test";

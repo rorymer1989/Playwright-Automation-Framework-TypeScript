@@ -1,7 +1,9 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "node:fs";
+import path from "node:path";
+import { EXECUTION_CONFIG } from "../../config/executionConfig";
+import type { EmailSummary } from "./emailTemplate";
 
-function buildExecutionSummary() {
+export function getExecutionSummary(): EmailSummary {
 
     const reportPath = path.join(process.cwd(), "test-result.json");
 
@@ -81,15 +83,15 @@ function buildExecutionSummary() {
 
     return {
 
-        framework: "Playwright Automation Framework",
+        framework: EXECUTION_CONFIG.frameworkName,
 
-        frameworkVersion: "v1.2.0",
+        frameworkVersion: EXECUTION_CONFIG.frameworkVersion,
 
         environment: process.env.TEST_ENV?.toUpperCase() || "UAT",
 
-        browser: process.env.BROWSER || "Chromium",
+        browser: EXECUTION_CONFIG.browser,
 
-        executionMode: "Parallel",
+        executionMode: EXECUTION_CONFIG.executionType,
 
         total: passed + failed + skipped,
 
@@ -107,8 +109,3 @@ function buildExecutionSummary() {
 
 }
 
-module.exports = {
-
-    getExecutionSummary: buildExecutionSummary
-
-};

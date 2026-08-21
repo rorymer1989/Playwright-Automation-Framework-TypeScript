@@ -1,5 +1,5 @@
 import { test, expect } from "../fixtures/baseFixture";
-import { takeScreenshot } from "../utilities/CommonUtilities";
+import { takeScreenshot } from "../utilities/screenshotUtil";
 
 interface HomeData {
     titlePattern: string;

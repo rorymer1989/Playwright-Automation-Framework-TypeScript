@@ -84,25 +84,20 @@ Example structure:
 ```text
 config
 │
-└── environment
+└── environments
     ├── dev.env
     ├── uat.env
-    ├── preprod.env
+    ├── pre-prod.env
     └── prod.env
 ```
 
 Run tests using:
 
 ```bash
-npm run uat
-```
-
-```bash
-npm run preprod
-```
-
-```bash
-npm run prod
+npm run test:dev
+npm run test:uat
+npm run test:prod
+TEST_ENV=pre-prod npm test
 ```
 
 This allows environment switching without changing the test implementation.
@@ -538,52 +533,36 @@ Page objects contain reusable locators and page-level actions while test files f
 # 📂 Framework Architecture
 
 ```text
-Playwright_Automation
+Playwright-Automation-Framework-TypeScript
 │
+├── .github/workflows/playwright.yml   # CI: typecheck + tests + artifacts
+├── AI/                                # Agent prompts, rules and framework context
 ├── config
-│   ├── environment
-│   │   ├── dev.env
-│   │   ├── uat.env
-│   │   ├── preprod.env
-│   │   └── prod.env
-│   │
+│   ├── environments/                  # dev.env, uat.env, pre-prod.env, prod.env (BASE_URL)
+│   ├── environment.ts                 # loadEnvironment(), ENV
 │   └── executionConfig.ts
-│
 ├── fixtures
-│   └── baseFixture.ts
-│
-├── pages
-│
-├── tests
-│
-├── testData
-│
+│   ├── baseFixture.ts                 # test/expect + homePage, docsPage, actions, assertion, data, allure, step
+│   ├── actionFixture.ts
+│   └── assertionFixture.ts
+├── pages                              # BasePage, HomePage, DocsPage, index.ts
+├── tests                              # *.spec.ts
+├── testData/<env>/*.json              # environment-aware test data
 ├── utilities
-│   ├── assertionUtil.ts
-│   ├── clickUtil.ts
-│   ├── dashboardUtil.ts
-│   ├── downloadUtil.ts
-│   ├── environmentUtil.ts
-│   ├── excelUtil.ts
-│   ├── fakerUtil.ts
-│   ├── fillUtil.ts
-│   ├── retryUtil.ts
-│   ├── screenshotUtil.ts
-│   └── waitUtil.ts
-│
+│   ├── assertionUtil.ts  softAssertionUtil.ts
+│   ├── clickUtil.ts  fillUtil.ts  waitUtil.ts  retryUtil.ts  ActionUtility.ts
+│   ├── screenshotUtil.ts  excelUtil.ts  fileUtil.ts  scrollUtil.ts
+│   ├── Fakerutility.ts  dataManager.ts  dashboardUtil.ts
+│   └── CommonUtilities.ts             # compatibility re-exports only
 ├── reporting
-│   ├── allure
-│   ├── email
-│   └── zip
-│
-├── reports
-│
-├── screenshots
-│
-├── downloads
-│
+│   ├── allure/                        # allureUtil, stepUtil, environmentWriter, defaultMetadata
+│   ├── email/                         # emailUtil, executionSummary, emailTemplate, emailConfig
+│   └── zip/                           # zipReport
+├── scripts                            # clean-snap-env.sh, send-report.ts, zip-reports.ts
+├── global-setup.ts / global-teardown.ts
 ├── playwright.config.ts
-│
+├── tsconfig.json
+├── .env.example                       # copy to .env for secrets (git-ignored)
 └── package.json
 ```
 
@@ -712,47 +691,28 @@ prod.env
 
 # 5. Run Tests
 
-Run the complete test suite:
-
 ```bash
-npx playwright test
-```
-
-Run a specific test:
-
-```bash
+npm test                      # all browsers, TEST_ENV from .env (default uat)
+npm run test:chromium         # single browser (also test:firefox / test:webkit)
+npm run test:headed
+npm run test:ui
 npx playwright test tests/home.spec.ts
 ```
 
-Run tests in headed mode:
-
-```bash
-npx playwright test --headed
-```
+> The `npm test*` scripts go through `scripts/clean-snap-env.sh`, which strips GTK/GIO variables injected by snap-packaged IDEs (VS Code snap). Without it WebKit crashes on Ubuntu. Calling `npx playwright test` directly works fine from a regular terminal.
 
 ---
 
-# 6. Run Against UAT
+# 6. Run Against an Environment
 
 ```bash
-npm run uat
+npm run test:dev
+npm run test:uat
+npm run test:prod
+TEST_ENV=pre-prod npm test
 ```
 
----
-
-# 7. Run Against Pre-Production
-
-```bash
-npm run preprod
-```
-
----
-
-# 8. Run Against Production
-
-```bash
-npm run prod
-```
+Precedence: shell / CI variables → `.env` → `config/environments/<TEST_ENV>.env`.
 
 ---
 
@@ -791,7 +751,7 @@ npm run allure
 Example:
 
 ```bash
-npm run uat
+npm run test:uat
 ```
 
 After execution:
@@ -804,19 +764,19 @@ npm run allure
 
 # 📧 Send Execution Email
 
-The framework supports automated execution email distribution through the reporting layer.
-
-Configuration can be maintained through environment variables rather than hard-coding credentials.
-
-Example:
-
-```text
-EMAIL_FROM
-EMAIL_PASSWORD
-EMAIL_TO
+```bash
+npm run report:zip      # reports/PlaywrightReport.zip + reports/AllureReport.zip
+npm run report:email    # zips the reports and emails the execution summary
 ```
 
-Sensitive credentials should never be committed to Git.
+Set the credentials in `.env` (never commit them):
+
+```text
+EMAIL_FROM=
+EMAIL_PASSWORD=   # Gmail: use an App Password
+EMAIL_TO=
+EMAIL_SERVICE=gmail   # optional
+```
 
 ---
 
@@ -846,21 +806,20 @@ Never commit:
 
 # 🧰 Utilities
 
-The framework provides reusable utilities for common automation requirements.
-
-| Utility             | Purpose                      |
-| ------------------- | ---------------------------- |
-| Assertion Utility   | Centralized assertions       |
-| Click Utility       | Reliable element interaction |
-| Fill Utility        | Reliable input handling      |
-| Wait Utility        | Application synchronization  |
-| Retry Utility       | Retry transient failures     |
-| Screenshot Utility  | Screenshot capture           |
-| Excel Utility       | Data-driven testing          |
-| Faker Utility       | Dynamic test data            |
-| Download Utility    | File download handling       |
-| Environment Utility | Environment management       |
-| Dashboard Utility   | Execution information        |
+| Module | Purpose |
+| --- | --- |
+| `utilities/assertionUtil.ts` | Centralized hard assertions (`Assertion.*`) |
+| `utilities/softAssertionUtil.ts` | `expect.soft` wrappers + `assertAll()` |
+| `utilities/clickUtil.ts` / `fillUtil.ts` | `smartClick`, `smartFill` with retry and verification |
+| `utilities/waitUtil.ts` | `waitForPageReady` (load + loader overlays, no `networkidle`) |
+| `utilities/retryUtil.ts` | Generic retry |
+| `utilities/screenshotUtil.ts` | Per-test numbered screenshots attached to the report |
+| `utilities/excelUtil.ts` | `getTestData`, `writeCell` (xlsx) |
+| `utilities/fileUtil.ts` | `downloadFile`, `createFolder` |
+| `utilities/scrollUtil.ts` | `clickWithScroll` for horizontal containers |
+| `utilities/Fakerutility.ts` | Dynamic test data (`@faker-js/faker`) |
+| `utilities/dataManager.ts` | Environment-aware JSON test data (`data` fixture) |
+| `utilities/dashboardUtil.ts` | Execution banner printed in `global-setup` |
 
 ---
 

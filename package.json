@@ -14,7 +14,9 @@
     "test:uat": "TEST_ENV=uat sh scripts/clean-snap-env.sh playwright test",
     "test:prod": "TEST_ENV=prod sh scripts/clean-snap-env.sh playwright test",
     "test:firefox": "sh scripts/clean-snap-env.sh playwright test --project=firefox",
-    "test:webkit": "sh scripts/clean-snap-env.sh playwright test --project=webkit"
+    "test:webkit": "sh scripts/clean-snap-env.sh playwright test --project=webkit",
+    "report:email": "tsx scripts/send-report.ts",
+    "report:zip": "tsx scripts/zip-reports.ts"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +29,7 @@
     "@types/nodemailer": "^8.0.1",
     "allure-commandline": "^2.43.0",
     "allure-playwright": "^3.10.2",
+    "tsx": "^4.23.12",
     "typescript": "^7.0.2"
   },
   "dependencies": {
