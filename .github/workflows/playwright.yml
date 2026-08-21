@@ -149,6 +149,9 @@ jobs:
       - name: Merge into one HTML report
         run: npx playwright merge-reports -c merge.config.ts --reporter html ./all-blob-reports
 
+      - name: Merge into one JSON report (input for Jira bugs and the email summary)
+        run: PLAYWRIGHT_JSON_OUTPUT_NAME=test-result.json npx playwright merge-reports -c merge.config.ts --reporter json ./all-blob-reports
+
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
         with:
@@ -172,3 +175,26 @@ jobs:
           name: allure-report
           path: allure-report/
           retention-days: 14
+
+      # ---- Close the loop (main / manual runs only, never on PRs) ----
+      - name: Raise Jira bugs for failed tests
+        if: github.event_name != 'pull_request' && env.JIRA_API_TOKEN != ''
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_PROJECT_KEY: ${{ vars.JIRA_PROJECT_KEY || 'SCRUM' }}
+          REPORT_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          SKIP_PREFLIGHT: 1
+        run: npm run -s jira:bugs
+
+      - name: Email execution summary
+        if: github.event_name != 'pull_request' && env.EMAIL_TO != ''
+        env:
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          EMAIL_SERVICE: ${{ vars.EMAIL_SERVICE || 'gmail' }}
+          REPORT_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          SKIP_PREFLIGHT: 1
+        run: npm run -s report:email

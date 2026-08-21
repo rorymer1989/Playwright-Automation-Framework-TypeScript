@@ -553,6 +553,7 @@ check (typecheck · lint · format · unit)
 - Each shard installs only its browser and uploads a **blob** report; `merge-reports` produces one `playwright-report` artifact plus the Allure report.
 - `workflow_dispatch` lets you pick `TEST_ENV`.
 - A unit test (`tests/unit/ciConfig.unit.spec.ts`) fails if the Docker image tag in the workflow drifts from `@playwright/test`.
+- **Closing the loop** (on `push` to `main` and manual runs, never on PRs): `merge-reports` also builds a merged `test-result.json`, raises de-duplicated **Jira bugs** for failed tests (`npm run jira:bugs`) and **emails** the summary with a link to the run. Both steps are skipped unless the repository secrets exist: `JIRA_BASE_URL`, `JIRA_EMAIL`, `JIRA_API_TOKEN` (+ optional variable `JIRA_PROJECT_KEY`) and `EMAIL_FROM`, `EMAIL_PASSWORD`, `EMAIL_TO` (+ optional `EMAIL_SERVICE`). Set them with `gh secret set NAME`.
 
 ---
 
