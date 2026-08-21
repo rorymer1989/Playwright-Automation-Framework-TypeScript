@@ -187,14 +187,43 @@ export class JiraClient {
         }));
     }
 
+    /** Issue types available in a project (names depend on the site language: Bug / Error / Fallo …). */
+    async issueTypes(projectKey: string): Promise<{ id: string; name: string; subtask: boolean }[]> {
+        const project = await this.request<{ issueTypes: { id: string; name: string; subtask: boolean }[] }>(
+            `/project/${encodeURIComponent(projectKey)}`
+        );
+        return project.issueTypes;
+    }
+
+    /**
+     * Resolves the issue type to use for bugs: JIRA_BUG_TYPE if set, otherwise the
+     * first project type matching a known bug name in any language, otherwise the
+     * first non-subtask type.
+     */
+    async resolveBugType(projectKey: string, preferred?: string): Promise<{ id: string; name: string }> {
+        const types = await this.issueTypes(projectKey);
+        const wanted = (preferred ?? process.env.JIRA_BUG_TYPE ?? "").toLowerCase();
+        const known = ["bug", "error", "fallo", "defecto", "defect", "incidencia", "問題", "错误"];
+        const pick =
+            types.find((t) => wanted && t.name.toLowerCase() === wanted) ??
+            types.find((t) => known.includes(t.name.toLowerCase())) ??
+            types.find((t) => !t.subtask);
+        if (!pick)
+            throw new Error(
+                `No usable issue type in project ${projectKey}. Available: ${types.map((t) => t.name).join(", ")}`
+            );
+        return { id: pick.id, name: pick.name };
+    }
+
     /** Creates a Bug with a structured ADF description. */
     async createBug(bug: BugReport): Promise<CreatedIssue> {
         const adf = bugToAdf(bug);
+        const issuetype = await this.resolveBugType(bug.projectKey, bug.issueType);
         const body = {
             fields: {
                 project: { key: bug.projectKey },
                 summary: bug.summary,
-                issuetype: { name: bug.issueType ?? "Bug" },
+                issuetype: { id: issuetype.id },
                 ...(bug.priority ? { priority: { name: bug.priority } } : {}),
                 labels: bug.labels ?? [],
                 description: { type: "doc", version: 1, content: adf.content },

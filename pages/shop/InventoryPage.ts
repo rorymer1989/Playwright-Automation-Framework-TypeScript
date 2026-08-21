@@ -44,6 +44,11 @@ export class InventoryPage extends ShopBasePage {
         await this.sortSelect.selectOption(option);
     }
 
+    /** Visible label of the currently selected sort option. */
+    async selectedSortOption(): Promise<string> {
+        return this.sortSelect.locator("option:checked").innerText();
+    }
+
     async products(): Promise<ProductCard[]> {
         const names = await this.page.getByTestId("inventory-item-name").allTextContents();
         const prices = await this.page.getByTestId("inventory-item-price").allTextContents();

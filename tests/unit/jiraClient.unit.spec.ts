@@ -233,7 +233,16 @@ test.describe("jira bugs from failures", () => {
                 contentType: req.headers["content-type"] ?? "",
             });
             res.setHeader("content-type", "application/json");
-            if (req.url === "/rest/api/3/issue" && req.method === "POST")
+            if (req.url === "/rest/api/3/project/SCRUM")
+                res.end(
+                    JSON.stringify({
+                        issueTypes: [
+                            { id: "5", name: "Tarea", subtask: false },
+                            { id: "7", name: "Error", subtask: false },
+                        ],
+                    })
+                );
+            else if (req.url === "/rest/api/3/issue" && req.method === "POST")
                 res.end(JSON.stringify({ key: "SCRUM-99", id: "1" }));
             else if (req.url === "/rest/api/3/search/jql") res.end(JSON.stringify({ issues: [] }));
             else if (req.url?.endsWith("/attachments")) res.end("[]");
@@ -274,10 +283,11 @@ test.describe("jira bugs from failures", () => {
         }
         expect(calls.map((c) => `${c.method} ${c.url}`)).toEqual([
             "POST /rest/api/3/search/jql",
+            "GET /rest/api/3/project/SCRUM",
             "POST /rest/api/3/issue",
             "POST /rest/api/3/issue/SCRUM-99/attachments",
         ]);
-        expect(calls[2].contentType).toMatch(/^multipart\/form-data/);
+        expect(calls[3].contentType).toMatch(/^multipart\/form-data/);
         expect(bugToAdf(bug).content?.map((n) => n.type)).toEqual([
             "heading",
             "paragraph",
