@@ -1,3 +1,4 @@
+import { logger } from "./logger";
 import os from "os";
 import { EXECUTION_CONFIG } from "../config/executionConfig";
 
@@ -9,7 +10,7 @@ export function printExecutionDashboard(): void {
         timeStyle: "medium",
     });
 
-    console.log(`
+    logger.info(`
 ══════════════════════════════════════════════════════════════════════
 
 🚀 ${EXECUTION_CONFIG.frameworkName}

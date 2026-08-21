@@ -1,0 +1,25 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      playwright:
+        patterns: ["@playwright/*", "playwright*"]
+      lint:
+        patterns: ["eslint*", "@eslint/*", "typescript-eslint", "prettier", "eslint-*"]
+      types:
+        patterns: ["@types/*"]
+    ignore:
+      # typescript-eslint does not support TypeScript 7 yet
+      - dependency-name: typescript
+        versions: [">=6"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday

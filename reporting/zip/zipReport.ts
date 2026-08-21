@@ -1,3 +1,4 @@
+import { logger } from "../../utilities/logger";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -15,7 +16,7 @@ async function zipDirectory(sourceDir: string, outputZip: string): Promise<void>
         const archive = new ZipArchive({ zlib: { level: 9 } });
 
         output.on("close", () => {
-            console.log(`✅ Created ${outputZip}`);
+            logger.info(`✅ Created ${outputZip}`);
             resolve();
         });
         archive.on("error", reject);
