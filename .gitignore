@@ -12,3 +12,5 @@ reports/
 
 # Authenticated browser state (tests/auth.setup.ts)
 .auth/
+blob-report/
+all-blob-reports/

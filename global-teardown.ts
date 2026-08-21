@@ -6,6 +6,12 @@ import { writeEnvironment } from "./reporting/allure/environmentWriter";
 import { logger } from "./utilities/logger";
 
 export default function globalTeardown(): void {
+    // CI shards only collect results; the merge-reports job generates the report once.
+    if (process.env.SKIP_ALLURE_REPORT) {
+        writeEnvironment();
+        return;
+    }
+
     logger.section("Generating Allure Report...");
 
     try {
