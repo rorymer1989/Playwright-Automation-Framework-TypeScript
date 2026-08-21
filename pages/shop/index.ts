@@ -7,3 +7,4 @@ export {
     CheckoutCompletePage,
     type CustomerInfo,
 } from "./CheckoutPages";
+export { ProductDetailPage } from "./ProductDetailPage";

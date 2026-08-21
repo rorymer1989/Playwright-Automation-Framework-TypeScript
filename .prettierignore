@@ -7,3 +7,8 @@ reports
 Screenshots
 package-lock.json
 test-result.json
+# Spec Kit and agent assets (generated/maintained by their own tools)
+.specify
+.claude/skills
+.claude/commands
+specs

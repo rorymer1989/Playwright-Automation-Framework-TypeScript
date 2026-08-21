@@ -23,8 +23,12 @@ export abstract class ShopBasePage extends BasePage {
         this.resetAppStateLink = page.getByTestId("reset-sidebar-link");
     }
 
+    protected baseUrl(): string {
+        return ENV.shopUrl;
+    }
+
     async open(): Promise<void> {
-        await this.goto(`${ENV.shopUrl}${this.path}`);
+        await this.goto(`${this.baseUrl()}${this.path}`);
     }
 
     async openCart(): Promise<void> {
