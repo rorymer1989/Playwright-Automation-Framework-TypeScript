@@ -23,7 +23,13 @@ export default defineConfig({
     retries: isCI ? 2 : 0,
     workers: process.env.PW_WORKERS ? Number(process.env.PW_WORKERS) : isCI ? 2 : undefined,
     timeout: 60_000,
-    expect: { timeout: 10_000 },
+    expect: {
+        timeout: 10_000,
+        toHaveScreenshot: { maxDiffPixelRatio: 0.01, animations: "disabled", caret: "hide" },
+    },
+    // Baseline name: <name>-<project>-<platform>.png → one baseline per browser and OS
+    snapshotPathTemplate:
+        "{testDir}/{testFileDir}/__snapshots__/{testFileName}/{arg}-{projectName}-{platform}{ext}",
 
     reporter: [
         ["list"],

@@ -31,11 +31,10 @@ The framework provides a structured foundation for building and maintaining larg
 
 # 🚀 What's New
 
-## v1.6.0 — Observability & Maintenance
+## v1.7.0 — Accessibility & Visual Regression
 
-- **Assertions as `test.step`s**: every `assertion.*` call is visible in the HTML/Allure report and trace viewer; failures point at the test line.
-- **Leveled logger** for framework output (`LOG_LEVEL`), no stray `console.log`.
-- **Dependabot** with weekly grouped updates.
+- **`a11y` fixture** (axe-core, WCAG 2.1 A/AA) with explicit, guarded exceptions for known issues.
+- **`visual` fixture** (`toHaveScreenshot`) with per-browser/OS baselines rendered in the official Playwright Docker image, locally and in CI.
 
 Full details in [CHANGELOG.md](CHANGELOG.md).
 
@@ -205,7 +204,7 @@ Environment       : UAT
 Browser           : Chromium
 Platform          : darwin
 Node Version      : v24.x
-Framework Version : v1.6.0
+Framework Version : v1.7.0
 Base URL          : https://example.com
 ```
 
@@ -382,7 +381,7 @@ Example:
 
 🚀 Playwright Automation Framework
 
-Framework Version : v1.6.0
+Framework Version : v1.7.0
 
 Environment       : UAT
 
@@ -439,6 +438,41 @@ The state is per browser on purpose: apps with session-hijacking protection bind
 ```bash
 npm run test:api
 ```
+
+---
+
+# ♿ Accessibility (axe-core)
+
+The `a11y` fixture wraps [`@axe-core/playwright`](https://github.com/dequelabs/axe-core-npm):
+
+```typescript
+await a11y.check(); // fails on WCAG 2.1 A/AA violations, attaches the JSON to the report
+await a11y.check({ disableRules: ["color-contrast"] }); // known issue, referenced in the test
+const violations = await a11y.scan({ exclude: ["iframe"] }); // audit mode, no assertion
+```
+
+See `tests/a11y/accessibility.spec.ts`. `npm run test:a11y`.
+
+---
+
+# 🖼️ Visual Regression
+
+The `visual` fixture wraps `toHaveScreenshot()` with animations disabled, caret hidden and optional masks:
+
+```typescript
+await visual.match(page, "login-page", { fullPage: true });
+await visual.match(dialog, "confirm-dialog", { mask: [page.locator(".timestamp")] });
+```
+
+Baselines live in `tests/visual/__snapshots__/` — one per browser **and OS** — and are rendered inside the official Playwright Docker image so that local and CI pixels match:
+
+```bash
+npm run test:visual           # compare (Docker)
+npm run test:visual:update    # (re)generate baselines after an intended UI change (Docker)
+npm run test:visual:local     # host run, informational: fonts differ from CI
+```
+
+CI runs the `visual` job in the same image; diffs are uploaded as artifacts on failure.
 
 ---
 
@@ -549,7 +583,7 @@ Playwright-Automation-Framework-TypeScript
 │   ├── actionFixture.ts
 │   └── assertionFixture.ts
 ├── pages                              # BasePage, HomePage, DocsPage, LoginPage, SecureAreaPage
-├── tests                              # *.spec.ts, auth/, api/*.api.spec.ts, unit/*.unit.spec.ts, auth.setup.ts
+├── tests                              # *.spec.ts, auth/, api/, a11y/, visual/ (+__snapshots__), unit/, auth.setup.ts
 ├── testData/<env>/*.json              # environment-aware test data
 ├── utilities                          # + logger.ts
 │   ├── assertionUtil.ts  softAssertionUtil.ts
@@ -888,6 +922,13 @@ The goal is to gradually evolve the framework toward **AI-enabled intelligent QA
 # 📦 Release History
 
 See [CHANGELOG.md](CHANGELOG.md) for the complete list.
+
+## 🚀 v1.7.0 — Accessibility & Visual Regression
+
+- `a11y` fixture over `@axe-core/playwright`
+- `visual` fixture, Docker-rendered baselines, `visual` CI job
+
+---
 
 ## 🚀 v1.6.0 — Observability & Maintenance
 

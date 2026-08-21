@@ -1,6 +1,6 @@
 {
   "name": "playwright_automation-ts",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Playwright Automation Framework (TypeScript)",
   "scripts": {
     "test": "sh scripts/clean-snap-env.sh playwright test",
@@ -23,13 +23,18 @@
     "format:check": "prettier --check .",
     "check": "npm run typecheck && npm run lint && npm run format:check",
     "test:api": "sh scripts/clean-snap-env.sh playwright test --project=api",
-    "test:unit": "playwright test --project=unit"
+    "test:unit": "playwright test --project=unit",
+    "test:a11y": "sh scripts/clean-snap-env.sh playwright test tests/a11y",
+    "test:visual": "sh scripts/visual-docker.sh",
+    "test:visual:update": "sh scripts/visual-docker.sh --update-snapshots",
+    "test:visual:local": "sh scripts/clean-snap-env.sh playwright test tests/visual"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.62.1",
     "@types/archiver": "^8.0.0",

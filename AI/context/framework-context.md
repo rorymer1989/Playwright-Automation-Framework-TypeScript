@@ -38,7 +38,7 @@ Deprecated: `utilities/CommonUtilities.ts` is only a re-export barrel — import
 
 ## npm scripts
 
-`test`, `test:chromium|firefox|webkit|api|unit`, `test:dev|uat|prod`, `test:ui`, `test:headed`, `typecheck`, `lint`, `lint:fix`, `format`, `format:check`, `check` (typecheck + lint + format, runs in CI), `report`, `allure`, `report:zip`, `report:email`.
+`test`, `test:chromium|firefox|webkit|api|unit|a11y|visual` (`test:visual` runs in Docker; `test:visual:update` regenerates baselines; `test:visual:local` is informational only), `test:dev|uat|prod`, `test:ui`, `test:headed`, `typecheck`, `lint`, `lint:fix`, `format`, `format:check`, `check` (typecheck + lint + format, runs in CI), `report`, `allure`, `report:zip`, `report:email`.
 
 ## Test template
 

@@ -2,6 +2,18 @@
 
 All notable changes to this project are documented here. Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/).
 
+## [1.7.0] — 2026-08-21
+
+### Added
+
+- **Accessibility testing** — `a11y` fixture over `@axe-core/playwright`: `a11y.check(options)` fails on WCAG 2.1 A/AA violations and attaches the JSON to the report; `a11y.scan()` returns them for audits. Known issues are excluded explicitly with `disableRules` (+ reference) and guarded by a test that asserts they are the only ones. `tests/a11y/`, `npm run test:a11y`.
+- **Visual regression** — `visual` fixture over `toHaveScreenshot()` (animations disabled, caret hidden, masks, 1 % tolerance). Baselines per browser **and OS** in `tests/visual/__snapshots__/`, generated and compared **inside the official Playwright Docker image** (`scripts/visual-docker.sh`) so local and CI pixels match; dedicated `visual` CI job in the same image. `npm run test:visual`, `test:visual:update`, `test:visual:local` (informational).
+- `utilities/a11yUtil.ts`, `utilities/visualUtil.ts`, `snapshotPathTemplate` and `expect.toHaveScreenshot` defaults in `playwright.config.ts`.
+
+### Changed
+
+- CI `test` job excludes the visual tests (`--grep-invert "Visual regression"`); they run in the `visual` job.
+
 ## [1.6.0] — 2026-08-21
 
 ### Added
@@ -96,6 +108,7 @@ Intelligent Execution Update — environment management, execution dashboard, re
 
 Initial release — Page Object Model.
 
+[1.7.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.7.0
 [1.6.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.6.0
 [1.5.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.5.0
 [1.4.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.4.0
