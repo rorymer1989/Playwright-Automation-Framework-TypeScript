@@ -11,7 +11,26 @@ export interface EmailSummary {
     duration: string;
 }
 
-export function generateEmailTemplate(summary: EmailSummary): string {
+export interface EmailTemplateOptions {
+    /** File names actually attached to the message. */
+    attachments?: string[];
+    /** Archives that were too large to attach. */
+    skippedAttachments?: string[];
+    /** Hosted report link shown above the attachments. */
+    reportUrl?: string;
+}
+
+export function generateEmailTemplate(summary: EmailSummary, options: EmailTemplateOptions = {}): string {
+    const attached = options.attachments ?? [];
+    const attachmentsBlock = attached.length
+        ? `<b>Attachments</b><ul>${attached.map((name) => `<li>📦 ${name}</li>`).join("")}</ul>`
+        : "<p>No attachments.</p>";
+    const reportLink = options.reportUrl
+        ? `<p><a href="${options.reportUrl}" style="font-weight:bold;">📊 Open the full report</a></p>`
+        : "";
+    const skippedNote = options.skippedAttachments?.length
+        ? `<p style="color:#b45309;font-size:12px;">Not attached (size limit): ${options.skippedAttachments.join(", ")}. Download them from the CI artifacts.</p>`
+        : "";
     return `
 
 <!DOCTYPE html>
@@ -194,21 +213,9 @@ color:#666;
 
 <br>
 
-<b>Attachments</b>
-
-<ul>
-
-<li>📊 Allure Report</li>
-
-<li>📄 Playwright HTML Report</li>
-
-<li>📸 Screenshots</li>
-
-<li>🎥 Videos</li>
-
-<li>📦 Trace Files</li>
-
-</ul>
+${reportLink}
+${attachmentsBlock}
+${skippedNote}
 
 <div class="footer">
 

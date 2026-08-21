@@ -204,7 +204,7 @@ Environment       : UAT
 Browser           : Chromium
 Platform          : darwin
 Node Version      : v24.x
-Framework Version : v1.9.0
+Framework Version : v1.9.1
 Base URL          : https://example.com
 ```
 
@@ -381,7 +381,7 @@ Example:
 
 🚀 Playwright Automation Framework
 
-Framework Version : v1.9.0
+Framework Version : v1.9.1
 
 Environment       : UAT
 
@@ -863,7 +863,19 @@ Google rejects account passwords over SMTP (`534-5.7.9 Application-specific pass
 3. Copy the 16 letters into `.env` as `EMAIL_PASSWORD` (spaces are ignored) and save the file
 4. `npm run report:email`
 
-The script zips `playwright-report/` and `allure-report/`, builds the summary from `test-result.json` and sends both archives as attachments. It refuses to run if any `EMAIL_*` variable is empty.
+The script builds the summary from `test-result.json` and always attaches that file. It refuses to run if any `EMAIL_*` variable is empty.
+
+### Attachments and Gmail
+
+Gmail **blocks archives that contain `.js` files** (`552-5.7.0 … potential security issue`), which rules out zipped HTML/Allure reports. Therefore:
+
+| Variable                  | Default | Effect                                                                                                                       |
+| ------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `EMAIL_ATTACH_REPORTS`    | `auto`  | Attach `PlaywrightReport.zip` / `AllureReport.zip` — `auto` means _unless `EMAIL_SERVICE=gmail`_. Force with `true`/`false`. |
+| `REPORT_URL`              | —       | Link to the hosted report (CI artifacts, Allure server) shown in the email body.                                             |
+| `EMAIL_MAX_ATTACHMENT_MB` | `18`    | Archives over this budget are skipped and listed in the email.                                                               |
+
+`allure-results/` is emptied by `global-setup` on every run (history is preserved), so the report and its zip only contain the current execution; set `KEEP_ALLURE_RESULTS=1` to opt out.
 
 ---
 
@@ -963,6 +975,12 @@ The goal is to gradually evolve the framework toward **AI-enabled intelligent QA
 # 📦 Release History
 
 See [CHANGELOG.md](CHANGELOG.md) for the complete list.
+
+## 🩹 v1.9.1 — Email reporting fixes
+
+- Lazy email config, `allure-results` cleanup, Gmail-aware attachments, `REPORT_URL`
+
+---
 
 ## 🚀 v1.9.0 — E-commerce Reference Suite
 

@@ -2,6 +2,18 @@
 
 All notable changes to this project are documented here. Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/).
 
+## [1.9.1] — 2026-08-21
+
+### Fixed
+
+- `npm run report:email` never saw the `.env` credentials: `emailConfig` read `process.env` at import time, before `loadEnvironment()`. Now read lazily via `getEmailConfig()`.
+- `allure-results/` was never cleaned, so the Allure report (and its zip) accumulated every execution; `global-setup` now empties it (history preserved, `KEEP_ALLURE_RESULTS=1` to opt out).
+- Gmail blocks zipped HTML reports (archives containing `.js`): attachments are now provider-aware (`EMAIL_ATTACH_REPORTS`, default off for gmail), capped by `EMAIL_MAX_ATTACHMENT_MB`, `test-result.json` always attached, optional `REPORT_URL` link; the template lists the real attachments instead of a static list.
+
+### Added
+
+- README: Gmail App Password setup and attachment behaviour; unit tests for the email template/config.
+
 ## [1.9.0] — 2026-08-21
 
 ### Added
@@ -128,6 +140,7 @@ Intelligent Execution Update — environment management, execution dashboard, re
 
 Initial release — Page Object Model.
 
+[1.9.1]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.9.1
 [1.9.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.9.0
 [1.8.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.8.0
 [1.7.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.7.0

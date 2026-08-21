@@ -9,6 +9,15 @@ export default function globalSetup(): void {
 
     const folders = ["allure-results", "allure-report", "playwright-report", "test-results"];
 
+    // Allure results accumulate across runs otherwise, and the report (and its zip)
+    // would contain every execution ever made. History is restored by the teardown
+    // from allure-report/history, so the folder can be emptied safely.
+    const allureResults = path.join(process.cwd(), "allure-results");
+    if (fs.existsSync(allureResults) && !process.env.KEEP_ALLURE_RESULTS) {
+        fs.rmSync(allureResults, { recursive: true, force: true });
+        logger.debug("Cleared allure-results from previous run");
+    }
+
     folders.forEach((folder: string) => {
         const folderPath = path.join(process.cwd(), folder);
 
