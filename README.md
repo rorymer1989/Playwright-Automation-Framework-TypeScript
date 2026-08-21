@@ -848,11 +848,22 @@ npm run report:email    # zips the reports and emails the execution summary
 Set the credentials in `.env` (never commit them):
 
 ```text
-EMAIL_FROM=
-EMAIL_PASSWORD=   # Gmail: use an App Password
-EMAIL_TO=
-EMAIL_SERVICE=gmail   # optional
+EMAIL_FROM=you@gmail.com
+EMAIL_PASSWORD=abcdefghijklmnop   # Gmail App Password (16 lowercase letters), NOT your account password
+EMAIL_TO=team@example.com         # comma-separated for several recipients
+EMAIL_SERVICE=gmail               # optional, any nodemailer well-known service
 ```
+
+### Gmail: App Password (required)
+
+Google rejects account passwords over SMTP (`534-5.7.9 Application-specific password required`). Create an App Password once:
+
+1. Enable 2-Step Verification: https://myaccount.google.com/signinoptions/two-step-verification
+2. Create an App Password: https://myaccount.google.com/apppasswords → name it (e.g. "Playwright reports") → **Create**
+3. Copy the 16 letters into `.env` as `EMAIL_PASSWORD` (spaces are ignored) and save the file
+4. `npm run report:email`
+
+The script zips `playwright-report/` and `allure-report/`, builds the summary from `test-result.json` and sends both archives as attachments. It refuses to run if any `EMAIL_*` variable is empty.
 
 ---
 
