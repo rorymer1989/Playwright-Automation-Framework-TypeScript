@@ -6,6 +6,11 @@ import type { APIResponse, Locator, Page } from "@playwright/test";
  * HTML/Allure report and trace viewer instead of stdout. `box: true` makes a
  * failure point at the caller's line rather than at this helper.
  */
+/** Escapes a literal string for use inside a RegExp. */
+export function escapeRegExp(text: string): string {
+    return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 async function step(title: string, assertion: () => Promise<void> | void): Promise<void> {
     await test.step(title, assertion, { box: true });
 }
@@ -68,15 +73,20 @@ export class Assertion {
     }
 
     static assertTitleContains(page: Page, title: string): Promise<void> {
-        return step(`Title should contain "${title}"`, () => expect(page).toHaveTitle(new RegExp(title)));
+        return step(`Title should contain "${title}"`, () =>
+            expect(page).toHaveTitle(new RegExp(escapeRegExp(title)))
+        );
     }
 
     static assertURL(page: Page, url: string | RegExp): Promise<void> {
         return step(`URL should be ${String(url)}`, () => expect(page).toHaveURL(url));
     }
 
+    /** Literal substring match — `?`, `.`, `+` etc. in `text` are NOT regex metacharacters. */
     static assertURLContains(page: Page, text: string): Promise<void> {
-        return step(`URL should contain "${text}"`, () => expect(page).toHaveURL(new RegExp(text)));
+        return step(`URL should contain "${text}"`, () =>
+            expect(page).toHaveURL(new RegExp(escapeRegExp(text)))
+        );
     }
 
     /* ---- Count / attributes ------------------------------------------ */

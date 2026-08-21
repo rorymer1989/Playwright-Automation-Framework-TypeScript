@@ -40,6 +40,27 @@ export class InventoryPage extends ShopBasePage {
         await this.removeButton(name).click();
     }
 
+    /** Card of a product, located by its exact name. */
+    card(name: string): Locator {
+        return this.items.filter({
+            has: this.page.getByTestId("inventory-item-name").filter({ hasText: name }),
+        });
+    }
+
+    async cardDetails(name: string): Promise<ProductCard & { description: string }> {
+        const card = this.card(name);
+        return {
+            name: await card.getByTestId("inventory-item-name").innerText(),
+            description: await card.getByTestId("inventory-item-desc").innerText(),
+            price: Number((await card.getByTestId("inventory-item-price").innerText()).replace("$", "")),
+        };
+    }
+
+    /** Opens the product detail page by clicking the card's name link. */
+    async openProduct(name: string): Promise<void> {
+        await this.card(name).getByTestId("inventory-item-name").click();
+    }
+
     async sortBy(option: SortOption): Promise<void> {
         await this.sortSelect.selectOption(option);
     }

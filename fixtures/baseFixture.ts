@@ -17,6 +17,7 @@ import {
     CheckoutInfoPage,
     CheckoutOverviewPage,
     CheckoutCompletePage,
+    ProductDetailPage,
 } from "../pages";
 
 interface CustomFixtures {
@@ -32,6 +33,7 @@ interface CustomFixtures {
         checkoutInfo: CheckoutInfoPage;
         checkoutOverview: CheckoutOverviewPage;
         checkoutComplete: CheckoutCompletePage;
+        productDetail: ProductDetailPage;
     };
     actions: Actions;
     assertion: Assertions;
@@ -68,6 +70,7 @@ export const test = base.extend<CustomFixtures>({
             checkoutInfo: new CheckoutInfoPage(page),
             checkoutOverview: new CheckoutOverviewPage(page),
             checkoutComplete: new CheckoutCompletePage(page),
+            productDetail: new ProductDetailPage(page),
         });
     },
     actions: async ({}, use) => {
