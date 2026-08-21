@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented here. Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/).
 
+## [1.12.0] — 2026-08-21
+
+### Added
+
+- **CI closes the loop** — `merge-reports` builds a merged `test-result.json` from the shard blobs and, on `push` to `main` and manual runs (never on PRs), raises de-duplicated **Jira bugs** with evidence for failed tests and **emails** the execution summary, both linking to the run. Steps are skipped when the repository secrets (`JIRA_BASE_URL/EMAIL/API_TOKEN`, `EMAIL_FROM/PASSWORD/TO`) are absent. Verified on a manual run with the failure demo: 12 bugs created with attachments, email delivered.
+
 ## [1.11.0] — 2026-08-21
 
 ### Added
@@ -163,6 +169,7 @@ Intelligent Execution Update — environment management, execution dashboard, re
 
 Initial release — Page Object Model.
 
+[1.12.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.12.0
 [1.11.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.11.0
 [1.10.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.10.0
 [1.9.1]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.9.1
