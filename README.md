@@ -31,9 +31,9 @@ The framework provides a structured foundation for building and maintaining larg
 
 # 🚀 What's New
 
-## v1.16.0 — Mobile Projects, Allure Trend in CI & Tooling
+## v1.17.0 — Flaky Policy, Governance & First /jira-test Story
 
-- `mobile-chrome` / `mobile-safari` projects for the e-commerce suite, Allure history persisted across CI runs, lint-staged pre-commit + `engines`, orphan utilities removed.
+- Flaky gate in CI (`FLAKY_BUDGET`, default 0), MIT license + CODEOWNERS + PR template + protected `main`, SCRUM-23 generated end to end with the official agents, dedicated `seed` project for the agents.
 
 Full details in [CHANGELOG.md](CHANGELOG.md).
 
@@ -203,7 +203,7 @@ Environment       : UAT
 Browser           : Chromium
 Platform          : darwin
 Node Version      : v24.x
-Framework Version : v1.16.0
+Framework Version : v1.17.0
 Base URL          : https://example.com
 ```
 
@@ -383,7 +383,7 @@ Example:
 
 🚀 Playwright Automation Framework
 
-Framework Version : v1.16.0
+Framework Version : v1.17.0
 
 Environment       : UAT
 
@@ -1060,6 +1060,12 @@ The goal is to gradually evolve the framework toward **AI-enabled intelligent QA
 # 📦 Release History
 
 See [CHANGELOG.md](CHANGELOG.md) for the complete list.
+
+## 🚀 v1.17.0 — Flaky Policy, Governance & First /jira-test Story
+
+- `reporting/flaky/`, `npm run report:flaky`, `LICENSE`, `.github/CODEOWNERS`, `PULL_REQUEST_TEMPLATE.md`, `specs/008-cart-persistence`, `seed` project
+
+---
 
 ## 🚀 v1.16.0 — Mobile Projects, Allure Trend in CI & Tooling
 
