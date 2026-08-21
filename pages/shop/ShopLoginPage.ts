@@ -13,7 +13,7 @@ export class ShopLoginPage extends BasePage {
         super(page);
         this.username = page.getByTestId("username");
         this.password = page.getByTestId("password");
-        this.loginButton = page.getByTestId("login-button");
+        this.loginButton = page.getByRole("button", { name: "Login" });
         this.error = page.getByTestId("error");
     }
 

@@ -2,6 +2,19 @@
 
 All notable changes to this project are documented here. Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/).
 
+## [1.13.0] — 2026-08-21
+
+### Added
+
+- **GitHub Spec Kit** (`specify init --integration claude`): `.specify/` with a project **constitution** (v1.0.0, derived from `AI/config/ai-rules.md` and `AI/context/framework-context.md`: reuse first, tests are specifications, deterministic automation, observable by default, quality gates, security, workflow, governance), a QA-oriented spec template and the `speckit-*` skills. Specs live in `specs/<feature>/` (`spec.md`, `plan.md`, `tasks.md`).
+- **`/jira-test` on Spec Kit**: story → `speckit-specify` → `speckit-plan` (live locators) → `speckit-tasks` → `speckit-implement` → verify on 3 browsers → deliver. First run: SCRUM-22 → `specs/001-product-detail/` + `tests/shop/product-detail.spec.ts` (AC1–AC4, 15/15), `ProductDetailPage`, summary commented on the story.
+- **`/heal <spec>`**: self-healing for broken locators — classifies the failure, discovers candidates on the live page, validates them in constitution priority order, proposes a diff for approval. Demonstrated on `ShopLoginPage` (broken test id → `getByRole("button", { name: "Login" })`, 21/21).
+- `InventoryPage.card/cardDetails/openProduct`, `ShopBasePage.baseUrl()`, `shop.productDetail` fixture.
+
+### Fixed
+
+- `assertURLContains` / `assertTitleContains` built a `RegExp` from raw text, so `?`, `.`, `+` acted as metacharacters (`"/inventory-item.html?id="` never matched). Now escaped via `escapeRegExp` (unit-tested).
+
 ## [1.12.0] — 2026-08-21
 
 ### Added
@@ -169,6 +182,7 @@ Intelligent Execution Update — environment management, execution dashboard, re
 
 Initial release — Page Object Model.
 
+[1.13.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.13.0
 [1.12.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.12.0
 [1.11.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.11.0
 [1.10.0]: https://github.com/rorymer1989/Playwright-Automation-Framework-TypeScript/releases/tag/v1.10.0

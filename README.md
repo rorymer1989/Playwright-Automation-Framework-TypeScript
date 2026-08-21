@@ -31,9 +31,10 @@ The framework provides a structured foundation for building and maintaining larg
 
 # 🚀 What's New
 
-## v1.12.0 — CI Closes the Loop
+## v1.13.0 — Spec-Driven with GitHub Spec Kit
 
-- On `main` and manual runs, CI raises **Jira bugs with evidence** for failed tests and **emails** the summary, both linking to the run — no human step needed from failure to ticket.
+- **Constitution** (`.specify/memory/constitution.md`) as the single binding rulebook for humans and AI agents; specs/plans/tasks versioned under `specs/`.
+- **`/jira-test`** now runs the Spec Kit workflow (specify → plan → tasks → implement); **`/heal`** repairs broken locators with validated candidates.
 
 Full details in [CHANGELOG.md](CHANGELOG.md).
 
@@ -203,7 +204,7 @@ Environment       : UAT
 Browser           : Chromium
 Platform          : darwin
 Node Version      : v24.x
-Framework Version : v1.12.0
+Framework Version : v1.13.0
 Base URL          : https://example.com
 ```
 
@@ -380,7 +381,7 @@ Example:
 
 🚀 Playwright Automation Framework
 
-Framework Version : v1.12.0
+Framework Version : v1.13.0
 
 Environment       : UAT
 
@@ -487,6 +488,20 @@ npm run test:visual:local     # host run, informational: fonts differ from CI
 ```
 
 CI runs the `visual` job in the same image; diffs are uploaded as artifacts on failure.
+
+---
+
+# 📐 Spec-Driven Development (GitHub Spec Kit)
+
+The repo is a [Spec Kit](https://github.com/github/spec-kit) project. `.specify/memory/constitution.md` is the **binding rulebook** (for people and AI agents); `specs/<feature>/` holds `spec.md` (Given/When/Then scenarios — each becomes a test), `plan.md` (reused vs. new components, locators verified on the live app) and `tasks.md`.
+
+| Command                                                                     | What it does                                                                                                                                                                   |
+| --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `/speckit-specify`, `/speckit-plan`, `/speckit-tasks`, `/speckit-implement` | Generic Spec Kit workflow (plus `clarify`, `analyze`, `checklist`, `converge`)                                                                                                 |
+| `/jira-test SCRUM-12`                                                       | Jira story → the workflow above → tests tagged `@SCRUM-12`, run on 3 browsers, summary back to the story                                                                       |
+| `/heal tests/shop/login.spec.ts`                                            | Self-healing of a broken locator: classify → discover on the live page → validate candidates (role → label → placeholder → test-id → text → CSS) → propose a diff for approval |
+
+Example: `specs/001-product-detail/` (SCRUM-22) → `tests/shop/product-detail.spec.ts`.
 
 ---
 
@@ -652,7 +667,9 @@ Page objects contain reusable locators and page-level actions while test files f
 Playwright-Automation-Framework-TypeScript
 │
 ├── .github/workflows/playwright.yml   # CI: typecheck + tests + artifacts
-├── AI/                                # Agent prompts, rules and framework context
+├── .specify/                          # Spec Kit: constitution, templates, scripts
+├── specs/                             # spec.md / plan.md / tasks.md per feature
+├── AI/                                # Agent context (map) and short rules; constitution wins
 ├── config
 │   ├── environments/                  # dev.env, uat.env, pre-prod.env, prod.env (BASE_URL)
 │   ├── environment.ts                 # loadEnvironment(), ENV
@@ -1024,6 +1041,12 @@ The goal is to gradually evolve the framework toward **AI-enabled intelligent QA
 # 📦 Release History
 
 See [CHANGELOG.md](CHANGELOG.md) for the complete list.
+
+## 🚀 v1.13.0 — Spec-Driven with GitHub Spec Kit
+
+- `.specify/` constitution + templates, `speckit-*` skills, `/jira-test` on Spec Kit, `/heal`, `specs/001-product-detail`
+
+---
 
 ## 🚀 v1.12.0 — CI Closes the Loop
 
