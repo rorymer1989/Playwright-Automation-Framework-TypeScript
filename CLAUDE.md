@@ -38,4 +38,4 @@ npm run report:flaky             # flaky gate over test-result.json (FLAKY_BUDGE
 npm run jira:story -- SCRUM-9    # fetch a story; npm run jira:bugs raises bugs from test-result.json
 ```
 
-CI (`.github/workflows/playwright.yml`): `check` → matrix (chromium/firefox/webkit × 2 shards + api) + `visual` (Docker) → `merge-reports`. Runs on push/PR to `main`, nightly (Mon–Fri 03:00 UTC) and manually; Jira bugs and the email summary are sent only on non-PR runs.
+CI (`.github/workflows/playwright.yml`): `check` → matrix (chromium/firefox/webkit × 2 shards + api) + `visual` (Docker) → `merge-reports`. Runs on push/PR to `main` and manually; Jira bugs and the email summary are sent only on non-PR runs.
